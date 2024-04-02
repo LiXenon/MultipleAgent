@@ -94,6 +94,8 @@ public class State
         {
             Action action = jointAction[agent];
             char box;
+            int boxrow;
+            int boxcol;
 
             switch (action.type)
             {
@@ -104,6 +106,33 @@ public class State
                     this.agentRows[agent] += action.agentRowDelta;
                     this.agentCols[agent] += action.agentColDelta;
                     break;
+
+                case Push:
+                    this.agentRows[agent] += action.agentRowDelta;
+                    this.agentCols[agent] += action.agentColDelta;
+
+                    boxrow = this.agentRows[agent];
+                    boxcol = this.agentCols[agent];
+
+                    box = this.boxes[boxrow][boxcol];
+
+                    this.boxes[boxrow + action.boxRowDelta][boxcol + action.boxColDelta] = box;
+                    this.boxes[boxrow][boxcol] = 0b000000;;
+                    break;
+
+                case Pull:
+                    boxrow = this.agentRows[agent];
+                    boxcol = this.agentCols[agent];
+
+                    box = this.boxes[boxrow - action.boxRowDelta][boxcol - action.boxColDelta];
+
+                    this.boxes[boxrow][boxcol] = box;
+                    this.boxes[boxrow - action.boxRowDelta][boxcol - action.boxColDelta] = 0b000000;
+
+                    this.agentRows[agent] += action.agentRowDelta;
+                    this.agentCols[agent] += action.agentColDelta;
+                    break;
+
             }
         }
     }
@@ -205,9 +234,9 @@ public class State
         int agentRow = this.agentRows[agent];
         int agentCol = this.agentCols[agent];
         Color agentColor = this.agentColors[agent];
-        int boxRow;
-        int boxCol;
+        Color[] boxColor = this.boxColors;
         char box;
+        int boxColorIndex;
         int destinationRow;
         int destinationCol;
         switch (action.type)
@@ -219,6 +248,34 @@ public class State
                 destinationRow = agentRow + action.agentRowDelta;
                 destinationCol = agentCol + action.agentColDelta;
                 return this.cellIsFree(destinationRow, destinationCol);
+
+            case Push:
+                destinationRow = agentRow + action.agentRowDelta;
+                destinationCol = agentCol + action.agentColDelta;
+                box = this.boxes[destinationRow][destinationCol];
+                if (box == 0b000000) {
+                    return false;
+                }
+
+                boxColorIndex = box - 'A';
+                if (boxColor[boxColorIndex] != agentColor) {
+                    return false;
+                }
+                return this.cellIsFree(destinationRow + action.boxRowDelta, destinationCol + action.boxColDelta);
+
+            case Pull:
+                destinationRow = agentRow;
+                destinationCol = agentCol;
+                box = this.boxes[destinationRow - action.boxRowDelta][destinationCol - action.boxColDelta];
+
+                if (box == 0b000000) {
+                    return false;
+                }
+                boxColorIndex = box - 'A';
+                if (boxColor[boxColorIndex] != agentColor) {
+                    return false;
+                }
+                return this.cellIsFree(destinationRow + action.boxRowDelta, destinationCol + action.boxColDelta);
 
         }
 
@@ -252,8 +309,22 @@ public class State
                 case Move:
                     destinationRows[agent] = agentRow + action.agentRowDelta;
                     destinationCols[agent] = agentCol + action.agentColDelta;
-                    boxRows[agent] = agentRow; // Distinct dummy value
-                    boxCols[agent] = agentCol; // Distinct dummy value
+                    boxRows[agent] = destinationRows[agent]; // Distinct dummy value
+                    boxCols[agent] = destinationCols[agent]; // Distinct dummy value
+                    break;
+
+                case Push:
+                    destinationRows[agent] = agentRow + action.agentRowDelta;
+                    destinationCols[agent] = agentCol + action.agentColDelta;
+                    boxRows[agent] = destinationRows[agent] + action.boxRowDelta;
+                    boxCols[agent] = destinationCols[agent] + action.boxColDelta;
+                    break;
+
+                case Pull:
+                    destinationRows[agent] = agentRow + action.agentRowDelta;
+                    destinationCols[agent] = agentCol + action.agentColDelta;
+                    boxRows[agent] = agentRow;
+                    boxCols[agent] = agentCol;
                     break;
            }
         }
@@ -275,6 +346,12 @@ public class State
                 // Moving into same cell?
                 if (destinationRows[a1] == destinationRows[a2] && destinationCols[a1] == destinationCols[a2])
                 {
+                    return true;
+                } else if (boxRows[a1] == boxRows[a2] && boxCols[a1] == boxCols[a2]) {
+                    return true;
+                } else if((destinationRows[a1] == boxRows[a2] && destinationCols[a1] == boxCols[a2])) {
+                    return true;
+                } else if (boxRows[a1] == destinationRows[a2] && boxCols[a1] == destinationCols[a2]) {
                     return true;
                 }
             }
