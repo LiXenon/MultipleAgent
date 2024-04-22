@@ -2,6 +2,9 @@ package searchclient;
 
 import java.util.ArrayDeque;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.PriorityQueue;
+
 
 public interface Frontier
 {
@@ -62,34 +65,40 @@ class FrontierBFS
 class FrontierDFS
         implements Frontier
 {
+    private final ArrayDeque<State> queue = new ArrayDeque<>(65536);
+    private final HashSet<State> set = new HashSet<>(65536);
+
     @Override
     public void add(State state)
     {
-        throw new NotImplementedException();
+        this.queue.addLast(state);
+        this.set.add(state);
     }
 
     @Override
     public State pop()
     {
-        throw new NotImplementedException();
+        State state = this.queue.pollLast();
+        this.set.remove(state);
+        return state;
     }
 
     @Override
     public boolean isEmpty()
     {
-        throw new NotImplementedException();
+        return this.queue.isEmpty();
     }
 
     @Override
     public int size()
     {
-        throw new NotImplementedException();
+        return this.queue.size();
     }
 
     @Override
     public boolean contains(State state)
     {
-        throw new NotImplementedException();
+        return this.set.contains(state);
     }
 
     @Override
@@ -103,6 +112,9 @@ class FrontierBestFirst
         implements Frontier
 {
     private Heuristic heuristic;
+    private final LinkedList<State> queue = new LinkedList<>();
+    private final LinkedList<Integer> value = new LinkedList<>();
+    private final HashSet<State> set = new HashSet<>(65536);
 
     public FrontierBestFirst(Heuristic h)
     {
@@ -112,31 +124,59 @@ class FrontierBestFirst
     @Override
     public void add(State state)
     {
-        throw new NotImplementedException();
+        int f = this.heuristic.f(state);
+
+        if (this.isEmpty()) {
+            this.queue.addLast(state);
+            this.value.addLast(f);
+            this.set.add(state);
+        } else {
+            int count = 0;
+            boolean flag = true;
+            for (int v : value){
+                if (f < v){
+                    this.value.add(count, f);
+                    this.queue.add(count, state);
+                    this.set.add(state);
+                    return ;
+                }
+                count += 1 ;
+                if (flag) {
+                    this.value.addFirst(f);
+                    this.queue.addFirst(state);
+                    this.set.add(state);
+                }
+            }
+
+        }
+
     }
 
     @Override
     public State pop()
     {
-        throw new NotImplementedException();
+        State state = this.queue.pollFirst();
+        this.value.pollFirst();
+        this.set.remove(state);
+        return state;
     }
 
     @Override
     public boolean isEmpty()
     {
-        throw new NotImplementedException();
+        return this.queue.isEmpty();
     }
 
     @Override
     public int size()
     {
-        throw new NotImplementedException();
+        return this.queue.size();
     }
 
     @Override
     public boolean contains(State state)
     {
-        throw new NotImplementedException();
+        return this.set.contains(state);
     }
 
     @Override
