@@ -1,9 +1,6 @@
 package searchclient;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Random;
+import java.util.*;
 
 public class State
 {
@@ -50,6 +47,17 @@ public class State
 
     private int hash = 0;
 
+    public PriorityQueue<Character> subgoal = new PriorityQueue<>();
+    public Map<Character, int[]> completedGoals = new HashMap<>();
+
+    public Map<Character, int[]> goalsAndPositon = new HashMap<>();
+    public Map<Character, int[]> boxesAndPositon = new HashMap<>();
+
+
+    public int[][] grid;
+    private static final int EMPTY_COST = 1;
+    private static final int BLOCK_COST = 1000;
+
 
     // Constructs an initial state.
     // Arguments are not copied, and therefore should not be modified after being passed in.
@@ -67,6 +75,51 @@ public class State
         this.parent = null;
         this.jointAction = null;
         this.g = 0;
+
+        int rows = walls.length, cols = walls[0].length;
+        this.grid = new int[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            Arrays.fill(this.grid[i], EMPTY_COST);
+        }
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (walls[i][j] == true || goals[i][j] != 0) {
+                    this.grid[i][j] = BLOCK_COST;
+                }
+            }
+        }
+
+        Subgoals subgoals = new Subgoals();
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                char c = goals[i][j];
+                char d = boxes[i][j];
+                if (c != 0) {
+                    if (!this.goalsAndPositon.containsKey(c)) {
+                        this.goalsAndPositon.put(c, new int[]{i, j});
+                    }
+                }
+                if (d != 0) {
+                    this.boxesAndPositon.put(d, new int[]{i, j});
+                }
+            }
+        }
+        this.subgoal = subgoals.sort_priority(this.grid, this.walls, this.goals, this.agentRows, this.agentCols, this.goalsAndPositon);
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                char c = goals[i][j];
+                char d = boxes[i][j];
+                if (c != 0) {
+                    this.goalsAndPositon.put(c, new int[]{i, j});
+                }
+                if (d != 0) {
+                    this.boxesAndPositon.put(d, new int[]{i, j});
+                }
+            }
+        }
     }
 
 
@@ -77,6 +130,9 @@ public class State
         // Copy parent
         this.agentRows = Arrays.copyOf(parent.agentRows, parent.agentRows.length);
         this.agentCols = Arrays.copyOf(parent.agentCols, parent.agentCols.length);
+        this.completedGoals = parent.completedGoals;
+        this.subgoal = parent.subgoal;
+        this.grid = parent.grid;
         this.boxes = new char[parent.boxes.length][];
         for (int i = 0; i < parent.boxes.length; i++)
         {
@@ -117,7 +173,7 @@ public class State
                     box = this.boxes[boxrow][boxcol];
 
                     this.boxes[boxrow + action.boxRowDelta][boxcol + action.boxColDelta] = box;
-                    this.boxes[boxrow][boxcol] = 0b000000;;
+                    this.boxes[boxrow][boxcol] = 0;;
                     break;
 
                 case Pull:
@@ -127,12 +183,30 @@ public class State
                     box = this.boxes[boxrow - action.boxRowDelta][boxcol - action.boxColDelta];
 
                     this.boxes[boxrow][boxcol] = box;
-                    this.boxes[boxrow - action.boxRowDelta][boxcol - action.boxColDelta] = 0b000000;
+                    this.boxes[boxrow - action.boxRowDelta][boxcol - action.boxColDelta] = 0;
 
                     this.agentRows[agent] += action.agentRowDelta;
                     this.agentCols[agent] += action.agentColDelta;
                     break;
 
+            }
+        }
+
+        int rows = walls.length, cols = walls[0].length;
+
+        this.goalsAndPositon = new HashMap<>();
+        this.boxesAndPositon = new HashMap<>();
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                char c = goals[i][j];
+                char d = boxes[i][j];
+                if (c != 0) {
+                    this.goalsAndPositon.put(c, new int[]{i, j});
+                }
+                if (d != 0) {
+                    this.boxesAndPositon.put(d, new int[]{i, j});
+                }
             }
         }
     }
@@ -239,6 +313,7 @@ public class State
         int boxColorIndex;
         int destinationRow;
         int destinationCol;
+
         switch (action.type)
         {
             case NoOp:
@@ -247,40 +322,49 @@ public class State
             case Move:
                 destinationRow = agentRow + action.agentRowDelta;
                 destinationCol = agentCol + action.agentColDelta;
+                if (!isOutBoundary(destinationRow,destinationCol)) {return false;}
                 return this.cellIsFree(destinationRow, destinationCol);
 
             case Push:
                 destinationRow = agentRow + action.agentRowDelta;
                 destinationCol = agentCol + action.agentColDelta;
+                if (!isOutBoundary(destinationRow,destinationCol)) {return false;}
                 box = this.boxes[destinationRow][destinationCol];
-                if (box == 0b000000) {
+                if (box == 0) {
                     return false;
                 }
-
                 boxColorIndex = box - 'A';
                 if (boxColor[boxColorIndex] != agentColor) {
                     return false;
                 }
+                if (!isOutBoundary(destinationRow + action.boxRowDelta,destinationCol + action.boxColDelta)) {return false;}
                 return this.cellIsFree(destinationRow + action.boxRowDelta, destinationCol + action.boxColDelta);
 
             case Pull:
                 destinationRow = agentRow;
                 destinationCol = agentCol;
+                if (!isOutBoundary(destinationRow - action.boxRowDelta,destinationCol - action.boxColDelta)) {return false;}
                 box = this.boxes[destinationRow - action.boxRowDelta][destinationCol - action.boxColDelta];
 
-                if (box == 0b000000) {
+                if (box == 0) {
                     return false;
                 }
                 boxColorIndex = box - 'A';
                 if (boxColor[boxColorIndex] != agentColor) {
                     return false;
                 }
-                return this.cellIsFree(destinationRow + action.boxRowDelta, destinationCol + action.boxColDelta);
+                if (!isOutBoundary(destinationRow + action.agentRowDelta,destinationCol + action.agentColDelta)) {return false;}
+                return this.cellIsFree(destinationRow + action.agentRowDelta, destinationCol + action.agentColDelta);
 
         }
 
         // Unreachable:
         return false;
+    }
+
+    private boolean isOutBoundary(int x, int y) {
+        int rows = this.walls.length, cols = this.walls[0].length;
+        return x >= 0 && x < rows && y >= 0 && y < cols; // true not out, false out
     }
 
     private boolean isConflicting(Action[] jointAction)

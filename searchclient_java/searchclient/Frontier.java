@@ -112,8 +112,7 @@ class FrontierBestFirst
         implements Frontier
 {
     private Heuristic heuristic;
-    private final LinkedList<State> queue = new LinkedList<>();
-    private final LinkedList<Integer> value = new LinkedList<>();
+    private final PriorityQueue<StateWrapper> queue = new PriorityQueue<>();
     private final HashSet<State> set = new HashSet<>(65536);
 
     public FrontierBestFirst(Heuristic h)
@@ -121,42 +120,44 @@ class FrontierBestFirst
         this.heuristic = h;
     }
 
-    @Override
-    public void add(State state)
-    {
-        int f = this.heuristic.f(state);
+    private class StateWrapper implements Comparable<StateWrapper> {
+        private final State state;
+        private final int f;
 
-        if (this.isEmpty()) {
-            this.queue.addLast(state);
-            this.value.addLast(f);
-            this.set.add(state);
-        } else {
-            int count = 0;
-            boolean flag = true;
-            for (int v : value){
-                if (f < v){
-                    this.value.add(count, f);
-                    this.queue.add(count, state);
-                    this.set.add(state);
-                    return ;
-                }
-                count += 1 ;
-                if (flag) {
-                    this.value.addFirst(f);
-                    this.queue.addFirst(state);
-                    this.set.add(state);
-                }
-            }
-
+        public StateWrapper(State state, int f) {
+            this.state = state;
+            this.f = f;
         }
 
+        @Override
+        public int compareTo(StateWrapper other) {
+            return this.f - other.f;
+        }
+
+        @Override
+        public String toString() {
+            return "StateWrapper{" +
+                    "state=" + state.toString() +
+                    ", f=" + f +
+                    '}';
+        }
+    }
+
+    @Override
+    public void add(State state) {
+            int f = heuristic.f(state);
+            queue.add(new StateWrapper(state, f));
+            set.add(state);
+
+//            System.err.println("Current Frontier:");
+//            System.err.println(toString());
     }
 
     @Override
     public State pop()
     {
-        State state = this.queue.pollFirst();
-        this.value.pollFirst();
+        StateWrapper stateWrapper = this.queue.poll();
+        State state = stateWrapper.state;
         this.set.remove(state);
         return state;
     }
@@ -177,6 +178,13 @@ class FrontierBestFirst
     public boolean contains(State state)
     {
         return this.set.contains(state);
+    }
+
+    @Override
+    public String toString() {
+        return "FrontierBestFirst{" +
+                "queue=" + queue.peek().toString() +
+                '}';
     }
 
     @Override

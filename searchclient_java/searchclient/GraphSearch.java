@@ -1,8 +1,8 @@
 package searchclient;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.*;
+
+import static java.lang.System.exit;
 
 public class GraphSearch {
 
@@ -46,16 +46,31 @@ public class GraphSearch {
             while (true) {
 
                 //Print a status message every 10000 iteration
-                if (++iterations % 10000 == 0) {
+                if (++iterations % 100000 == 0) {
                     printSearchStatus(expanded, frontier);
                 }
+//                if (iterations == 40) {
+//                    exit(0);
+//                }
 
                 //Your code here... Don't forget to print out the stats when a solution has been found (see above)
                 if (frontier.isEmpty()) {
                     return null;
                 }
 
+//                System.err.println("Round:" + iterations);
+//                System.err.println(frontier.toString());
+//
                 s = frontier.pop();
+//
+//                System.err.print("Completed: ");
+//                for (Map.Entry<Character, int[]> entry : s.completedGoals.entrySet()) {
+//                    System.err.print(entry.getKey());
+//                }
+
+                isChangeGoal(s);
+
+//                System.err.println(s.toString());
 
                 if (s.isGoalState()) {
                     printSearchStatus(expanded, frontier);
@@ -71,6 +86,22 @@ public class GraphSearch {
                 }
 
             }
+        }
+    }
+
+    private static void isChangeGoal(State s) {
+        Map<Character, int[]> goalsAndPositon = s.goalsAndPositon;
+        Map<Character, int[]> boxesAndPositon = s.boxesAndPositon;
+        Map<Character, int[]> completedGoals = s.completedGoals;
+        PriorityQueue<Character> subgoal = s.subgoal;
+
+        char currentGoal = subgoal.peek();
+        int[] targetPosition = boxesAndPositon.get(currentGoal);
+        int[] goalPosition = goalsAndPositon.get(currentGoal);
+
+        if (goalPosition[0] == targetPosition[0] && goalPosition[1] == targetPosition[1]) {
+            completedGoals.put(currentGoal, targetPosition);
+            subgoal.poll();
         }
     }
 
