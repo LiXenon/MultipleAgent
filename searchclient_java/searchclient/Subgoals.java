@@ -2,16 +2,7 @@ package searchclient;
 
 import java.util.*;
 
-class Node {
-    int x, y, cost;
-
-    public Node(int x, int y, int cost) {
-        this.x = x;
-        this.y = y;
-        this.cost = cost;
-    }
-}
-
+import searchclient.Node;
 public class Subgoals {
 
     public PriorityQueue<Character> sort_priority(int[][] grid, boolean[][] walls, char[][] goals, int[] agentRows, int[] agentCols, Map<Character, int[]> goalsAndPositon) {
