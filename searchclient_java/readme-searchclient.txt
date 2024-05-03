@@ -33,3 +33,7 @@ Memory settings:
         $ java -jar ../server.jar -l ../levels/SAD1.lvl -c "java -Xmx4g searchclient.SearchClient" -g -s 150 -t 180
     Note that this option is set for the *client*.
     Avoid setting max heap size too high, since it will lead to your OS doing memory swapping which is terribly slow.
+
+java -jar ../server.jar -l ../levels/SATheRedDot.lvl -c "java searchclient.SearchClient -greedy" -g -s 150 -t 180
+java -jar ../server.jar -l ../levels/SAthomasAppartment.lvl -c "java searchclient.SearchClient -greedy" -g -s 150 -t 180
+

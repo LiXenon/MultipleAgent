@@ -7,10 +7,28 @@ import static java.lang.System.exit;
 public abstract class Heuristic
         implements Comparator<State>
 {
+    int[][] grid;
+
+    private static final int EMPTY_COST = 1;
+    private static final int BLOCK_COST = 1000;
 
     public Heuristic(State initialState)
     {
         // Here's a chance to pre-process the static parts of the level.
+        boolean[][] walls = initialState.walls;
+        int rows = walls.length, cols = walls[0].length;
+        this.grid = new int[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            Arrays.fill(this.grid[i], EMPTY_COST);
+        }
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (walls[i][j] == true) {
+                    this.grid[i][j] = BLOCK_COST;
+                }
+            }
+        }
 /**
         System.err.println("walls:");
         for (boolean[] i : walls) {
@@ -56,7 +74,7 @@ public abstract class Heuristic
         char currentGoal = subgoal.peek();
         int[] targetPosition;
         int[] goalPosition = goalsAndPositon.get(currentGoal);
-        int[][] grid = s.grid;
+//        int[][] grid = s.grid;
 
         if (currentGoal >= 'A' && currentGoal <= 'Z') {
             targetPosition = boxesAndPositon.get(currentGoal);
@@ -75,7 +93,7 @@ public abstract class Heuristic
 //            System.err.println("targetPosition[1]" + targetPosition[1]);
 //            System.err.println("agentCol" + agentCol);
 
-            int boxtogoaldiff = subgoals.shortest_way(grid, targetPosition[0], targetPosition[1], goalPosition[0], goalPosition[1]);
+            int boxtogoaldiff = subgoals.shortest_way(grid, targetPosition[0], targetPosition[1], goalPosition[0], goalPosition[1]) + 1000;
             int agenttoboxdiff = subgoals.shortest_way(grid, agentRow, agentCol, targetPosition[0], targetPosition[1]) + 1000;
 //            System.err.println("agenttoboxdiff" + agenttoboxdiff);
 //            while (xboxtogoaldiff == 0 && yboxtogoaldiff == 0) {

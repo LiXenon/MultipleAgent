@@ -97,9 +97,7 @@ public class State
                 char c = goals[i][j];
                 char d = boxes[i][j];
                 if (c != 0) {
-                    if (!this.goalsAndPositon.containsKey(c)) {
-                        this.goalsAndPositon.put(c, new int[]{i, j});
-                    }
+                    this.goalsAndPositon.put(c, new int[]{i, j});
                 }
                 if (d != 0) {
                     this.boxesAndPositon.put(d, new int[]{i, j});
@@ -108,18 +106,20 @@ public class State
         }
         this.subgoal = subgoals.sort_priority(this.grid, this.walls, this.goals, this.agentRows, this.agentCols, this.goalsAndPositon);
 
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                char c = goals[i][j];
-                char d = boxes[i][j];
-                if (c != 0) {
-                    this.goalsAndPositon.put(c, new int[]{i, j});
-                }
-                if (d != 0) {
-                    this.boxesAndPositon.put(d, new int[]{i, j});
-                }
-            }
-        }
+        System.err.println(this.subgoal);
+
+//        for (int i = 0; i < rows; i++) {
+//            for (int j = 0; j < cols; j++) {
+//                char c = goals[i][j];
+//                char d = boxes[i][j];
+//                if (c != 0) {
+//                    this.goalsAndPositon.put(c, new int[]{i, j});
+//                }
+//                if (d != 0) {
+//                    this.boxesAndPositon.put(d, new int[]{i, j});
+//                }
+//            }
+//        }
     }
 
 
