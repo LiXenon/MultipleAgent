@@ -5,7 +5,7 @@ import java.util.*;
 import searchclient.Node;
 public class Subgoals {
 
-    public PriorityQueue<Character> sort_priority(int[][] grid, boolean[][] walls, char[][] goals, int[] agentRows, int[] agentCols, Map<Character, int[]> goalsAndPositon) {
+    public PriorityQueue<Character> sort_priority(int[][] grid, boolean[][] walls, char[][] goals, int[] agentRows, int[] agentCols, Map<Character, int[]> goalsAndPosition) {
         int rows = walls.length, cols = walls[0].length;
         int agentRow = agentRows[0];
         int agentCol = agentCols[0];
@@ -18,11 +18,11 @@ public class Subgoals {
 //        }
 //
 //        System.err.println(agentRow + "  " + agentCol);
-        char[] goal = new char[goalsAndPositon.size()];
-        int[] cost = new int[goalsAndPositon.size()];
+        char[] goal = new char[goalsAndPosition.size()];
+        int[] cost = new int[goalsAndPosition.size()];
         int count = 0;
 
-        for (Map.Entry<Character, int[]> entry : goalsAndPositon.entrySet()) {
+        for (Map.Entry<Character, int[]> entry : goalsAndPosition.entrySet()) {
             int[] indices = entry.getValue();
             goal[count] = entry.getKey();
             cost[count] = shortest_way(grid, indices[0], indices[1], agentRow, agentCol);
@@ -56,7 +56,6 @@ public class Subgoals {
 //            System.err.print(i + " ");
 //
 //        }
-//        System.err.println("subgoals end");
         return subgoal;
     }
 
