@@ -56,7 +56,6 @@ public class Subgoals {
 //            System.err.print(i + " ");
 //
 //        }
-//        System.err.println("subgoals end");
         return subgoal;
     }
 

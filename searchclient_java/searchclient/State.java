@@ -58,6 +58,7 @@ public class State
     private static final int EMPTY_COST = 1;
     private static final int BLOCK_COST = 1000;
 
+    public List<Help> helps;
 
     // Constructs an initial state.
     // Arguments are not copied, and therefore should not be modified after being passed in.
@@ -75,9 +76,9 @@ public class State
         this.parent = null;
         this.jointAction = null;
         this.g = 0;
-
         int rows = walls.length, cols = walls[0].length;
         this.grid = new int[rows][cols];
+        this.helps = new ArrayList<>();
         for (int i = 0; i < rows; i++) {
             Arrays.fill(this.grid[i], EMPTY_COST);
         }
@@ -107,19 +108,6 @@ public class State
             }
         }
         this.subgoal = subgoals.sort_priority(this.grid, this.walls, this.goals, this.agentRows, this.agentCols, this.goalsAndPositon);
-
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                char c = goals[i][j];
-                char d = boxes[i][j];
-                if (c != 0) {
-                    this.goalsAndPositon.put(c, new int[]{i, j});
-                }
-                if (d != 0) {
-                    this.boxesAndPositon.put(d, new int[]{i, j});
-                }
-            }
-        }
     }
 
 
@@ -138,7 +126,6 @@ public class State
         {
             this.boxes[i] = Arrays.copyOf(parent.boxes[i], parent.boxes[i].length);
         }
-
         // Set own parameters
         this.parent = parent;
         this.jointAction = Arrays.copyOf(jointAction, jointAction.length);
@@ -249,6 +236,9 @@ public class State
             ArrayList<Action> agentActions = new ArrayList<>(Action.values().length);
             for (Action action : Action.values())
             {
+                // !!! In Multiple Agent, if you encounter a box-blocked situation or agent-blocked situation, make a help request
+                // If someone can help (or give in), no operation will be performed until the help (or give in) is completed; thereafter, the helper (giver) is not allowed to act until the Agent resolves the situation just now.
+                // All agents are not allowed to offer or accept any help (concession) when helping (or giving in) and solving situations.
                 if (this.isApplicable(agent, action))
                 {
                     agentActions.add(action);
@@ -366,7 +356,8 @@ public class State
         int rows = this.walls.length, cols = this.walls[0].length;
         return x >= 0 && x < rows && y >= 0 && y < cols; // true not out, false out
     }
-
+//    !!!Next is to add new features in this method (or another new method) to implement BDI.
+//    Initial thoughts are executing concession when meeting conflicting, and asking for help when encountering blocks
     private boolean isConflicting(Action[] jointAction)
     {
         int numAgents = this.agentRows.length;
@@ -443,6 +434,85 @@ public class State
 
         return false;
     }
+    // Get the shortest path from box to goal
+    // start[0]: box_X, start[1]: box_Y
+    // goal[0]: goal_X, goal[1]: goal_Y
+    public List<int[]> getShortestPath(int[] start, int[] goal) {
+        PriorityQueue<int[]> frontier = new PriorityQueue<>(Comparator.comparingInt(n -> this.grid[n[0]][n[1]]));
+        frontier.offer(new int[]{start[0], start[1], 0}); // x, y, cost
+
+        Map<String, Integer> costSoFar = new HashMap<>();
+        costSoFar.put(Arrays.toString(start), 0);
+
+        Map<String, int[]> cameFrom = new HashMap<>();
+        cameFrom.put(Arrays.toString(start), null);
+
+        while (!frontier.isEmpty()) {
+            int[] current = frontier.poll();
+
+            if (Arrays.equals(new int[]{current[0], current[1]}, goal)) {
+                break;
+            }
+
+            for (int[] next : getNeighbors(current[0], current[1])) {
+                int newCost = costSoFar.get(Arrays.toString(new int[]{current[0], current[1]})) + this.grid[next[0]][next[1]];
+                if (!costSoFar.containsKey(Arrays.toString(next)) || newCost < costSoFar.get(Arrays.toString(next))) {
+                    costSoFar.put(Arrays.toString(next), newCost);
+                    frontier.add(new int[]{next[0], next[1], newCost});
+                    cameFrom.put(Arrays.toString(next), new int[]{current[0], current[1]});
+                }
+            }
+        }
+
+        return reconstructPath(cameFrom, start, goal);
+    }
+
+    private List<int[]> getNeighbors(int x, int y) {
+        List<int[]> neighbors = new ArrayList<>();
+        int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+        for (int[] dir : directions) {
+            int nx = x + dir[0];
+            int ny = y + dir[1];
+            if (nx >= 0 && ny >= 0 && nx < this.grid.length && ny < this.grid[0].length && this.grid[nx][ny] != BLOCK_COST) {
+                neighbors.add(new int[]{nx, ny});
+            }
+        }
+        return neighbors;
+    }
+
+    private List<int[]> reconstructPath(Map<String, int[]> cameFrom, int[] start, int[] goal) {
+        List<int[]> path = new ArrayList<>();
+        int[] current = goal;
+        while (!Arrays.equals(current, start)) {
+            path.add(current);
+            current = cameFrom.get(Arrays.toString(current));
+        }
+        path.add(start);
+        Collections.reverse(path);
+        return path;
+    }
+
+    // Get the id of the first box on the path, if box not found, return '0'
+    private char firstBoxOnThePath(List<int[]> path) {
+        for (int[] coor: path) {
+            Iterator<Map.Entry<Character, int[]>> it = this.boxesAndPositon.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry<Character, int[]> entry = it.next();
+                if (coor[0] == entry.getValue()[0] && coor[1] == entry.getValue()[1]) {
+                    return entry.getKey(); // box found, return its id
+                }
+            }
+        }
+        return '0'; // If return 0, means no box found on the path
+    }
+
+    // Check if the box is still on the path
+    private boolean isBoxOnThePath(List<int[]> path, int[] boxCoordinate) {
+        for (int[] coor: path) {
+            if (boxCoordinate[0] == coor[0] && boxCoordinate[1] == coor[1]) return true;
+        }
+        return false;
+    }
 
     private boolean cellIsFree(int row, int col)
     {
@@ -471,6 +541,71 @@ public class State
             state = state.parent;
         }
         return plan;
+    }
+    // If the coordinate is free and not out of boundary
+    private boolean canMoveTo(int x, int y) {
+        return cellIsFree(x, y) && !isOutBoundary(x, y);
+    }
+    // Find coordinate to make the path unblocked
+    private int[] findUnblockedCoordinate(int x, int y, List<int[]> path) {
+        if (!canMoveTo(x, y)) {
+            return null;
+        }
+       boolean isOn = isBoxOnThePath(path, new int[] {x, y});
+        // Path is unblocked
+        if (!isOn) {
+            return new int[] {x, y};
+        }
+        // Search near cells recursively
+        int[][] directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+        for (int[] dir : directions) {
+            int newX = x + dir[0];
+            int newY = y + dir[1];
+            if (canMoveTo(newX, newY)) {
+                int[] result = findUnblockedCoordinate(newX, newY, path);
+                if (result != null) {
+                    return result;
+                }
+            }
+        }
+        return null; // No suitable coordinate found
+    }
+
+    private char findAgentOfBox(char boxId) {
+        int boxColorIndex = boxId - 'A';
+        Color boxColor = boxColors[boxColorIndex];
+        for(int i = 0; i < agentColors.length; i++) {
+            if (boxColor == agentColors[i]) {
+                return (char)(i + 'A');
+            }
+        }
+        return '0'; // Agent not found
+    }
+    private boolean addHelp(int requesterAgent, char requesterBox) {
+        int startX = this.agentRows[requesterAgent];
+        int startY = this.agentCols[requesterAgent];
+        int goalX = this.goalsAndPositon.get(requesterBox)[0];
+        int goalY = this.goalsAndPositon.get(requesterBox)[1];
+        int[][] grid = this.grid;
+        // Shortest path
+        List<int[]> path = getShortestPath(new int[]{startX, startY}, new int[]{goalX, goalY});
+        // Only the first blocker is considered
+        char blocker = firstBoxOnThePath(path);
+        // If id is '0', the box is not found; agent don't need to request for help
+        if (blocker == '0') return false;
+
+        int x = this.boxesAndPositon.get(blocker)[0];
+        int y = this.boxesAndPositon.get(blocker)[1];
+
+        int[] unblockedCoordinate = findUnblockedCoordinate(x, y, path);
+        // Unable to move blocker currently, agent cannot request for help
+        if (unblockedCoordinate == null) return false;
+        char helperAgent = findAgentOfBox(blocker);
+        // Unable to find helper agent, agent cannot request for help
+        if (helperAgent == '0') return false;
+
+        this.helps.add(new Help(requesterAgent, helperAgent, requesterBox, blocker, unblockedCoordinate));
+        return true;
     }
 
     @Override
