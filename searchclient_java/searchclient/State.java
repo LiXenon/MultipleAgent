@@ -596,7 +596,21 @@ public class State
         }
         return '0'; // Agent not found
     }
+
+    // Check if agent is already a requester or a helper in the help list
+    private boolean isInHelp(int agent) {
+        for (Help item : helps) {
+            if (item.requesterAgent == agent || item.helperAgent == agent) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private boolean addHelp(int requesterAgent, char requesterBox) {
+        // If requester agent is requesting for help, it cannot request more
+        if (isInHelp(requesterAgent)) return false;
+
         int startX = this.agentRows[requesterAgent];
         int startY = this.agentCols[requesterAgent];
         int goalX = this.goalsAndPositon.get(requesterBox)[0];
@@ -618,10 +632,24 @@ public class State
         char helperAgent = findAgentOfBox(blocker);
         // Unable to find helper agent, agent cannot request for help
         if (helperAgent == '0') return false;
-
+        // If helper agent is helping, it cannot help more
+        if (isInHelp(helperAgent)) return false;
         this.helps.add(new Help(requesterAgent, helperAgent, requesterBox, blocker, unblockedCoordinate));
         return true;
     }
+
+    private boolean removeHelp(int requesterAgent) {
+        Iterator<Help> it = helps.iterator();
+        while (it.hasNext()) {
+            Help item = it.next();
+            if (item.requesterAgent == requesterAgent) {
+                it.remove();
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     @Override
     public int hashCode()
