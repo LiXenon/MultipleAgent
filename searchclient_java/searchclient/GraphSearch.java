@@ -44,12 +44,11 @@ public class GraphSearch {
             State s;
 
             while (true) {
-
                 //Print a status message every 10000 iteration
                 if (++iterations % 100000 == 0) {
                     printSearchStatus(expanded, frontier);
                 }
-//                if (iterations == 40) {
+//                if (iterations == 30) {
 //                    exit(0);
 //                }
 
@@ -62,6 +61,8 @@ public class GraphSearch {
 //                System.err.println(frontier.toString());
 //
                 s = frontier.pop();
+
+//                System.err.println(s.subgoal);
 //
 //                System.err.print("Completed: ");
 //                for (Map.Entry<Character, int[]> entry : s.completedGoals.entrySet()) {
@@ -93,15 +94,20 @@ public class GraphSearch {
         Map<Character, int[]> goalsAndPositon = s.goalsAndPositon;
         Map<Character, int[]> boxesAndPositon = s.boxesAndPositon;
         Map<Character, int[]> completedGoals = s.completedGoals;
-        PriorityQueue<Character> subgoal = s.subgoal;
+        ArrayList<PriorityQueue<Character>> subgoal = s.subgoal;
 
-        char currentGoal = subgoal.peek();
-        int[] targetPosition = boxesAndPositon.get(currentGoal);
-        int[] goalPosition = goalsAndPositon.get(currentGoal);
+        for (int i = 0; i < s.subgoal.size(); i++) {
+            PriorityQueue<Character> agentsubgoal = subgoal.get(i);
+            if (!agentsubgoal.isEmpty()) {
+                char currentGoal = agentsubgoal.peek();
+                int[] targetPosition = boxesAndPositon.get(currentGoal);
+                int[] goalPosition = goalsAndPositon.get(currentGoal);
 
-        if (goalPosition[0] == targetPosition[0] && goalPosition[1] == targetPosition[1]) {
-            completedGoals.put(currentGoal, targetPosition);
-            subgoal.poll();
+                if (goalPosition[0] == targetPosition[0] && goalPosition[1] == targetPosition[1]) {
+                    completedGoals.put(currentGoal, targetPosition);
+                    agentsubgoal.poll();
+                }
+            }
         }
     }
 

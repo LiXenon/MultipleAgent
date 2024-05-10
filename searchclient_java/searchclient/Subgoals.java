@@ -5,8 +5,9 @@ import java.util.*;
 import searchclient.Node;
 public class Subgoals {
 
-    public PriorityQueue<Character> sort_priority(int[][] grid, boolean[][] walls, char[][] goals, int[] agentRows, int[] agentCols, Map<Character, int[]> goalsAndPosition) {
+    public ArrayList<PriorityQueue<Character>> sort_priority(int[][] grid, boolean[][] walls, char[][] goals, int[] agentRows, int[] agentCols, Map<Character, int[]> goalsAndPosition, Color[] agentColors, Color[] boxColors) {
         int rows = walls.length, cols = walls[0].length;
+        int agentAmount = agentRows.length;
         int agentRow = agentRows[0];
         int agentCol = agentCols[0];
 
@@ -18,14 +19,30 @@ public class Subgoals {
 //        }
 //
 //        System.err.println(agentRow + "  " + agentCol);
-        char[] goal = new char[goalsAndPosition.size()];
-        int[] cost = new int[goalsAndPosition.size()];
+        ArrayList<ArrayList<Character>> goal = new ArrayList<ArrayList<Character>>(agentAmount);
+        ArrayList<ArrayList<Integer>> cost = new ArrayList<ArrayList<Integer>>(agentAmount);
         int count = 0;
+
+        char goalName;
+        int goalIndex;
 
         for (Map.Entry<Character, int[]> entry : goalsAndPosition.entrySet()) {
             int[] indices = entry.getValue();
-            goal[count] = entry.getKey();
-            cost[count] = shortest_way(grid, indices[0], indices[1], agentRow, agentCol);
+            goalName = entry.getKey();
+            goalIndex = goalName - 'A';
+
+            Color b = boxColors[goalIndex];
+            int index = 0;
+            for (int i = 0; i < agentAmount; i++) {
+                if (agentColors[i] == b) {
+                    index = i;
+                    break;
+                }
+            }
+            goal.add(new ArrayList<>());
+            cost.add(new ArrayList<>());
+            goal.get(index).add(goalName);
+            cost.get(index).add(shortest_way(grid, indices[0], indices[1], agentRow, agentCol));
 //            System.err.print(goal[count]);
 //            System.err.println(cost[count]);
             count++;
@@ -33,10 +50,14 @@ public class Subgoals {
 //            System.err.println(shortest_way(grid, indices[0], indices[1], agentRow, agentCol));
         }
 
-        PriorityQueue<Character> subgoal = new PriorityQueue<>(Comparator.comparingInt(c -> -getIntValue(c, goal, cost)));
-
-        for (char c : goal) {
-            subgoal.offer(c);
+        ArrayList<PriorityQueue<Character>> subgoal = new ArrayList<PriorityQueue<Character>>(agentAmount);
+        for (int i = 0; i < agentAmount; i++) {
+            int finalI = i;
+            PriorityQueue<Character> agentsubgoal = new PriorityQueue<>(Comparator.comparingInt(c -> -getIntValue(c, goal.get(finalI), cost.get(finalI))));
+            for (char c : goal.get(finalI)) {
+                agentsubgoal.offer(c);
+            }
+            subgoal.add(agentsubgoal);
         }
 
 //        for (char goalname : subgoal) {
@@ -59,10 +80,10 @@ public class Subgoals {
         return subgoal;
     }
 
-    private static int getIntValue(char c, char[] chars, int[] ints) {
-        for (int i = 0; i < chars.length; i++) {
-            if (chars[i] == c) {
-                return ints[i];
+    private static int getIntValue(char c, ArrayList<Character> chars, ArrayList<Integer> ints) {
+        for (int i = 0; i < chars.size(); i++) {
+            if (chars.get(i) == c) {
+                return ints.get(i);
             }
         }
         return Integer.MIN_VALUE;
