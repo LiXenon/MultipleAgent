@@ -47,7 +47,7 @@ public class State
 
     private int hash = 0;
 
-    public PriorityQueue<Character> subgoal = new PriorityQueue<>();
+    public ArrayList<PriorityQueue<Character>> subgoal = new ArrayList<PriorityQueue<Character>>();;
     public Map<Character, int[]> completedGoals = new HashMap<>();
 
     public Map<Character, int[]> goalsAndPositon = new HashMap<>();
@@ -106,7 +106,7 @@ public class State
                 }
             }
         }
-        this.subgoal = subgoals.sort_priority(this.grid, this.walls, this.goals, this.agentRows, this.agentCols, this.goalsAndPositon);
+        this.subgoal = subgoals.sort_priority(this.grid, this.walls, this.goals, this.agentRows, this.agentCols, this.goalsAndPositon, this.agentColors, this.boxColors);
 
         System.err.println(this.subgoal);
 

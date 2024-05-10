@@ -63,7 +63,7 @@ public abstract class Heuristic
         Map<Character, int[]> goalsAndPositon = s.goalsAndPositon;
         Map<Character, int[]> boxesAndPositon = s.boxesAndPositon;
 
-        PriorityQueue<Character> subgoal = s.subgoal;
+        ArrayList<PriorityQueue<Character>> subgoal = s.subgoal;
 //        System.err.println("subgoals:");
 //        for (char goalname : subgoal) {
 //            System.err.print(goalname + " ");
@@ -71,30 +71,39 @@ public abstract class Heuristic
 //        System.err.println();
         Map<Character, int[]> completedGoals = s.completedGoals;
 
-        char currentGoal = subgoal.peek();
-        int[] targetPosition;
-        int[] goalPosition = goalsAndPositon.get(currentGoal);
+        int sumHue = 0;
+//        System.err.println("All goals:" + subgoal.toString());
+        for (int i = 0; i < s.subgoal.size(); i++) {
+
+//            System.err.println("This is agent: " + i);
+//            System.err.println("Agent" + "i goal: "+ subgoal.toString());
+            PriorityQueue<Character> agentsubgoal = subgoal.get(i);
+
+            if (!agentsubgoal.isEmpty()) {
+                char currentGoal = agentsubgoal.peek();
+                int[] targetPosition;
+                int[] goalPosition = goalsAndPositon.get(currentGoal);
 //        int[][] grid = s.grid;
 
-        if (currentGoal >= 'A' && currentGoal <= 'Z') {
-            targetPosition = boxesAndPositon.get(currentGoal);
-            Color b = s.boxColors[currentGoal - 'A'];
-            int index = 0;
-            for (int i = 0; i < s.agentColors.length; i++) {
-                if (s.agentColors[i] == b) {
-                    index = i;
-                    break;
-                }
-            }
-            int agentRow = s.agentRows[index];
-            int agentCol = s.agentCols[index];
+                if (currentGoal >= 'A' && currentGoal <= 'Z') {
+                    targetPosition = boxesAndPositon.get(currentGoal);
+                    Color b = s.boxColors[currentGoal - 'A'];
+                    int index = 0;
+                    for (int j = 0; j < s.agentColors.length; j++) {
+                        if (s.agentColors[j] == b) {
+                            index = j;
+                            break;
+                        }
+                    }
+                    int agentRow = s.agentRows[index];
+                    int agentCol = s.agentCols[index];
 //            System.err.println("targetPosition[0]" + targetPosition[0]);
 //            System.err.println("agentRow" + agentRow);
 //            System.err.println("targetPosition[1]" + targetPosition[1]);
 //            System.err.println("agentCol" + agentCol);
 
-            int boxtogoaldiff = subgoals.shortest_way(grid, targetPosition[0], targetPosition[1], goalPosition[0], goalPosition[1]) + 1000;
-            int agenttoboxdiff = subgoals.shortest_way(grid, agentRow, agentCol, targetPosition[0], targetPosition[1]) + 1000;
+                    int boxtogoaldiff = subgoals.shortest_way(grid, targetPosition[0], targetPosition[1], goalPosition[0], goalPosition[1]) + 1000;
+                    int agenttoboxdiff = subgoals.shortest_way(grid, agentRow, agentCol, targetPosition[0], targetPosition[1]) + 1000;
 //            System.err.println("agenttoboxdiff" + agenttoboxdiff);
 //            while (xboxtogoaldiff == 0 && yboxtogoaldiff == 0) {
 //                subgoal.poll();
@@ -118,40 +127,61 @@ public abstract class Heuristic
 //            System.err.println("yboxtogoaldiff" + yboxtogoaldiff);
 //            System.err.println("xagenttoboxdiff" + xagenttoboxdiff);
 //            System.err.println("yagenttoboxdiff" + yagenttoboxdiff);
-            int notInPosition = subgoals.freeze_cell(completedGoals, s);
-            if (goalPosition[0] == targetPosition[0] && goalPosition[1] == targetPosition[1]) {
-                completedGoals.put(currentGoal, targetPosition);
-            }
-            int completed = completedGoals.size() * -1000;
-            if (boxtogoaldiff != 1) {
-                return boxtogoaldiff + agenttoboxdiff + notInPosition + completed;
-            } else {
-                return boxtogoaldiff + notInPosition + completed;
-            }
-        } else {
-            int index = currentGoal - '0';
-            targetPosition = new int[]{s.agentRows[index], s.agentCols[index]};
-            int xdiff = Math.abs(targetPosition[0] - goalPosition[0]);
-            int ydiff = Math.abs(targetPosition[1] - goalPosition[1]);
 
-            while (xdiff == 0 && ydiff == 0) {
-                subgoal.poll();
-                currentGoal = subgoal.peek();
-                index = currentGoal - '0';
-                targetPosition = new int[]{s.agentRows[index], s.agentCols[index]};
-                goalPosition = goalsAndPositon.get(currentGoal);
+//                    if (goalPosition[0] == targetPosition[0] && goalPosition[1] == targetPosition[1]) {
+//                        completedGoals.put(currentGoal, targetPosition);
+//                    }
 
-                xdiff = Math.abs(targetPosition[0] - goalPosition[0]);
-                ydiff = Math.abs(targetPosition[1] - goalPosition[1]);
+                    if (boxtogoaldiff != 1) {
+                        int thisHue = boxtogoaldiff + agenttoboxdiff;
+//                    System.err.println("Number " + i + " cost: " + thisHue);
+                        sumHue += thisHue;
+                    } else {
+                        int thisHue = boxtogoaldiff;
+//                    System.err.println("Number " + i + " cost: " + thisHue);
+                        sumHue += thisHue;
+                    }
+                } else {
+                    int index = currentGoal - '0';
+                    targetPosition = new int[]{s.agentRows[index], s.agentCols[index]};
+                    int xdiff = Math.abs(targetPosition[0] - goalPosition[0]);
+                    int ydiff = Math.abs(targetPosition[1] - goalPosition[1]);
+
+                    while (xdiff == 0 && ydiff == 0) {
+                        agentsubgoal.poll();
+                        currentGoal = agentsubgoal.peek();
+                        index = currentGoal - '0';
+                        targetPosition = new int[]{s.agentRows[index], s.agentCols[index]};
+                        goalPosition = goalsAndPositon.get(currentGoal);
+
+                        xdiff = Math.abs(targetPosition[0] - goalPosition[0]);
+                        ydiff = Math.abs(targetPosition[1] - goalPosition[1]);
+                    }
+//                    if (goalPosition[0] == targetPosition[0] && goalPosition[1] == targetPosition[1]) {
+//                        completedGoals.put(currentGoal, targetPosition);
+//                    }
+                    sumHue += xdiff + ydiff;
+                }
             }
-            int notInPosition = subgoals.freeze_cell(completedGoals, s);
-            if (goalPosition[0] == targetPosition[0] && goalPosition[1] == targetPosition[1]) {
-                completedGoals.put(currentGoal, targetPosition);
+        }
+        int punishment = 0;
+
+        if (s.parent != null) {
+            State parent = s.parent;
+            int[] parentAgentCols = parent.agentCols;
+            int[] parentAgentRows = parent.agentRows;
+            int[] agentCols = s.agentCols;
+            int[] agentRows = s.agentRows;
+            for (int i = 0; i < parentAgentCols.length; i++) {
+                if (agentRows[i] == parentAgentRows[i] && agentCols[i] == parentAgentCols[i]) {
+                    punishment += 100;
+                }
             }
-            int completed = completedGoals.size() * -1000;
-            return xdiff + ydiff + notInPosition + completed;
         }
 
+        int notInPosition = subgoals.freeze_cell(completedGoals, s);
+        int completed = completedGoals.size() * -1000;
+        return sumHue + notInPosition + completed + punishment;
 //        System.err.println(currentGoal);
 //        System.err.println(targetPosition[0] + " " + targetPosition[1]);
 //        System.err.println(goalPosition[0] + " " + goalPosition[1]);
