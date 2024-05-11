@@ -71,14 +71,19 @@ public abstract class Heuristic
 //        System.err.println();
         Map<Character, int[]> completedGoals = s.completedGoals;
 
-//        List<Help> helps = s.helps;
-//        ArrayList<ArrayList<Character>> helpBoxesAndPositon = new ArrayList<>(subgoal.size());
-
+        List<Help> helps = s.helps;
+//        ArrayList<ArrayList<Character>> helpBoxes = new ArrayList<>(subgoal.size());
+//        ArrayList<ArrayList<int[]>> helpGoalPositions = new ArrayList<>(subgoal.size());
+//
 //        for (int i = 0; i < subgoal.size(); i++) {
-//            helpBoxesAndPositon.add(new ArrayList<>());
-//            for (int j = 0; j < helps.size(); j++) {
-//                if (helps.get(j).helperAgent == i) {
-//                    helpBoxesAndPositon.get(i).add()
+//            helpBoxes.add(new ArrayList<>());
+//            helpGoalPositions.add(new ArrayList<>());
+//            Iterator<Help> it = helps.iterator();
+//            while (it.hasNext()) {
+//                Help item = it.next();
+//                if (item.helperAgent == i) {
+//                    helpBoxes.get(i).add(item.blocker);
+//                    helpGoalPositions.get(i).add(item.blockerGoalCoordinate);
 //                }
 //            }
 //        }
@@ -92,7 +97,30 @@ public abstract class Heuristic
 //            System.err.println("Agent" + "i goal: "+ subgoal.toString());
             PriorityQueue<Character> agentsubgoal = subgoal.get(i);
 
-            if (!agentsubgoal.isEmpty()) {
+            Help help = s.getHelp(i);
+
+            if (help != null) {
+                char currentGoal = help.blocker;
+                int[] blockerGoalCoordinate = help.blockerGoalCoordinate;
+                int[] targetPosition = boxesAndPositon.get(currentGoal);
+
+                int agentRow = s.agentRows[i];
+                int agentCol = s.agentCols[i];
+
+                int boxtogoaldiff = subgoals.shortest_way(grid, targetPosition[0], targetPosition[1], blockerGoalCoordinate[0], blockerGoalCoordinate[1]) + 1000;
+                int agenttoboxdiff = subgoals.shortest_way(grid, agentRow, agentCol, targetPosition[0], targetPosition[1]) + 1000;
+
+                if (boxtogoaldiff != 1) {
+                    int thisHue = boxtogoaldiff + agenttoboxdiff;
+//                    System.err.println("Number " + i + " cost: " + thisHue);
+                    sumHue += thisHue;
+                } else {
+                    int thisHue = boxtogoaldiff;
+//                    System.err.println("Number " + i + " cost: " + thisHue);
+                    sumHue += thisHue;
+                }
+
+            } else if (!agentsubgoal.isEmpty()) {
                 char currentGoal = agentsubgoal.peek();
                 int[] targetPosition;
                 int[] goalPosition = goalsAndPositon.get(currentGoal);
