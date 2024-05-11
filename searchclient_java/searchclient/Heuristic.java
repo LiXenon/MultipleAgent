@@ -71,6 +71,19 @@ public abstract class Heuristic
 //        System.err.println();
         Map<Character, int[]> completedGoals = s.completedGoals;
 
+//        List<Help> helps = s.helps;
+//        ArrayList<ArrayList<Character>> helpBoxesAndPositon = new ArrayList<>(subgoal.size());
+
+//        for (int i = 0; i < subgoal.size(); i++) {
+//            helpBoxesAndPositon.add(new ArrayList<>());
+//            for (int j = 0; j < helps.size(); j++) {
+//                if (helps.get(j).helperAgent == i) {
+//                    helpBoxesAndPositon.get(i).add()
+//                }
+//            }
+//        }
+
+
         int sumHue = 0;
 //        System.err.println("All goals:" + subgoal.toString());
         for (int i = 0; i < s.subgoal.size(); i++) {
@@ -87,16 +100,9 @@ public abstract class Heuristic
 
                 if (currentGoal >= 'A' && currentGoal <= 'Z') {
                     targetPosition = boxesAndPositon.get(currentGoal);
-                    Color b = s.boxColors[currentGoal - 'A'];
-                    int index = 0;
-                    for (int j = 0; j < s.agentColors.length; j++) {
-                        if (s.agentColors[j] == b) {
-                            index = j;
-                            break;
-                        }
-                    }
-                    int agentRow = s.agentRows[index];
-                    int agentCol = s.agentCols[index];
+
+                    int agentRow = s.agentRows[i];
+                    int agentCol = s.agentCols[i];
 //            System.err.println("targetPosition[0]" + targetPosition[0]);
 //            System.err.println("agentRow" + agentRow);
 //            System.err.println("targetPosition[1]" + targetPosition[1]);

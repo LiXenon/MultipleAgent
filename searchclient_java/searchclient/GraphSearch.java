@@ -42,6 +42,7 @@ public class GraphSearch {
             frontier.add(initialState);
             HashSet<State> expanded = new HashSet<>();
             State s;
+            char requestBox;
 
             while (true) {
                 //Print a status message every 10000 iteration
@@ -61,6 +62,13 @@ public class GraphSearch {
 //                System.err.println(frontier.toString());
 //
                 s = frontier.pop();
+
+//                int agentAmount = s.agentRows.length;
+//                for (int i = 0; i < agentAmount; i++) {
+//                    if(s.addHelp(i, s.subgoal.get(i).peek())) {
+//                        s.subgoal.get(i).offer(s.helps.get(s.helps.size() - 1).blocker);
+//                    }
+//                }
 
 //                System.err.println(s.subgoal);
 //
@@ -104,6 +112,7 @@ public class GraphSearch {
                 int[] goalPosition = goalsAndPositon.get(currentGoal);
 
                 if (goalPosition[0] == targetPosition[0] && goalPosition[1] == targetPosition[1]) {
+//                    if (currentGoal != s.helps.contains()) {}
                     completedGoals.put(currentGoal, targetPosition);
                     agentsubgoal.poll();
                 }

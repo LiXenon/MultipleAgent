@@ -596,7 +596,7 @@ public class State
         }
         return '0'; // Agent not found
     }
-    private boolean addHelp(int requesterAgent, char requesterBox) {
+    public boolean addHelp(int requesterAgent, char requesterBox) {
         int startX = this.agentRows[requesterAgent];
         int startY = this.agentCols[requesterAgent];
         int goalX = this.goalsAndPositon.get(requesterBox)[0];
