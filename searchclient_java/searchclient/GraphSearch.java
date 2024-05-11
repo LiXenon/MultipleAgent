@@ -49,20 +49,24 @@ public class GraphSearch {
                 if (++iterations % 100000 == 0) {
                     printSearchStatus(expanded, frontier);
                 }
-//                if (iterations == 30) {
-//                    exit(0);
-//                }
 
                 //Your code here... Don't forget to print out the stats when a solution has been found (see above)
                 if (frontier.isEmpty()) {
                     return null;
                 }
 
+//                if (iterations >= 10) {
+//                    exit(0);
+//                }
+
 //                System.err.println("Round:" + iterations);
 //                System.err.println(frontier.toString());
 //
                 s = frontier.pop();
 
+//                if (iterations >= 55 && iterations <= 70) {
+//                    System.out.println(s.helps);
+//                }
 //                int agentAmount = s.agentRows.length;
 //                for (int i = 0; i < agentAmount; i++) {
 //                    if(s.addHelp(i, s.subgoal.get(i).peek())) {
@@ -76,6 +80,7 @@ public class GraphSearch {
 //                for (Map.Entry<Character, int[]> entry : s.completedGoals.entrySet()) {
 //                    System.err.print(entry.getKey());
 //                }
+                s.helps = addNewHelp(s);
 
                 isChangeGoal(s);
 
@@ -98,21 +103,63 @@ public class GraphSearch {
         }
     }
 
+    private static List<Help> addNewHelp(State s) {
+//        Map<Character, int[]> goalsAndPositon = s.goalsAndPositon;
+//        Map<Character, int[]> boxesAndPositon = s.boxesAndPositon;
+//        Map<Character, int[]> completedGoals = s.completedGoals;
+        ArrayList<PriorityQueue<Character>> subgoal = s.subgoal;
+
+//        Subgoals subgoals = new Subgoals();
+        int[][] grid = s.grid;
+
+        for (int i = 0; i < s.subgoal.size(); i++) {
+            PriorityQueue<Character> agentsubgoal = subgoal.get(i);
+            System.err.println("agentsubgoal: " + agentsubgoal);
+            if (!agentsubgoal.isEmpty()) {
+                char currentGoal = agentsubgoal.peek();
+//                int agentRow = s.agentRows[i];
+//                int agentCol = s.agentCols[i];
+//                int[] targetPosition = boxesAndPositon.get(currentGoal);
+//                int agenttoboxdiff = subgoals.shortest_way(grid, agentRow, agentCol, targetPosition[0], targetPosition[1]) + 1000;
+//                System.err.println("Agent " + i + " distance " + agenttoboxdiff);
+//                if (agenttoboxdiff == 2) {
+                Help help = s.addHelp(i, currentGoal);
+                System.err.println("Help: " + help);
+                System.err.println("This agent needs help: " + help.requesterAgent);
+                System.err.println("This box needs help: " + help.blocker);
+                System.err.println("This agent will help: " + help.helperAgent);
+                System.err.println("The goal position: " + help.blockerGoalCoordinate);
+//                }
+            }
+        }
+        return s.helps;
+    }
+
     private static void isChangeGoal(State s) {
         Map<Character, int[]> goalsAndPositon = s.goalsAndPositon;
         Map<Character, int[]> boxesAndPositon = s.boxesAndPositon;
         Map<Character, int[]> completedGoals = s.completedGoals;
         ArrayList<PriorityQueue<Character>> subgoal = s.subgoal;
+        List<Help> helps = s.helps;
 
         for (int i = 0; i < s.subgoal.size(); i++) {
             PriorityQueue<Character> agentsubgoal = subgoal.get(i);
+            if (!helps.isEmpty()) {
+                Help help = helps.get(i);
+                char currentGoal = help.blocker;
+                int[] targetPosition = boxesAndPositon.get(currentGoal);
+                int[] goalPosition = help.blockerGoalCoordinate;
+
+                if (goalPosition[0] == targetPosition[0] && goalPosition[1] == targetPosition[1]) {
+                    helps.remove(i);
+                }
+            }
             if (!agentsubgoal.isEmpty()) {
                 char currentGoal = agentsubgoal.peek();
                 int[] targetPosition = boxesAndPositon.get(currentGoal);
                 int[] goalPosition = goalsAndPositon.get(currentGoal);
 
                 if (goalPosition[0] == targetPosition[0] && goalPosition[1] == targetPosition[1]) {
-//                    if (currentGoal != s.helps.contains()) {}
                     completedGoals.put(currentGoal, targetPosition);
                     agentsubgoal.poll();
                 }

@@ -166,7 +166,7 @@ public abstract class Heuristic
 //                        completedGoals.put(currentGoal, targetPosition);
 //                    }
 
-                    if (boxtogoaldiff != 1) {
+                    if (agenttoboxdiff != 2) {
                         int thisHue = boxtogoaldiff + agenttoboxdiff;
 //                    System.err.println("Number " + i + " cost: " + thisHue);
                         sumHue += thisHue;
@@ -207,7 +207,7 @@ public abstract class Heuristic
             int[] agentCols = s.agentCols;
             int[] agentRows = s.agentRows;
             for (int i = 0; i < parentAgentCols.length; i++) {
-                if (agentRows[i] == parentAgentRows[i] && agentCols[i] == parentAgentCols[i]) {
+                if ((agentRows[i] == parentAgentRows[i] && agentCols[i] == parentAgentCols[i]) && (subgoal.get(i).size() != 0)) {
                     punishment += 100;
                 }
             }

@@ -135,6 +135,7 @@ public class State
         this.completedGoals = parent.completedGoals;
         this.subgoal = parent.subgoal;
         this.grid = parent.grid;
+        this.helps = parent.helps;
         this.boxes = new char[parent.boxes.length][];
         for (int i = 0; i < parent.boxes.length; i++)
         {
@@ -607,9 +608,9 @@ public class State
         return false;
     }
 
-    private boolean addHelp(int requesterAgent, char requesterBox) {
+    public Help addHelp(int requesterAgent, char requesterBox) {
         // If requester agent is requesting for help, it cannot request more
-        if (isInHelp(requesterAgent)) return false;
+        if (isInHelp(requesterAgent)) return null;
 
         int startX = this.agentRows[requesterAgent];
         int startY = this.agentCols[requesterAgent];
@@ -621,29 +622,33 @@ public class State
         // Only the first blocker is considered
         char blocker = firstBoxOnThePath(path);
         // If id is '0', the box is not found; agent don't need to request for help
-        if (blocker == '0') return false;
+        if (blocker == '0') return null;
 
         int x = this.boxesAndPositon.get(blocker)[0];
         int y = this.boxesAndPositon.get(blocker)[1];
-
+        System.err.println("Before unblockedCoordinate");
         int[] unblockedCoordinate = findUnblockedCoordinate(x, y, path);
+        System.err.println("After unblockedCoordinate");
         // Unable to move blocker currently, agent cannot request for help
-        if (unblockedCoordinate == null) return false;
+        if (unblockedCoordinate == null) return null;
         char helperAgent = findAgentOfBox(blocker);
         // Unable to find helper agent, agent cannot request for help
-        if (helperAgent == '0') return false;
+        if (helperAgent == '0') return null;
         // If helper agent is helping, it cannot help more
-        if (isInHelp(helperAgent)) return false;
-        this.helps.add(new Help(requesterAgent, helperAgent, requesterBox, blocker, unblockedCoordinate));
-        return true;
+        if (isInHelp(helperAgent)) return null;
+        Help help = new Help(requesterAgent, helperAgent, requesterBox, blocker, unblockedCoordinate);
+        this.helps.add(help);
+        return help;
     }
 
     public Help getHelp(int helperAgent) {
-        Iterator<Help> it = helps.iterator();
-        while (it.hasNext()) {
-            Help item = it.next();
-            if (item.helperAgent == helperAgent) {
-                return item;
+        if (helps != null) {
+            Iterator<Help> it = helps.iterator();
+            while (it.hasNext()) {
+                Help item = it.next();
+                if (item.helperAgent == helperAgent) {
+                    return item;
+                }
             }
         }
         return null;

@@ -35,5 +35,5 @@ Memory settings:
     Avoid setting max heap size too high, since it will lead to your OS doing memory swapping which is terribly slow.
 
 java -jar ../server.jar -l ../levels/SATheRedDot.lvl -c "java searchclient.SearchClient -greedy" -g -s 150 -t 180
-java -jar ../server.jar -l ../levels/SAthomasAppartment.lvl -c "java searchclient.SearchClient -greedy" -g -s 150 -t 180
+java -jar ../server.jar -l ../levels/MAthomasAppartment.lvl -c "java -Xmx8g searchclient.SearchClient -greedy" -g -s 150 -t 180
 
