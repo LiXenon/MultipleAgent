@@ -10,12 +10,14 @@ public abstract class Heuristic
     int[][] grid;
 
     private static final int EMPTY_COST = 1;
-    private static final int BLOCK_COST = 1000;
+    private static final int BLOCK_COST = 10000;
+    private static final int BOX_COST = 1000;
 
     public Heuristic(State initialState)
     {
         // Here's a chance to pre-process the static parts of the level.
         boolean[][] walls = initialState.walls;
+        char[][] boxes = initialState.boxes;
         int rows = walls.length, cols = walls[0].length;
         this.grid = new int[rows][cols];
         for (int i = 0; i < rows; i++) {
@@ -27,6 +29,9 @@ public abstract class Heuristic
                 if (walls[i][j] == true) {
                     this.grid[i][j] = BLOCK_COST;
                 }
+//                } else if (boxes[i][j] != 0) {
+//                    this.grid[i][j] = BOX_COST;
+//                }
             }
         }
 /**
@@ -89,6 +94,7 @@ public abstract class Heuristic
 //        }
 
 
+
         int sumHue = 0;
 //        System.err.println("All goals:" + subgoal.toString());
         for (int i = 0; i < s.subgoal.size(); i++) {
@@ -107,8 +113,8 @@ public abstract class Heuristic
                 int agentRow = s.agentRows[i];
                 int agentCol = s.agentCols[i];
 
-                int boxtogoaldiff = subgoals.shortest_way(grid, targetPosition[0], targetPosition[1], blockerGoalCoordinate[0], blockerGoalCoordinate[1]) + 1000;
-                int agenttoboxdiff = subgoals.shortest_way(grid, agentRow, agentCol, targetPosition[0], targetPosition[1]) + 1000;
+                int boxtogoaldiff = subgoals.shortest_way(grid, targetPosition[0], targetPosition[1], blockerGoalCoordinate[0], blockerGoalCoordinate[1]) + 1000 - 100;
+                int agenttoboxdiff = subgoals.shortest_way(grid, agentRow, agentCol, targetPosition[0], targetPosition[1]) + 1000 - 100;
 
                 if (boxtogoaldiff != 1) {
                     int thisHue = boxtogoaldiff + agenttoboxdiff;
@@ -206,11 +212,25 @@ public abstract class Heuristic
             int[] parentAgentRows = parent.agentRows;
             int[] agentCols = s.agentCols;
             int[] agentRows = s.agentRows;
-            for (int i = 0; i < parentAgentCols.length; i++) {
-                if ((agentRows[i] == parentAgentRows[i] && agentCols[i] == parentAgentCols[i]) && (subgoal.get(i).size() != 0)) {
-                    punishment += 100;
+//            if (parent.parent != null) {
+//                State grandparent = parent.parent;
+//                int[] grandparentAgentCols = grandparent.agentCols;
+//                int[] grandparentAgentRows = grandparent.agentRows;
+//                for (int i = 0; i < parentAgentCols.length; i++) {
+//                    if (((agentRows[i] == grandparentAgentRows[i] && agentCols[i] == grandparentAgentCols[i]) || (agentRows[i] == parentAgentRows[i] && agentCols[i] == parentAgentCols[i]))
+//                            && (subgoal.get(i).size() != 0)) {
+//                        punishment += 100;
+//                    }
+//                }
+//            } else {
+                for (int i = 0; i < parentAgentCols.length; i++) {
+                    if ((agentRows[i] == parentAgentRows[i] && agentCols[i] == parentAgentCols[i]) && (subgoal.get(i).size() != 0)) {
+                        punishment += 100;
+                    }
                 }
-            }
+//            }
+
+
         }
 
         int notInPosition = subgoals.freeze_cell(completedGoals, s);

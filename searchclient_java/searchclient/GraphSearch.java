@@ -55,7 +55,7 @@ public class GraphSearch {
                     return null;
                 }
 
-//                if (iterations >= 10) {
+//                if (iterations > 9307) {
 //                    exit(0);
 //                }
 
@@ -82,7 +82,11 @@ public class GraphSearch {
 //                }
 //                s.helps = addNewHelp(s);
 
-                isChangeGoal(s);
+//                if (iterations >= 9290 && iterations <= 9307) {
+//                    System.err.println(s.toString());
+//                }
+
+                isChangeGoal(s, iterations);
 
 //                System.err.println(s.toString());
 
@@ -135,12 +139,13 @@ public class GraphSearch {
         return s.helps;
     }
 
-    private static void isChangeGoal(State s) {
+    private static void isChangeGoal(State s, int iterations) {
         Map<Character, int[]> goalsAndPositon = s.goalsAndPositon;
         Map<Character, int[]> boxesAndPositon = s.boxesAndPositon;
         Map<Character, int[]> completedGoals = s.completedGoals;
         ArrayList<LinkedList<Character>> subgoal = s.subgoal;
         List<Help> helps = s.helps;
+        boolean change = false;
 
         for (int i = 0; i < s.subgoal.size(); i++) {
             LinkedList<Character> agentsubgoal = subgoal.get(i);
@@ -162,8 +167,13 @@ public class GraphSearch {
                 if (goalPosition[0] == targetPosition[0] && goalPosition[1] == targetPosition[1]) {
                     completedGoals.put(currentGoal, targetPosition);
                     agentsubgoal.remove(0);
+                    change = true;
                 }
             }
+        }
+        if (change) {
+            System.err.println(subgoal);
+            System.err.println(iterations);
         }
     }
 
