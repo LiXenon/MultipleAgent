@@ -656,13 +656,25 @@ public class State
         List<int[]> pathBlockerToBeUnblocked = getShortestPath(new int[] {x, y}, unblockedCoordinate, grid);
         pathHelperAgentToBlocker.addAll(pathBlockerToBeUnblocked);
         List<int[]> helperPath = pathHelperAgentToBlocker;
-        int[] requesterGoalCoordinate = findUnblockedCoordinate(agentRows[requesterAgent], agentCols[requesterAgent], helperPath);
+        int[] requesterCoordinate = new int[] {agentRows[requesterAgent], agentCols[requesterAgent]};
+        int[] requesterGoalCoordinate;
+        if (isBoxOnThePath(helperPath, requesterCoordinate)) {
+            requesterGoalCoordinate = findUnblockedCoordinate(requesterCoordinate[0], requesterCoordinate[1], helperPath);
+        } else {
+            requesterGoalCoordinate = requesterCoordinate;
+        }
         // Helper cannot move the blocker because requester block the way, and requester cannot move away
         if (requesterGoalCoordinate == null) return null;
         Help help = new Help(requesterAgent, helperAgent, requesterBox, blocker, unblockedCoordinate, requesterGoalCoordinate);
         this.helps.add(help);
         System.err.println(help);
 //        for(int[] p: path) {
+//            System.err.print(Arrays.toString(p));
+//        }
+//        System.err.println("");
+//        System.err.println("====================================");
+//        System.err.println("");
+//        for(int[] p: helperPath) {
 //            System.err.print(Arrays.toString(p));
 //        }
 //        System.err.println("");
