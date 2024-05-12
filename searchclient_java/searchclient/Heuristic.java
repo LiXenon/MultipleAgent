@@ -63,7 +63,7 @@ public abstract class Heuristic
         Map<Character, int[]> goalsAndPositon = s.goalsAndPositon;
         Map<Character, int[]> boxesAndPositon = s.boxesAndPositon;
 
-        ArrayList<PriorityQueue<Character>> subgoal = s.subgoal;
+        ArrayList<LinkedList<Character>> subgoal = s.subgoal;
 //        System.err.println("subgoals:");
 //        for (char goalname : subgoal) {
 //            System.err.print(goalname + " ");
@@ -95,7 +95,7 @@ public abstract class Heuristic
 
 //            System.err.println("This is agent: " + i);
 //            System.err.println("Agent" + "i goal: "+ subgoal.toString());
-            PriorityQueue<Character> agentsubgoal = subgoal.get(i);
+            LinkedList<Character> agentsubgoal = subgoal.get(i);
 
             Help help = s.getHelp(i);
 

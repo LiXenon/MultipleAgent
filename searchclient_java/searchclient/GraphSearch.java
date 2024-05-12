@@ -80,7 +80,7 @@ public class GraphSearch {
 //                for (Map.Entry<Character, int[]> entry : s.completedGoals.entrySet()) {
 //                    System.err.print(entry.getKey());
 //                }
-                s.helps = addNewHelp(s);
+//                s.helps = addNewHelp(s);
 
                 isChangeGoal(s);
 
@@ -107,16 +107,16 @@ public class GraphSearch {
 //        Map<Character, int[]> goalsAndPositon = s.goalsAndPositon;
 //        Map<Character, int[]> boxesAndPositon = s.boxesAndPositon;
 //        Map<Character, int[]> completedGoals = s.completedGoals;
-        ArrayList<PriorityQueue<Character>> subgoal = s.subgoal;
+        ArrayList<LinkedList<Character>> subgoal = s.subgoal;
 
 //        Subgoals subgoals = new Subgoals();
         int[][] grid = s.grid;
 
         for (int i = 0; i < s.subgoal.size(); i++) {
-            PriorityQueue<Character> agentsubgoal = subgoal.get(i);
+            LinkedList<Character> agentsubgoal = subgoal.get(i);
             System.err.println("agentsubgoal: " + agentsubgoal);
             if (!agentsubgoal.isEmpty()) {
-                char currentGoal = agentsubgoal.peek();
+                char currentGoal = agentsubgoal.get(0);
 //                int agentRow = s.agentRows[i];
 //                int agentCol = s.agentCols[i];
 //                int[] targetPosition = boxesAndPositon.get(currentGoal);
@@ -139,11 +139,11 @@ public class GraphSearch {
         Map<Character, int[]> goalsAndPositon = s.goalsAndPositon;
         Map<Character, int[]> boxesAndPositon = s.boxesAndPositon;
         Map<Character, int[]> completedGoals = s.completedGoals;
-        ArrayList<PriorityQueue<Character>> subgoal = s.subgoal;
+        ArrayList<LinkedList<Character>> subgoal = s.subgoal;
         List<Help> helps = s.helps;
 
         for (int i = 0; i < s.subgoal.size(); i++) {
-            PriorityQueue<Character> agentsubgoal = subgoal.get(i);
+            LinkedList<Character> agentsubgoal = subgoal.get(i);
             if (!helps.isEmpty()) {
                 Help help = helps.get(i);
                 char currentGoal = help.blocker;
@@ -155,13 +155,13 @@ public class GraphSearch {
                 }
             }
             if (!agentsubgoal.isEmpty()) {
-                char currentGoal = agentsubgoal.peek();
+                char currentGoal = agentsubgoal.get(0);
                 int[] targetPosition = boxesAndPositon.get(currentGoal);
                 int[] goalPosition = goalsAndPositon.get(currentGoal);
 
                 if (goalPosition[0] == targetPosition[0] && goalPosition[1] == targetPosition[1]) {
                     completedGoals.put(currentGoal, targetPosition);
-                    agentsubgoal.poll();
+                    agentsubgoal.remove(0);
                 }
             }
         }

@@ -47,7 +47,7 @@ public class State
 
     private int hash = 0;
 
-    public ArrayList<PriorityQueue<Character>> subgoal = new ArrayList<PriorityQueue<Character>>();;
+    public ArrayList<LinkedList<Character>> subgoal = new ArrayList<LinkedList<Character>>();;
     public Map<Character, int[]> completedGoals = new HashMap<>();
 
     public Map<Character, int[]> goalsAndPositon = new HashMap<>();
@@ -56,7 +56,7 @@ public class State
 
     public int[][] grid;
     private static final int EMPTY_COST = 1;
-    private static final int BLOCK_COST = 1000;
+    private static final int BLOCK_COST = 10000;
 
     public List<Help> helps;
 
@@ -86,8 +86,10 @@ public class State
 
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                if (walls[i][j] == true || goals[i][j] != 0) {
+                if (walls[i][j] == true) {
                     this.grid[i][j] = BLOCK_COST;
+                } else if (goals[i][j] != 0) {
+                    this.grid[i][j] = 1000;
                 }
             }
         }
@@ -618,9 +620,13 @@ public class State
         int goalY = this.goalsAndPositon.get(requesterBox)[1];
         int[][] grid = this.grid;
         // Shortest path
+        System.err.println("Before getShortestPath");
         List<int[]> path = getShortestPath(new int[]{startX, startY}, new int[]{goalX, goalY});
+        System.err.println("Before getShortestPath");
         // Only the first blocker is considered
+        System.err.println("Before firstBoxOnThePath");
         char blocker = firstBoxOnThePath(path);
+        System.err.println("Before firstBoxOnThePath");
         // If id is '0', the box is not found; agent don't need to request for help
         if (blocker == '0') return null;
 

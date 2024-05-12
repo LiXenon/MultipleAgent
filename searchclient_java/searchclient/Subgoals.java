@@ -5,8 +5,31 @@ import java.util.*;
 import searchclient.Node;
 public class Subgoals {
 
-    public ArrayList<PriorityQueue<Character>> sort_priority(int[][] grid, boolean[][] walls, char[][] goals, int[] agentRows, int[] agentCols, Map<Character, int[]> goalsAndPosition, Color[] agentColors, Color[] boxColors) {
-        int rows = walls.length, cols = walls[0].length;
+    class GoalCost implements Comparable<GoalCost> {
+
+        char goalName;
+        int cost;
+
+        public GoalCost(char goalName, int cost) {
+            this.goalName = goalName;
+            this.cost = cost;
+        }
+
+        public int compareTo(GoalCost gc) {
+            return gc.cost - this.cost;
+        }
+
+        @Override
+        public String toString() {
+            return "GoalCost{" +
+                    "goalName=" + goalName +
+                    ", cost=" + cost +
+                    '}';
+        }
+    }
+
+    public ArrayList<LinkedList<Character>> sort_priority(int[][] grid, boolean[][] walls, char[][] goals, int[] agentRows, int[] agentCols, Map<Character, int[]> goalsAndPosition, Color[] agentColors, Color[] boxColors) {
+//        int rows = walls.length, cols = walls[0].length;
         int agentAmount = agentRows.length;
         int agentRow = agentRows[0];
         int agentCol = agentCols[0];
@@ -19,9 +42,12 @@ public class Subgoals {
 //        }
 //
 //        System.err.println(agentRow + "  " + agentCol);
-        ArrayList<ArrayList<Character>> goal = new ArrayList<ArrayList<Character>>(agentAmount);
-        ArrayList<ArrayList<Integer>> cost = new ArrayList<ArrayList<Integer>>(agentAmount);
-        int count = 0;
+        ArrayList<LinkedList<GoalCost>> goalCosts = new ArrayList<LinkedList<GoalCost>>(agentAmount);
+        for (int i = 0; i < agentRows.length; i++) {
+            goalCosts.add(new LinkedList<GoalCost>());
+        }
+
+//        int count = 0;
 
         char goalName;
         int goalIndex;
@@ -39,26 +65,42 @@ public class Subgoals {
                     break;
                 }
             }
-            goal.add(new ArrayList<>());
-            cost.add(new ArrayList<>());
-            goal.get(index).add(goalName);
-            cost.get(index).add(shortest_way(grid, indices[0], indices[1], agentRow, agentCol));
-//            System.err.print(goal[count]);
-//            System.err.println(cost[count]);
-            count++;
+            int thisCost = shortest_way(grid, indices[0], indices[1], agentRow, agentCol);
+            goalCosts.get(index).add(new GoalCost(goalName, thisCost));
+//            System.err.print(goalName);
+//            System.err.println(thisCost);
+//            count++;
 //            System.err.print(entry.getKey() + "  " + indices[0] + " " + indices[1] + " ");
 //            System.err.println(shortest_way(grid, indices[0], indices[1], agentRow, agentCol));
         }
-
-        ArrayList<PriorityQueue<Character>> subgoal = new ArrayList<PriorityQueue<Character>>(agentAmount);
-        for (int i = 0; i < agentAmount; i++) {
-            int finalI = i;
-            PriorityQueue<Character> agentsubgoal = new PriorityQueue<>(Comparator.comparingInt(c -> -getIntValue(c, goal.get(finalI), cost.get(finalI))));
-            for (char c : goal.get(finalI)) {
-                agentsubgoal.offer(c);
-            }
-            subgoal.add(agentsubgoal);
+        for (LinkedList<GoalCost> gcs : goalCosts) {
+            Collections.sort(gcs);
         }
+
+        ArrayList<LinkedList<Character>> subgoals = new ArrayList<LinkedList<Character>>(agentAmount);
+
+        for (int i = 0; i < agentRows.length; i++) {
+            subgoals.add(new LinkedList<Character>());
+            for (GoalCost gc : goalCosts.get(i)) {
+                subgoals.get(i).add(gc.goalName);
+            }
+        }
+//        System.err.print(goalCosts.toString());
+
+//        ArrayList<LinkedList<Character>> subgoal = new ArrayList<LinkedList<Character>>(agentAmount);
+//        for (int i = 0; i < agentAmount; i++) {
+//            LinkedList<GoalCost> agentsubgoal = goalCosts.get(i);
+//            for (GoalCost gc : agentsubgoal) {
+//
+//            }
+////            int finalI = i;
+////            PriorityQueue<Character> agentsubgoal = new PriorityQueue<>(Comparator.comparingInt(c -> -getIntValue(c, goal.get(finalI), cost.get(finalI))));
+////            for (char c : goal.get(finalI)) {
+////                agentsubgoal.offer(c);
+////                System.err.print(agentsubgoal);
+////            }
+//            subgoal.add(agentsubgoal);
+//        }
 
 //        for (char goalname : subgoal) {
 //            System.err.print(goalname + " ");
@@ -77,12 +119,14 @@ public class Subgoals {
 //            System.err.print(i + " ");
 //
 //        }
-        return subgoal;
+        return subgoals;
     }
 
     private static int getIntValue(char c, ArrayList<Character> chars, ArrayList<Integer> ints) {
         for (int i = 0; i < chars.size(); i++) {
             if (chars.get(i) == c) {
+                System.err.print(chars.get(i));
+                System.err.println(ints.get(i));
                 return ints.get(i);
             }
         }
