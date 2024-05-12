@@ -103,7 +103,7 @@ public abstract class Heuristic
 //            System.err.println("Agent" + "i goal: "+ subgoal.toString());
             LinkedList<Character> agentsubgoal = subgoal.get(i);
 
-            Help help = s.getHelpbyhelper(i);
+            Help help = s.getHelperHelp(i);
 
             if (help != null) {
                 char currentGoal = help.blocker;

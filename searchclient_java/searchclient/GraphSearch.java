@@ -16,10 +16,10 @@ public class GraphSearch {
             //Try to solve a few levels by hand, enter the found solutions below, and run them:
 
             return new Action[][] {
-                {Action.MoveS},
-                {Action.MoveE},
-                {Action.MoveE},
-                {Action.MoveS},
+                    {Action.MoveS},
+                    {Action.MoveE},
+                    {Action.MoveE},
+                    {Action.MoveS},
             };
         } else {
             //Part 2:
@@ -55,7 +55,7 @@ public class GraphSearch {
                     return null;
                 }
 
-//                if (iterations > 9307) {
+//                if (iterations >= 10) {
 //                    exit(0);
 //                }
 
@@ -80,13 +80,10 @@ public class GraphSearch {
 //                for (Map.Entry<Character, int[]> entry : s.completedGoals.entrySet()) {
 //                    System.err.print(entry.getKey());
 //                }
-//                s.helps = addNewHelp(s);
+                List<Help> newHelp = addNewHelp(s);
+                if (newHelp != null) s.helps = newHelp;
 
-//                if (iterations >= 9290 && iterations <= 9307) {
-//                    System.err.println(s.toString());
-//                }
-
-                isChangeGoal(s, iterations);
+                isChangeGoal(s);
 
 //                System.err.println(s.toString());
 
@@ -118,62 +115,56 @@ public class GraphSearch {
 
         for (int i = 0; i < s.subgoal.size(); i++) {
             LinkedList<Character> agentsubgoal = subgoal.get(i);
-            System.err.println("agentsubgoal: " + agentsubgoal);
+//            System.err.println("agentsubgoal: " + agentsubgoal);
             if (!agentsubgoal.isEmpty()) {
-                char currentGoal = agentsubgoal.get(0);
+                char currentGoal = agentsubgoal.peek();
 //                int agentRow = s.agentRows[i];
 //                int agentCol = s.agentCols[i];
 //                int[] targetPosition = boxesAndPositon.get(currentGoal);
 //                int agenttoboxdiff = subgoals.shortest_way(grid, agentRow, agentCol, targetPosition[0], targetPosition[1]) + 1000;
 //                System.err.println("Agent " + i + " distance " + agenttoboxdiff);
 //                if (agenttoboxdiff == 2) {
-                Help help = s.addHelp(i, currentGoal);
-                System.err.println("Help: " + help);
-                System.err.println("This agent needs help: " + help.requesterAgent);
-                System.err.println("This box needs help: " + help.blocker);
-                System.err.println("This agent will help: " + help.helperAgent);
-                System.err.println("The goal position: " + help.blockerGoalCoordinate);
+                if (s.getHelp(i) == null) {
+                    Help help = s.addHelp(i, currentGoal);
+                }
+//                System.err.println("Current agent: " + i);
+//                for (Help h : s.helps) {
+//                    System.err.println(h.toString());
 //                }
             }
         }
         return s.helps;
     }
 
-    private static void isChangeGoal(State s, int iterations) {
+    private static void isChangeGoal(State s) {
         Map<Character, int[]> goalsAndPositon = s.goalsAndPositon;
         Map<Character, int[]> boxesAndPositon = s.boxesAndPositon;
         Map<Character, int[]> completedGoals = s.completedGoals;
         ArrayList<LinkedList<Character>> subgoal = s.subgoal;
         List<Help> helps = s.helps;
-        boolean change = false;
 
         for (int i = 0; i < s.subgoal.size(); i++) {
             LinkedList<Character> agentsubgoal = subgoal.get(i);
-            if (!helps.isEmpty()) {
-                Help help = helps.get(i);
+            if (s.getHelperHelp(i) != null) {
+                Help help = s.getHelperHelp(i);
+                if (help == null) continue;
                 char currentGoal = help.blocker;
                 int[] targetPosition = boxesAndPositon.get(currentGoal);
                 int[] goalPosition = help.blockerGoalCoordinate;
 
                 if (goalPosition[0] == targetPosition[0] && goalPosition[1] == targetPosition[1]) {
-                    helps.remove(i);
+                    s.removeHelp(i);
                 }
-            }
-            if (!agentsubgoal.isEmpty()) {
-                char currentGoal = agentsubgoal.get(0);
+            } else if (!agentsubgoal.isEmpty()) {
+                char currentGoal = agentsubgoal.peek();
                 int[] targetPosition = boxesAndPositon.get(currentGoal);
                 int[] goalPosition = goalsAndPositon.get(currentGoal);
 
                 if (goalPosition[0] == targetPosition[0] && goalPosition[1] == targetPosition[1]) {
                     completedGoals.put(currentGoal, targetPosition);
-                    agentsubgoal.remove(0);
-                    change = true;
+                    agentsubgoal.poll();
                 }
             }
-        }
-        if (change) {
-            System.err.println(subgoal);
-            System.err.println(iterations);
         }
     }
 
@@ -184,6 +175,6 @@ public class GraphSearch {
         String statusTemplate = "#Expanded: %,8d, #Frontier: %,8d, #Generated: %,8d, Time: %3.3f s\n%s\n";
         double elapsedTime = (System.nanoTime() - startTime) / 1_000_000_000d;
         System.err.format(statusTemplate, expanded.size(), frontier.size(), expanded.size() + frontier.size(),
-                          elapsedTime, Memory.stringRep());
+                elapsedTime, Memory.stringRep());
     }
 }
