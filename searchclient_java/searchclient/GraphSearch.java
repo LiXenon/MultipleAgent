@@ -126,6 +126,7 @@ public class GraphSearch {
 //                if (agenttoboxdiff == 2) {
                 if (s.getHelp(i) == null) {
                     Help help = s.addHelp(i, currentGoal);
+                    s.helps.add(help);
                 }
 //                System.err.println("Current agent: " + i);
 //                for (Help h : s.helps) {
@@ -141,7 +142,6 @@ public class GraphSearch {
         Map<Character, int[]> boxesAndPositon = s.boxesAndPositon;
         Map<Character, int[]> completedGoals = s.completedGoals;
         ArrayList<LinkedList<Character>> subgoal = s.subgoal;
-        List<Help> helps = s.helps;
 
         for (int i = 0; i < s.subgoal.size(); i++) {
             LinkedList<Character> agentsubgoal = subgoal.get(i);

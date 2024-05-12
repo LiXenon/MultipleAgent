@@ -127,7 +127,7 @@ public abstract class Heuristic
                 int boxtogoaldiff = subgoals.shortest_way(grid, targetPosition[0], targetPosition[1], blockerGoalCoordinate[0], blockerGoalCoordinate[1]) + 1000;
                 int agenttoboxdiff = subgoals.shortest_way(grid, agentRow, agentCol, targetPosition[0], targetPosition[1]) + 1000;
 
-                if (boxtogoaldiff != 1) {
+                if (boxtogoaldiff != 2) {
                     int thisHue = boxtogoaldiff + agenttoboxdiff;
 //                    System.err.println("Number " + i + " cost: " + thisHue);
                     sumHue += thisHue;

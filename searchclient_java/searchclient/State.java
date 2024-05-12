@@ -615,7 +615,7 @@ public class State
     // Check if agent is already a requester or a helper in the help list
     private boolean isInHelp(int agent) {
         for (Help item : helps) {
-            if (item.requesterAgent == agent || item.helperAgent == agent) {
+            if (item != null && (item.requesterAgent == agent || item.helperAgent == agent)) {
                 return true;
             }
         }
@@ -676,7 +676,7 @@ public class State
             Iterator<Help> it = helps.iterator();
             while (it.hasNext()) {
                 Help item = it.next();
-                if (item.requesterAgent == agent || item.helperAgent == agent) {
+                if (item != null && (item.requesterAgent == agent || item.helperAgent == agent)) {
                     return item;
                 }
             }
@@ -689,7 +689,7 @@ public class State
             Iterator<Help> it = helps.iterator();
             while (it.hasNext()) {
                 Help item = it.next();
-                if (item.helperAgent == helperAgent) {
+                if (item != null && item.helperAgent == helperAgent) {
                     return item;
                 }
             }
@@ -702,7 +702,7 @@ public class State
             Iterator<Help> it = helps.iterator();
             while (it.hasNext()) {
                 Help item = it.next();
-                if (item.requesterAgent == requesterAgent) {
+                if (item != null && item.requesterAgent == requesterAgent) {
                     return item;
                 }
             }
@@ -714,7 +714,7 @@ public class State
         Iterator<Help> it = helps.iterator();
         while (it.hasNext()) {
             Help item = it.next();
-            if (item.requesterAgent == agent || item.helperAgent == agent) {
+            if (item != null && (item.requesterAgent == agent || item.helperAgent == agent)) {
                 it.remove();
                 return true;
             }
