@@ -80,7 +80,8 @@ public class GraphSearch {
 //                for (Map.Entry<Character, int[]> entry : s.completedGoals.entrySet()) {
 //                    System.err.print(entry.getKey());
 //                }
-                s.helps = addNewHelp(s);
+                List<Help> newHelp = addNewHelp(s);
+                if (newHelp != null) s.helps = newHelp;
 
                 isChangeGoal(s);
 
@@ -114,7 +115,7 @@ public class GraphSearch {
 
         for (int i = 0; i < s.subgoal.size(); i++) {
             PriorityQueue<Character> agentsubgoal = subgoal.get(i);
-            System.err.println("agentsubgoal: " + agentsubgoal);
+//            System.err.println("agentsubgoal: " + agentsubgoal);
             if (!agentsubgoal.isEmpty()) {
                 char currentGoal = agentsubgoal.peek();
 //                int agentRow = s.agentRows[i];
@@ -124,11 +125,9 @@ public class GraphSearch {
 //                System.err.println("Agent " + i + " distance " + agenttoboxdiff);
 //                if (agenttoboxdiff == 2) {
                 Help help = s.addHelp(i, currentGoal);
-                System.err.println("Help: " + help);
-                System.err.println("This agent needs help: " + help.requesterAgent);
-                System.err.println("This box needs help: " + help.blocker);
-                System.err.println("This agent will help: " + help.helperAgent);
-                System.err.println("The goal position: " + help.blockerGoalCoordinate);
+//                System.err.println("Current agent: " + i);
+//                for (Help h : s.helps) {
+//                    System.err.println(h.toString());
 //                }
             }
         }
@@ -145,13 +144,14 @@ public class GraphSearch {
         for (int i = 0; i < s.subgoal.size(); i++) {
             PriorityQueue<Character> agentsubgoal = subgoal.get(i);
             if (!helps.isEmpty()) {
-                Help help = helps.get(i);
+                Help help = s.getHelperHelp(i);
+                if (help == null) continue;
                 char currentGoal = help.blocker;
                 int[] targetPosition = boxesAndPositon.get(currentGoal);
                 int[] goalPosition = help.blockerGoalCoordinate;
 
                 if (goalPosition[0] == targetPosition[0] && goalPosition[1] == targetPosition[1]) {
-                    helps.remove(i);
+                    s.removeHelp(i);
                 }
             }
             if (!agentsubgoal.isEmpty()) {
