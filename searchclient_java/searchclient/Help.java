@@ -14,9 +14,8 @@ public class Help {
     public char blocker;
     // The coordinate that blocker should be in to unblock the path
     public int[] blockerGoalCoordinate;
-
+    // The coordinate that requester agent should temporarily be to prevent from deadlock
     public int[] requesterGoalCoordinate;
-
     public Help(int requesterAgent, int helperAgent, char requesterBox, char blocker, int[] blockerGoalCoordinate, int[] requesterGoalCoordinate) {
         this.requesterAgent = requesterAgent;
         this.helperAgent = helperAgent;
@@ -28,6 +27,6 @@ public class Help {
 
     @Override
     public String toString() {
-        return "requesterAgent: " + requesterAgent + ", helperAgent: " + helperAgent + ", requesterBox: " + requesterBox + ", blocker: " + blocker + ", blockerGoalCoordinate: " + Arrays.toString(blockerGoalCoordinate);
+        return "requesterAgent: " + requesterAgent + ", helperAgent: " + helperAgent + ", requesterBox: " + requesterBox + ", blocker: " + blocker + ", blockerGoalCoordinate: " + Arrays.toString(blockerGoalCoordinate)  + ", requesterGoalCoordinate: " + Arrays.toString(requesterGoalCoordinate);
     }
 }

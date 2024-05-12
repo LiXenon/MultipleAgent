@@ -80,8 +80,8 @@ public class GraphSearch {
 //                for (Map.Entry<Character, int[]> entry : s.completedGoals.entrySet()) {
 //                    System.err.print(entry.getKey());
 //                }
-//                List<Help> newHelp = addNewHelp(s);
-//                if (newHelp != null) s.helps = newHelp;
+                List<Help> newHelp = addNewHelp(s);
+                if (newHelp != null) s.helps = newHelp;
 
                 isChangeGoal(s,iterations);
 

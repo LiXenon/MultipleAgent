@@ -138,8 +138,8 @@ public abstract class Heuristic
                 }
 
             } else if (requesterhelp != null) {
-                char currentGoal = helperhelp.blocker;
-                int[] requesterGoalCoordinate = helperhelp.requesterGoalCoordinate;
+                char currentGoal = requesterhelp.blocker;
+                int[] requesterGoalCoordinate = requesterhelp.requesterGoalCoordinate;
 
                 int agentRow = s.agentRows[i];
                 int agentCol = s.agentCols[i];
@@ -256,7 +256,7 @@ public abstract class Heuristic
 
         int notInPosition = subgoals.freeze_cell(completedGoals, s);
         int completed = completedGoals.size() * -1000;
-        return sumHue + notInPosition + completed + punishment;
+        return sumHue + notInPosition + completed;// + punishment;
 //        System.err.println(currentGoal);
 //        System.err.println(targetPosition[0] + " " + targetPosition[1]);
 //        System.err.println(goalPosition[0] + " " + goalPosition[1]);
