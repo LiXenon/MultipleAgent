@@ -80,10 +80,10 @@ public class GraphSearch {
 //                for (Map.Entry<Character, int[]> entry : s.completedGoals.entrySet()) {
 //                    System.err.print(entry.getKey());
 //                }
-                List<Help> newHelp = addNewHelp(s);
-                if (newHelp != null) s.helps = newHelp;
+//                List<Help> newHelp = addNewHelp(s);
+//                if (newHelp != null) s.helps = newHelp;
 
-                isChangeGoal(s);
+                isChangeGoal(s,iterations);
 
 //                System.err.println(s.toString());
 
@@ -136,7 +136,7 @@ public class GraphSearch {
         return s.helps;
     }
 
-    private static void isChangeGoal(State s) {
+    private static void isChangeGoal(State s, int iterations) {
         Map<Character, int[]> goalsAndPositon = s.goalsAndPositon;
         Map<Character, int[]> boxesAndPositon = s.boxesAndPositon;
         Map<Character, int[]> completedGoals = s.completedGoals;
@@ -163,6 +163,8 @@ public class GraphSearch {
                 if (goalPosition[0] == targetPosition[0] && goalPosition[1] == targetPosition[1]) {
                     completedGoals.put(currentGoal, targetPosition);
                     agentsubgoal.poll();
+                    System.err.println(iterations);
+                    System.err.println(s.subgoal);
                 }
             }
         }

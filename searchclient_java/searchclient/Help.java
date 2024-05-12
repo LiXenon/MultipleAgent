@@ -15,12 +15,15 @@ public class Help {
     // The coordinate that blocker should be in to unblock the path
     public int[] blockerGoalCoordinate;
 
-    public Help(int requesterAgent, int helperAgent, char requesterBox, char blocker, int[] blockerGoalCoordinate) {
+    public int[] requesterGoalCoordinate;
+
+    public Help(int requesterAgent, int helperAgent, char requesterBox, char blocker, int[] blockerGoalCoordinate, int[] requesterGoalCoordinate) {
         this.requesterAgent = requesterAgent;
         this.helperAgent = helperAgent;
         this.requesterBox = requesterBox;
         this.blocker = blocker;
         this.blockerGoalCoordinate = blockerGoalCoordinate;
+        this.requesterGoalCoordinate = requesterGoalCoordinate;
     }
 
     @Override

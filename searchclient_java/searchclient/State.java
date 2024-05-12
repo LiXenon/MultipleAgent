@@ -56,7 +56,8 @@ public class State
 
     public int[][] grid;
     private static final int EMPTY_COST = 1;
-    private static final int BLOCK_COST = 1000;
+    private static final int GOAL_COST = 1000;
+    private static final int BLOCK_COST = 10000;
 
     public List<Help> helps;
 
@@ -86,8 +87,10 @@ public class State
 
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                if (walls[i][j] == true || goals[i][j] != 0) {
+                if (walls[i][j] == true) {
                     this.grid[i][j] = BLOCK_COST;
+                } else if (goals[i][j] != 0) {
+                    this.grid[i][j] = GOAL_COST;
                 }
             }
         }
@@ -372,6 +375,7 @@ public class State
         int rows = this.walls.length, cols = this.walls[0].length;
         return x >= 0 && x < rows && y >= 0 && y < cols; // true not out, false out
     }
+
     //    !!!Next is to add new features in this method (or another new method) to implement BDI.
 //    Initial thoughts are executing concession when meeting conflicting, and asking for help when encountering blocks
     private boolean isConflicting(Action[] jointAction)
@@ -632,6 +636,7 @@ public class State
         int x = this.boxesAndPositon.get(blocker)[0];
         int y = this.boxesAndPositon.get(blocker)[1];
         int[] unblockedCoordinate = findUnblockedCoordinate(x, y, path, true, new HashSet<>());
+        int[] requesterGoalCoordinate = new int[10];
         // Unable to move blocker currently, agent cannot request for help
         if (unblockedCoordinate == null) return null;
         int helperAgent = findAgentOfBox(blocker);
@@ -639,7 +644,7 @@ public class State
         if (helperAgent == '0') return null;
         // If helper agent is helping, it cannot help more
         if (isInHelp(helperAgent)) return null;
-        Help help = new Help(requesterAgent, helperAgent, requesterBox, blocker, unblockedCoordinate);
+        Help help = new Help(requesterAgent, helperAgent, requesterBox, blocker, unblockedCoordinate, requesterGoalCoordinate);
         this.helps.add(help);
         System.err.println(help.toString());
         return help;
