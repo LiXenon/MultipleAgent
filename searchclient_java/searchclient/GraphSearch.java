@@ -96,6 +96,7 @@ public class GraphSearch {
                 try {
                     System.err.println(s.toString());
                     System.err.println(s.helps.toString());
+                    System.err.println(s.agentConflicts.toString());
 //                    if (s.jointAction != null) {
 //                        for (Action action : s.jointAction) {
 //                            System.err.println(action.toString());
@@ -137,14 +138,25 @@ public class GraphSearch {
         if (deadLockedAgents != null) {
             for (int[] i : deadLockedAgents) {
                 int[] unlockPosition = s.blockerAgentGoalCoordinate(i[0], i[1]);
+                if (s.getHelp(i[0]) != null) {
+                    s.removeHelp(i[0]);
+                }
+                if (s.getHelp(i[1]) != null) {
+                    s.removeHelp(i[1]);
+                }
                 if (unlockPosition == null) {
                     unlockPosition = s.blockerAgentGoalCoordinate(i[1], i[0]);
                     if (unlockPosition == null) {
                         break;
                     }
+                    if (s.agentConflicts.get(1) != null) {
+                        s.agentConflicts.remove(i[1]);
+                    }
                     s.agentConflicts.put(i[1], unlockPosition);
+                    s.agentConflicts.put(i[0], new int[]{s.agentRows[i[0]], s.agentCols[i[0]]});
                 } else {
                     s.agentConflicts.put(i[0], unlockPosition);
+                    s.agentConflicts.put(i[1], new int[]{s.agentRows[i[1]], s.agentCols[i[1]]});
                 }
             }
         }

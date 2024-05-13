@@ -124,7 +124,7 @@ public abstract class Heuristic
 //        }
 
 
-
+        int completedAgents = 0;
         int sumHue = 0;
         boolean[] holdBox = new boolean[agentRows.length];
 //        System.err.println("All goals:" + subgoal.toString());
@@ -254,17 +254,16 @@ public abstract class Heuristic
 //                    }
                     sumHue += agenttogoaldiff;
                 }
+            } else if (agentsubgoal.isEmpty()){
+                State parent = s.parent;
+                int[] parentAgentRows = parent.agentRows;
+                int[] parentAgentCols = parent.agentCols;
+                if (agentRows[i] == parentAgentRows[i] && agentCols[i] == parentAgentCols[i]) {
+                    sumHue -= 10000;
+                }
             }
-//            } else if (agentsubgoal.isEmpty()){
-//                State parent = s.parent;
-//                int[] parentAgentRows = parent.agentRows;
-//                int[] parentAgentCols = parent.agentCols;
-//                if (agentRows[i] == parentAgentRows[i] && agentCols[i] == parentAgentCols[i]) {
-//                    sumHue -= 10000;
-//                }
-//            }
         }
-        int punishment = 0;
+//        int punishment = 0;
 
 //        if (s.parent != null) {
 //            State parent = s.parent;
