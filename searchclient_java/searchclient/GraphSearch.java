@@ -93,18 +93,18 @@ public class GraphSearch {
 //
 //                timer.scheduleAtFixedRate(task, 1000, 10000);
 
-                try {
-                    System.err.println(s.toString());
-                    System.err.println(s.helps.toString());
-                    if (s.jointAction != null) {
-                        for (Action action : s.jointAction) {
-                            System.err.println(action.toString());
-                        }
-                    }
-                    Thread.sleep(200);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    System.err.println(s.toString());
+//                    System.err.println(s.helps.toString());
+//                    if (s.jointAction != null) {
+//                        for (Action action : s.jointAction) {
+//                            System.err.println(action.toString());
+//                        }
+//                    }
+//                    Thread.sleep(200);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
 
                 List<Help> newHelp = addNewHelp(s, iterations);
                 if (newHelp != null) s.helps = newHelp;
@@ -136,14 +136,16 @@ public class GraphSearch {
     private static void unlockDeadLockAgents(State s, LinkedList<int[]> deadLockedAgents) {
         if (deadLockedAgents != null) {
             for (int[] i : deadLockedAgents) {
-                int[] unlockPosition = s.asd(int[0], int[1]);
+                int[] unlockPosition = s.blockerAgentGoalCoordinate(i[0], i[1]);
                 if (unlockPosition == null) {
-                    unlockPosition = s.asd(int[1], int[0]);
+                    unlockPosition = s.blockerAgentGoalCoordinate(i[1], i[0]);
                     if (unlockPosition == null) {
                         break;
                     }
+                    s.agentConflicts.put(i[1], unlockPosition);
+                } else {
+                    s.agentConflicts.put(i[0], unlockPosition);
                 }
-
             }
         }
     }
@@ -192,7 +194,7 @@ public class GraphSearch {
 //                int agenttoboxdiff = subgoals.shortest_way(grid, agentRow, agentCol, targetPosition[0], targetPosition[1]) + 1000;
 //                System.err.println("Agent " + i + " distance " + agenttoboxdiff);
 //                if (agenttoboxdiff == 2) {
-                if (s.getHelp(i) == null) {
+                if (s.getHelp(i) == null && currentGoal >= 'A') {
 //                    System.err.println(iterations + " New help");
                     Help help = s.addHelp(i, currentGoal);
                     if (help != null) {
@@ -216,6 +218,15 @@ public class GraphSearch {
 
         for (int i = 0; i < s.subgoal.size(); i++) {
             LinkedList<Character> agentsubgoal = subgoal.get(i);
+            if (s.agentConflicts.get(i) != null) {
+                int[] targetPosition = {s.agentRows[i], s.agentCols[i]};
+                int[] goalPosition = s.agentConflicts.get(i);
+
+                if (goalPosition[0] == targetPosition[0] && goalPosition[1] == targetPosition[1]) {
+                    s.agentConflicts.remove(i);
+                    s.completedAgentConflicts++;
+                }
+            }
             if (s.getHelp(i) != null) {
                 Help help = s.getHelperHelp(i);
                 if (help == null) continue;
@@ -231,7 +242,12 @@ public class GraphSearch {
                 }
             } else if (!agentsubgoal.isEmpty()) {
                 char currentGoal = agentsubgoal.peek();
-                int[] targetPosition = boxesAndPositon.get(currentGoal);
+                int[] targetPosition;
+                if (currentGoal >= 'A') {
+                    targetPosition = boxesAndPositon.get(currentGoal);
+                } else {
+                    targetPosition = new int[]{s.agentRows[i], s.agentCols[i]};
+                }
                 int[] goalPosition = goalsAndPositon.get(currentGoal);
 
                 if (goalPosition[0] == targetPosition[0] && goalPosition[1] == targetPosition[1]) {

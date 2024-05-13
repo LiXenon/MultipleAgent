@@ -50,6 +50,7 @@ public class State
     public ArrayList<LinkedList<Character>> subgoal = new ArrayList<LinkedList<Character>>();;
     public Map<Character, int[]> completedGoals = new HashMap<>();
     public int completedHelps = 0;
+    public int completedAgentConflicts = 0;
 
     public Map<Character, int[]> goalsAndPositon = new HashMap<>();
     public Map<Character, int[]> boxesAndPositon = new HashMap<>();
@@ -62,7 +63,7 @@ public class State
     private static final int BOX_COST = 100;
 
     public List<Help> helps;
-    public List<int[]>
+    public Map<Integer, int[]> agentConflicts;
 
     // Constructs an initial state.
     // Arguments are not copied, and therefore should not be modified after being passed in.
@@ -80,10 +81,12 @@ public class State
         this.parent = null;
         this.jointAction = null;
         this.completedHelps = 0;
+        this.completedAgentConflicts = 0;
         this.g = 0;
 
         int rows = walls.length, cols = walls[0].length;
         this.grid = new int[rows][cols];
+        this.agentConflicts = new HashMap<>();
         this.helps = new ArrayList<>();
         for (int i = 0; i < rows; i++) {
             Arrays.fill(this.grid[i], EMPTY_COST);
@@ -142,6 +145,7 @@ public class State
         this.completedGoals = parent.completedGoals;
         this.subgoal = parent.subgoal;
         this.grid = parent.grid;
+        this.agentConflicts = parent.agentConflicts;
         this.helps = parent.helps;
         this.boxes = new char[parent.boxes.length][];
         for (int i = 0; i < parent.boxes.length; i++)
@@ -152,6 +156,7 @@ public class State
         // Set own parameters
         this.parent = parent;
         this.jointAction = Arrays.copyOf(jointAction, jointAction.length);
+        this.completedAgentConflicts = parent.completedAgentConflicts;
         this.completedHelps = parent.completedHelps;
         this.g = parent.g + 1;
 

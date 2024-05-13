@@ -55,18 +55,26 @@ public class Subgoals {
         for (Map.Entry<Character, int[]> entry : goalsAndPosition.entrySet()) {
             int[] indices = entry.getValue();
             goalName = entry.getKey();
-            goalIndex = goalName - 'A';
+            if (goalName >= 'A') {
+                goalIndex = goalName - 'A';
 
-            Color b = boxColors[goalIndex];
-            int index = 0;
-            for (int i = 0; i < agentAmount; i++) {
-                if (agentColors[i] == b) {
-                    index = i;
-                    break;
+                Color b = boxColors[goalIndex];
+                int index = 0;
+                for (int i = 0; i < agentAmount; i++) {
+                    if (agentColors[i] == b) {
+                        index = i;
+                        break;
+                    }
                 }
+                int thisCost = shortest_way(grid, indices[0], indices[1], agentRow, agentCol);
+                goalCosts.get(index).add(new GoalCost(goalName, thisCost));
+            } else {
+                goalIndex = goalName - '0';
+                int thisCost = -1;
+                goalCosts.get(goalIndex).add(new GoalCost(goalName, thisCost));
             }
-            int thisCost = shortest_way(grid, indices[0], indices[1], agentRow, agentCol);
-            goalCosts.get(index).add(new GoalCost(goalName, thisCost));
+
+
 //            System.err.print(goalName);
 //            System.err.println(thisCost);
 //            count++;
@@ -186,11 +194,13 @@ public class Subgoals {
     public int freeze_cell(Map<Character, int[]> completedGoals, State s) {
         int inPosition = 0;
         char[][] boxes = s.boxes;
+        int[] agentRows = s.agentRows;
+        int[] agentCols = s.agentCols;
         for (Map.Entry<Character, int[]> entry : completedGoals.entrySet()) {
             char boxName = entry.getKey();
 //            System.err.println("Compeleted Goals:" + boxName);
             int[] indices = entry.getValue();
-            if (boxes[indices[0]][indices[1]] != boxName) {
+            if ((boxName >= 'A' && boxes[indices[0]][indices[1]] != boxName) || (boxName < 'A' && (agentRows[boxName - '0'] != indices[0] || agentCols[boxName - '0'] != indices[1]))) {
                 inPosition += 1000;
             }
         }
