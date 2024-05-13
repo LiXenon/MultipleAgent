@@ -719,7 +719,7 @@ public class State
         }
         // Helper cannot move the blocker because requester block the way, and requester cannot move away
         if (requesterGoalCoordinate == null) return null;
-        Help help = new Help(requesterAgent, helperAgent, requesterBox, blocker, unblockedCoordinate, requesterGoalCoordinate);
+        Help help = new Help(requesterAgent, helperAgent, requesterBox, blocker, new int[] {x, y}, unblockedCoordinate, requesterGoalCoordinate);
         this.helps.add(help);
         System.err.println(help);
 //        for(int[] p: path) {
