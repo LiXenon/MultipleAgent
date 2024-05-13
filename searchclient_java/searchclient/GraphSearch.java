@@ -152,11 +152,11 @@ public class GraphSearch {
                     if (s.agentConflicts.get(1) != null) {
                         s.agentConflicts.remove(i[1]);
                     }
-                    s.agentConflicts.put(i[1], unlockPosition);
-                    s.agentConflicts.put(i[0], new int[]{s.agentRows[i[0]], s.agentCols[i[0]]});
-                } else {
                     s.agentConflicts.put(i[0], unlockPosition);
                     s.agentConflicts.put(i[1], new int[]{s.agentRows[i[1]], s.agentCols[i[1]]});
+                } else {
+                    s.agentConflicts.put(i[1], unlockPosition);
+                    s.agentConflicts.put(i[0], new int[]{s.agentRows[i[0]], s.agentCols[i[0]]});
                 }
             }
         }
