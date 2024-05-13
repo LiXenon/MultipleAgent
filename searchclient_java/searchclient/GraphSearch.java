@@ -93,25 +93,27 @@ public class GraphSearch {
 //
 //                timer.scheduleAtFixedRate(task, 1000, 10000);
 
-                try {
-                    System.err.println(s.toString());
-                    System.err.println(s.helps.toString());
-                    System.err.println(s.agentConflicts.toString());
-//                    if (s.jointAction != null) {
-//                        for (Action action : s.jointAction) {
-//                            System.err.println(action.toString());
-//                        }
+//                try {
+//                    System.err.println(s.toString());
+//                    System.err.println(s.helps.toString());
+//                    for (Map.Entry<Integer, int[]> entry : s.agentConflicts.entrySet()) {
+//                        System.err.println(entry.getKey()+ " " + Arrays.toString(entry.getValue()));
 //                    }
-                    Thread.sleep(200);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+////                    if (s.jointAction != null) {
+////                        for (Action action : s.jointAction) {
+////                            System.err.println(action.toString());
+////                        }
+////                    }
+//                    Thread.sleep(200);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
 
-                List<Help> newHelp = addNewHelp(s, iterations);
-                if (newHelp != null) s.helps = newHelp;
-
-                LinkedList<int[]> deadLockedAgents = isAgentDeadlocked(s);
-                unlockDeadLockAgents(s, deadLockedAgents);
+//                List<Help> newHelp = addNewHelp(s, iterations);
+//                if (newHelp != null) s.helps = newHelp;
+//
+//                LinkedList<int[]> deadLockedAgents = isAgentDeadlocked(s);
+//                unlockDeadLockAgents(s, deadLockedAgents);
 
                 isChangeGoal(s,iterations);
 
@@ -137,13 +139,13 @@ public class GraphSearch {
     private static void unlockDeadLockAgents(State s, LinkedList<int[]> deadLockedAgents) {
         if (deadLockedAgents != null) {
             for (int[] i : deadLockedAgents) {
-                int[] unlockPosition = s.blockerAgentGoalCoordinate(i[0], i[1]);
                 if (s.getHelp(i[0]) != null) {
                     s.removeHelp(i[0]);
                 }
                 if (s.getHelp(i[1]) != null) {
                     s.removeHelp(i[1]);
                 }
+                int[] unlockPosition = s.blockerAgentGoalCoordinate(i[0], i[1]);
                 if (unlockPosition == null) {
                     unlockPosition = s.blockerAgentGoalCoordinate(i[1], i[0]);
                     if (unlockPosition == null) {
@@ -153,10 +155,10 @@ public class GraphSearch {
                         s.agentConflicts.remove(i[1]);
                     }
                     s.agentConflicts.put(i[0], unlockPosition);
-                    s.agentConflicts.put(i[1], new int[]{s.agentRows[i[1]], s.agentCols[i[1]]});
+//                    s.agentConflicts.put(i[1], new int[]{s.agentRows[i[1]], s.agentCols[i[1]]});
                 } else {
                     s.agentConflicts.put(i[1], unlockPosition);
-                    s.agentConflicts.put(i[0], new int[]{s.agentRows[i[0]], s.agentCols[i[0]]});
+//                    s.agentConflicts.put(i[0], new int[]{s.agentRows[i[0]], s.agentCols[i[0]]});
                 }
             }
         }

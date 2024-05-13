@@ -11,6 +11,7 @@ public abstract class Heuristic
 
     private static final int EMPTY_COST = 1;
     private static final int BLOCK_COST = 10000;
+    private static final int GOAL_COST = 1000;
     private static final int BOX_COST = 100;
 
     public Heuristic(State initialState)
@@ -85,6 +86,7 @@ public abstract class Heuristic
 
         boolean[][] walls = s.walls;
         char[][] boxes = s.boxes;
+        char[][] goals = s.goals;
         int rows = walls.length, cols = walls[0].length;
         this.grid = new int[rows][cols];
         for (int i = 0; i < rows; i++) {
@@ -96,17 +98,20 @@ public abstract class Heuristic
                 if (walls[i][j] == true) {
                     this.grid[i][j] = BLOCK_COST;
                 }
+//                } else if (goals[i][j] != 0) {
+//                    this.grid[i][j] = GOAL_COST;
+//                }
             }
         }
 
 //        for (int i = 0; i < agentRows.length; i++) {
 //            this.grid[agentRows[i]][agentCols[i]] = 5;
 //        }
-
-        for (Map.Entry<Character, int[]> entry : boxesAndPositon.entrySet()) {
-            int[] indices = entry.getValue();
-            grid[indices[0]][indices[1]] = BOX_COST;
-        }
+//
+//        for (Map.Entry<Character, int[]> entry : boxesAndPositon.entrySet()) {
+//            int[] indices = entry.getValue();
+//            grid[indices[0]][indices[1]] = BOX_COST;
+//        }
 //        ArrayList<ArrayList<Character>> helpBoxes = new ArrayList<>(subgoal.size());
 //        ArrayList<ArrayList<int[]>> helpGoalPositions = new ArrayList<>(subgoal.size());
 //
@@ -263,32 +268,32 @@ public abstract class Heuristic
                 }
             }
         }
-//        int punishment = 0;
+        int punishment = 0;
 
-//        if (s.parent != null) {
-//            State parent = s.parent;
-//            int[] parentAgentCols = parent.agentCols;
-//            int[] parentAgentRows = parent.agentRows;
-////            if (parent.parent != null) {
-////                State grandparent = parent.parent;
-////                int[] grandparentAgentCols = grandparent.agentCols;
-////                int[] grandparentAgentRows = grandparent.agentRows;
-////                for (int i = 0; i < parentAgentCols.length; i++) {
-////                    if (((agentRows[i] == grandparentAgentRows[i] && agentCols[i] == grandparentAgentCols[i]) || (agentRows[i] == parentAgentRows[i] && agentCols[i] == parentAgentCols[i]))
-////                            && (subgoal.get(i).size() != 0)) {
-////                        punishment += 100;
-////                    }
-////                }
-////            } else {
+        if (s.parent != null) {
+            State parent = s.parent;
+            int[] parentAgentCols = parent.agentCols;
+            int[] parentAgentRows = parent.agentRows;
+//            if (parent.parent != null) {
+//                State grandparent = parent.parent;
+//                int[] grandparentAgentCols = grandparent.agentCols;
+//                int[] grandparentAgentRows = grandparent.agentRows;
 //                for (int i = 0; i < parentAgentCols.length; i++) {
-//                    if ((agentRows[i] == parentAgentRows[i] && agentCols[i] == parentAgentCols[i]) && (subgoal.get(i).size() != 0) && !holdBox[i]) {
+//                    if (((agentRows[i] == grandparentAgentRows[i] && agentCols[i] == grandparentAgentCols[i]) || (agentRows[i] == parentAgentRows[i] && agentCols[i] == parentAgentCols[i]))
+//                            && (subgoal.get(i).size() != 0)) {
 //                        punishment += 100;
 //                    }
 //                }
-////            }
-//
-//
-//        }
+//            } else {
+                for (int i = 0; i < parentAgentCols.length; i++) {
+                    if ((agentRows[i] == parentAgentRows[i] && agentCols[i] == parentAgentCols[i]) && (subgoal.get(i).size() != 0) && !holdBox[i]) {
+                        punishment += 100;
+                    }
+                }
+//            }
+
+
+        }
 
         int notInPosition = subgoals.freeze_cell(completedGoals, s);
         int completedgoals = completedGoals.size() * -1000;
