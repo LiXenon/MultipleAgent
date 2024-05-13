@@ -62,6 +62,7 @@ public class State
     private static final int BOX_COST = 100;
 
     public List<Help> helps;
+    public List<int[]>
 
     // Constructs an initial state.
     // Arguments are not copied, and therefore should not be modified after being passed in.

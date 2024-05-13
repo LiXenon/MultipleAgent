@@ -109,6 +109,9 @@ public class GraphSearch {
                 List<Help> newHelp = addNewHelp(s, iterations);
                 if (newHelp != null) s.helps = newHelp;
 
+                LinkedList<int[]> deadLockedAgents = isAgentDeadlocked(s);
+                unlockDeadLockAgents(s, deadLockedAgents);
+
                 isChangeGoal(s,iterations);
 
 //                System.err.println(s.toString());
@@ -128,6 +131,45 @@ public class GraphSearch {
 
             }
         }
+    }
+
+    private static void unlockDeadLockAgents(State s, LinkedList<int[]> deadLockedAgents) {
+        if (deadLockedAgents != null) {
+            for (int[] i : deadLockedAgents) {
+                int[] unlockPosition = s.asd(int[0], int[1]);
+                if (unlockPosition == null) {
+                    unlockPosition = s.asd(int[1], int[0]);
+                    if (unlockPosition == null) {
+                        break;
+                    }
+                }
+
+            }
+        }
+    }
+
+    private static LinkedList<int[]> isAgentDeadlocked(State s) {
+        int[] agentRows = s.agentRows;
+        int[] agentCols = s.agentCols;
+        int length = agentRows.length;
+        LinkedList<int[]> deadLockedAgents = new LinkedList<int[]>();
+
+
+        for (int i = 0; i < length - 1; i++) {
+            int x1 = agentRows[i];
+            int y1 = agentCols[i];
+            for (int j = i + 1; j < length; j++) {
+                int x2 = agentRows[j];
+                int y2 = agentCols[j];
+                int xdiff = Math.abs(x1 - x2);
+                int ydiff = Math.abs(y1 - y2);
+                if (xdiff + ydiff == 1) {
+                    deadLockedAgents.add(new int[]{i, j});
+                }
+            }
+        }
+
+        return deadLockedAgents;
     }
 
     private static List<Help> addNewHelp(State s, int iterations) {
