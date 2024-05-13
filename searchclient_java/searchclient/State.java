@@ -65,7 +65,6 @@ public class State
     public List<Help> helps;
 
     public List<AgentConflict> agentConflicts;
-    public List<Map<Integer, int[]>> listofAgentConflicts;
 
     // Constructs an initial state.
     // Arguments are not copied, and therefore should not be modified after being passed in.
@@ -90,7 +89,6 @@ public class State
         this.grid = new int[rows][cols];
         this.agentConflicts = new ArrayList<>();
         this.helps = new ArrayList<>();
-        this.listofAgentConflicts = new ArrayList<>();
         for (int i = 0; i < rows; i++) {
             Arrays.fill(this.grid[i], EMPTY_COST);
         }
@@ -150,7 +148,6 @@ public class State
         this.grid = parent.grid;
         this.agentConflicts = parent.agentConflicts;
         this.helps = parent.helps;
-        this.listofAgentConflicts = parent.listofAgentConflicts;
         this.boxes = new char[parent.boxes.length][];
         for (int i = 0; i < parent.boxes.length; i++)
         {
