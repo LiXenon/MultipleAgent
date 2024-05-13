@@ -779,6 +779,31 @@ public class State
         return false;
     }
 
+    //
+    public int[] blockerAgentGoalCoordinate(int requesterAgent, int blockerAgent) {
+        int[] requesterAgentCoordinate = new int[] {agentRows[requesterAgent], agentCols[requesterAgent]};
+        int[] blockerAgentCoordinate = new int[] {agentRows[blockerAgent], agentCols[blockerAgent]};
+        int[] requesterGoal;
+        if (requesterAgentCoordinate[0] == blockerAgentCoordinate[0]) {
+            if (requesterAgentCoordinate[1] < blockerAgentCoordinate[1]) {
+                requesterGoal = new int[]{blockerAgentCoordinate[0], blockerAgentCoordinate[1] + 1};
+            } else {
+                requesterGoal = new int[]{blockerAgentCoordinate[0], blockerAgentCoordinate[1] - 1};
+            }
+        } else {
+            if (requesterAgentCoordinate[0] < blockerAgentCoordinate[0]) {
+                requesterGoal = new int[]{blockerAgentCoordinate[0], blockerAgentCoordinate[1] + 1};
+            } else {
+                requesterGoal = new int[]{blockerAgentCoordinate[0], blockerAgentCoordinate[1] - 1};
+            }
+        }
+        if (!canMoveTo(requesterGoal[0], requesterGoal[1])) return null;
+        List<int[]> path = new ArrayList<>();
+        path.add(requesterAgentCoordinate);
+        path.add(requesterGoal);
+        path.add(blockerAgentCoordinate);
+        return findUnblockedCoordinate(blockerAgentCoordinate[0], blockerAgentCoordinate[1], path);
+    }
     @Override
     public int hashCode()
     {
