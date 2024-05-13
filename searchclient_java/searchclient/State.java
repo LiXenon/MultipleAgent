@@ -699,7 +699,7 @@ public class State
         // Unable to find helper agent, agent cannot request for help
         if (helperAgent == '0') return null;
         // If helper agent is helping, it cannot help more
-        if (agentConflicts.containsKey(helperAgent) || agentConflicts.containsKey(requesterAgent)) return null;
+        if (getBlockerAgentConflict(helperAgent) != null || getRequesterAgentConflict(requesterAgent) != null) return null;
         if (isInHelp(helperAgent)) return null;
 //        if (!subgoal.isEmpty() && subgoal.get(helperAgent).peek() == blocker) return null;
         int[] helperCoordinate = new int[] {agentRows[helperAgent], agentCols[helperAgent]};
@@ -846,7 +846,7 @@ public class State
     //
     public int[] blockerAgentGoalCoordinate(int requesterAgent, int blockerAgent) {
         if (isInHelp(requesterAgent) || isInHelp(blockerAgent)) return null;
-        if (agentConflicts.containsKey(blockerAgent) || agentConflicts.containsKey(requesterAgent)) return null;
+        if (getBlockerAgentConflict(blockerAgent) != null || getRequesterAgentConflict(requesterAgent) != null) return null;
         int[] requesterAgentCoordinate = new int[] {agentRows[requesterAgent], agentCols[requesterAgent]};
         int[] blockerAgentCoordinate = new int[] {agentRows[blockerAgent], agentCols[blockerAgent]};
         if (subgoal.get(requesterAgent).isEmpty()) return null;
@@ -875,13 +875,12 @@ public class State
                 }
             }
         }
-        for (Map.Entry<Character, int[]> entry : this.boxesAndPositon.entrySet()) {
-            grid[entry.getValue()[0]][entry.getValue()[1]] = BOX_COST;
-        }
-        List<int[]> path = getShortestPath(requesterAgentCoordinate, requesterGoal, grid);
-        int[] blockerGoalCoordinate = findUnblockedCoordinate(blockerAgentCoordinate[0], blockerAgentCoordinate[1], path, 0);
-//        System.err.println("AAAblockerGoalCoordinate:" + Arrays.toString(blockerGoalCoordinate));
-        return blockerGoalCoordinate;
+        if (!canMoveTo(requesterGoal[0], requesterGoal[1])) return null;
+        List<int[]> path = new ArrayList<>();
+        path.add(requesterAgentCoordinate);
+        path.add(requesterGoal);
+        path.add(blockerAgentCoordinate);
+        return findUnblockedCoordinate(blockerAgentCoordinate[0], blockerAgentCoordinate[1], path, 10);
     }
     @Override
     public int hashCode()

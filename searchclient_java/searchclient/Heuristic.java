@@ -158,7 +158,7 @@ public abstract class Heuristic
                 int agentRow = s.agentRows[i];
                 int agentCol = s.agentCols[i];
 
-                int[] unlockPosition = requesterAgent.blockerGoalCoordinate;
+                int[] unlockPosition = requesterAgent.requesterGoalCoordinate;
 
                 int agenttogoaldiff = subgoals.shortest_way(grid, agentRow, agentCol, unlockPosition[0], unlockPosition[1]) + 1000;
 

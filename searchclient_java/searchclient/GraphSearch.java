@@ -151,14 +151,15 @@ public class GraphSearch {
                     if (unlockPosition == null) {
                         break;
                     }
-                    if (s.agentConflicts.get(1) != null) {
-                        s.agentConflicts.remove(i[1]);
+                    if (s.getAgentConflict(1) != null) {
+                        s.removeAgentConflict(i[1]);
                     }
-                    AgentConflict ac = new AgentConflict(i[0], i[1], new int[]{s.agentRows[i[0]], s.agentCols[i[0]]}, unlockPosition);
+                    AgentConflict ac = new AgentConflict(i[1], i[0], new int[]{s.agentRows[i[1]], s.agentCols[i[1]]}, unlockPosition);
+
                     s.agentConflicts.add(ac);
 
                 } else {
-                    AgentConflict ac = new AgentConflict(i[1], i[0], new int[]{s.agentRows[i[1]], s.agentCols[i[1]]}, unlockPosition);
+                    AgentConflict ac = new AgentConflict(i[0], i[1], new int[]{s.agentRows[i[0]], s.agentCols[i[0]]}, unlockPosition);
                     s.agentConflicts.add(ac);
                 }
             }
