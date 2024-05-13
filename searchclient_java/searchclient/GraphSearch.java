@@ -263,11 +263,9 @@ public class GraphSearch {
                 int[] blockertargetPosition = boxesAndPositon.get(currentGoal);
                 int[] blockergoalPosition = help.blockerGoalCoordinate;
                 int[] requestertargetPosition = boxesAndPositon.get(help.requesterBox);
-                int[] requestergoalPosition = help.blockerGoalCoordinate;
+                int[] blockerStartPosition = help.blockerStartPosition;
 
-                if (blockergoalPosition[0] == blockertargetPosition[0] && blockergoalPosition[1] == blockertargetPosition[1] &&
-
-                ) {
+                if (requestertargetPosition[0] == blockerStartPosition[0] && requestertargetPosition[1] == blockerStartPosition[1]) {
                     System.err.println(iterations + " Blocker moved");
                     s.removeHelp(i);
 
