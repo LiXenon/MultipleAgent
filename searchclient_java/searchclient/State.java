@@ -64,7 +64,7 @@ public class State
 
     public List<Help> helps;
 
-    public Map<Integer, int[]> agentConflicts;
+    public List<AgentConflict> agentConflicts;
     public List<Map<Integer, int[]>> listofAgentConflicts;
 
     // Constructs an initial state.
@@ -88,7 +88,7 @@ public class State
 
         int rows = walls.length, cols = walls[0].length;
         this.grid = new int[rows][cols];
-        this.agentConflicts = new HashMap<>();
+        this.agentConflicts = new ArrayList<>();
         this.helps = new ArrayList<>();
         this.listofAgentConflicts = new ArrayList<>();
         for (int i = 0; i < rows; i++) {
@@ -793,6 +793,59 @@ public class State
         return false;
     }
 
+    public AgentConflict getAgentConflict(int agent) {
+        if (agentConflicts != null) {
+            Iterator<AgentConflict> it = agentConflicts.iterator();
+            while (it.hasNext()) {
+                AgentConflict item = it.next();
+                if (item != null && (item.requesterAgent == agent || item.blockerAgent == agent)) {
+                    return item;
+                }
+            }
+        }
+        return null;
+    }
+
+    public AgentConflict getBlockerAgentConflict(int blockerAgent) {
+        if (agentConflicts != null) {
+            Iterator<AgentConflict> it = agentConflicts.iterator();
+            while (it.hasNext()) {
+                AgentConflict item = it.next();
+                if (item != null && item.blockerAgent == blockerAgent) {
+                    return item;
+                }
+            }
+        }
+        return null;
+    }
+
+    public AgentConflict getRequesterAgentConflict(int requesterAgent) {
+        if (agentConflicts != null) {
+            Iterator<AgentConflict> it = agentConflicts.iterator();
+            while (it.hasNext()) {
+                AgentConflict item = it.next();
+                if (item != null && item.requesterAgent == requesterAgent) {
+                    return item;
+                }
+            }
+        }
+        return null;
+    }
+
+    public boolean removeAgentConflict(int agent) {
+        Iterator<AgentConflict> it = agentConflicts.iterator();
+        while (it.hasNext()) {
+            AgentConflict item = it.next();
+            if (item != null && (item.requesterAgent == agent || item.blockerAgent == agent)) {
+                System.err.println("Before: " + agentConflicts.toString());
+                it.remove();
+                System.err.println("After: " + agentConflicts.toString());
+                return true;
+            }
+        }
+        return false;
+    }
+
     //
     public int[] blockerAgentGoalCoordinate(int requesterAgent, int blockerAgent) {
         if (isInHelp(requesterAgent) || isInHelp(blockerAgent)) return null;
@@ -830,7 +883,7 @@ public class State
         }
         List<int[]> path = getShortestPath(requesterAgentCoordinate, requesterGoal, grid);
         int[] blockerGoalCoordinate = findUnblockedCoordinate(blockerAgentCoordinate[0], blockerAgentCoordinate[1], path, 0);
-        System.err.println("AAAblockerGoalCoordinate:" + Arrays.toString(blockerGoalCoordinate));
+//        System.err.println("AAAblockerGoalCoordinate:" + Arrays.toString(blockerGoalCoordinate));
         return blockerGoalCoordinate;
     }
     @Override

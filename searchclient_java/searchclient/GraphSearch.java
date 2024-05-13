@@ -109,11 +109,11 @@ public class GraphSearch {
 //                    e.printStackTrace();
 //                }
 
-//                List<Help> newHelp = addNewHelp(s, iterations);
-//                if (newHelp != null) s.helps = newHelp;
-//
-//                LinkedList<int[]> deadLockedAgents = isAgentDeadlocked(s);
-//                unlockDeadLockAgents(s, deadLockedAgents);
+                List<Help> newHelp = addNewHelp(s, iterations);
+                if (newHelp != null) s.helps = newHelp;
+
+                LinkedList<int[]> deadLockedAgents = isAgentDeadlocked(s);
+                unlockDeadLockAgents(s, deadLockedAgents);
 
                 isChangeGoal(s,iterations);
 
@@ -154,11 +154,12 @@ public class GraphSearch {
                     if (s.agentConflicts.get(1) != null) {
                         s.agentConflicts.remove(i[1]);
                     }
-                    s.agentConflicts.put(i[0], unlockPosition);
-//                    s.agentConflicts.put(i[1], new int[]{s.agentRows[i[1]], s.agentCols[i[1]]});
+                    AgentConflict ac = new AgentConflict(i[0], i[1], new int[]{s.agentRows[i[0]], s.agentCols[i[0]]}, unlockPosition);
+                    s.agentConflicts.add(ac);
+
                 } else {
-                    s.agentConflicts.put(i[1], unlockPosition);
-//                    s.agentConflicts.put(i[0], new int[]{s.agentRows[i[0]], s.agentCols[i[0]]});
+                    AgentConflict ac = new AgentConflict(i[1], i[0], new int[]{s.agentRows[i[1]], s.agentCols[i[1]]}, unlockPosition);
+                    s.agentConflicts.add(ac);
                 }
             }
         }
@@ -212,7 +213,7 @@ public class GraphSearch {
 //                    System.err.println(iterations + " New help");
                     Help help = s.addHelp(i, currentGoal);
                     if (help != null) {
-                        System.err.println(s.toString());
+//                        System.err.println(s.toString());
                     }
                 }
 //                System.err.println("Current agent: " + i);
@@ -229,15 +230,18 @@ public class GraphSearch {
         Map<Character, int[]> boxesAndPositon = s.boxesAndPositon;
         Map<Character, int[]> completedGoals = s.completedGoals;
         ArrayList<LinkedList<Character>> subgoal = s.subgoal;
+        List<AgentConflict> agentConflicts = s.agentConflicts;
 
         for (int i = 0; i < s.subgoal.size(); i++) {
             LinkedList<Character> agentsubgoal = subgoal.get(i);
-            if (s.agentConflicts.get(i) != null) {
+            if (s.getAgentConflict(i) != null) {
+                AgentConflict ac = s.getBlockerAgentConflict(i);
+                if (ac == null) continue;
                 int[] targetPosition = {s.agentRows[i], s.agentCols[i]};
-                int[] goalPosition = s.agentConflicts.get(i);
+                int[] goalPosition = ac.blockerGoalCoordinate;
 
                 if (goalPosition[0] == targetPosition[0] && goalPosition[1] == targetPosition[1]) {
-                    s.agentConflicts.remove(i);
+                    s.removeAgentConflict(i);
                     s.completedAgentConflicts++;
                 }
             }

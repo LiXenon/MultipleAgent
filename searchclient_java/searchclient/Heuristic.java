@@ -108,10 +108,10 @@ public abstract class Heuristic
 //            this.grid[agentRows[i]][agentCols[i]] = 5;
 //        }
 //
-//        for (Map.Entry<Character, int[]> entry : boxesAndPositon.entrySet()) {
-//            int[] indices = entry.getValue();
-//            grid[indices[0]][indices[1]] = BOX_COST;
-//        }
+        for (Map.Entry<Character, int[]> entry : boxesAndPositon.entrySet()) {
+            int[] indices = entry.getValue();
+            grid[indices[0]][indices[1]] = BOX_COST;
+        }
 //        ArrayList<ArrayList<Character>> helpBoxes = new ArrayList<>(subgoal.size());
 //        ArrayList<ArrayList<int[]>> helpGoalPositions = new ArrayList<>(subgoal.size());
 //
@@ -141,16 +141,29 @@ public abstract class Heuristic
 
             Help helperhelp = s.getHelperHelp(i);
             Help requesterhelp = s.getRequesterHelp(i);
-            int[] unlockPosition = s.agentConflicts.get(i);
-            if (unlockPosition != null) {
+            AgentConflict blockerAgent = s.getBlockerAgentConflict(i);
+            AgentConflict requesterAgent = s.getRequesterAgentConflict(i);
+            if (blockerAgent != null) {
                 int agentRow = s.agentRows[i];
                 int agentCol = s.agentCols[i];
+
+                int[] unlockPosition = blockerAgent.blockerGoalCoordinate;
 
                 int agenttogoaldiff = subgoals.shortest_way(grid, agentRow, agentCol, unlockPosition[0], unlockPosition[1]) + 1000;
 
                 int thisHue = agenttogoaldiff;
                 sumHue += thisHue;
 
+            } else if (requesterAgent != null) {
+                int agentRow = s.agentRows[i];
+                int agentCol = s.agentCols[i];
+
+                int[] unlockPosition = requesterAgent.blockerGoalCoordinate;
+
+                int agenttogoaldiff = subgoals.shortest_way(grid, agentRow, agentCol, unlockPosition[0], unlockPosition[1]) + 1000;
+
+                int thisHue = agenttogoaldiff;
+                sumHue += thisHue;
             } else if (helperhelp != null) {
                 char currentGoal = helperhelp.blocker;
                 int[] blockerGoalCoordinate = helperhelp.blockerGoalCoordinate;
@@ -268,32 +281,32 @@ public abstract class Heuristic
                 }
             }
         }
-        int punishment = 0;
-
-        if (s.parent != null) {
-            State parent = s.parent;
-            int[] parentAgentCols = parent.agentCols;
-            int[] parentAgentRows = parent.agentRows;
-//            if (parent.parent != null) {
-//                State grandparent = parent.parent;
-//                int[] grandparentAgentCols = grandparent.agentCols;
-//                int[] grandparentAgentRows = grandparent.agentRows;
+//        int punishment = 0;
+//
+//        if (s.parent != null) {
+//            State parent = s.parent;
+//            int[] parentAgentCols = parent.agentCols;
+//            int[] parentAgentRows = parent.agentRows;
+////            if (parent.parent != null) {
+////                State grandparent = parent.parent;
+////                int[] grandparentAgentCols = grandparent.agentCols;
+////                int[] grandparentAgentRows = grandparent.agentRows;
+////                for (int i = 0; i < parentAgentCols.length; i++) {
+////                    if (((agentRows[i] == grandparentAgentRows[i] && agentCols[i] == grandparentAgentCols[i]) || (agentRows[i] == parentAgentRows[i] && agentCols[i] == parentAgentCols[i]))
+////                            && (subgoal.get(i).size() != 0)) {
+////                        punishment += 100;
+////                    }
+////                }
+////            } else {
 //                for (int i = 0; i < parentAgentCols.length; i++) {
-//                    if (((agentRows[i] == grandparentAgentRows[i] && agentCols[i] == grandparentAgentCols[i]) || (agentRows[i] == parentAgentRows[i] && agentCols[i] == parentAgentCols[i]))
-//                            && (subgoal.get(i).size() != 0)) {
+//                    if ((agentRows[i] == parentAgentRows[i] && agentCols[i] == parentAgentCols[i]) && (subgoal.get(i).size() != 0) && !holdBox[i]) {
 //                        punishment += 100;
 //                    }
 //                }
-//            } else {
-                for (int i = 0; i < parentAgentCols.length; i++) {
-                    if ((agentRows[i] == parentAgentRows[i] && agentCols[i] == parentAgentCols[i]) && (subgoal.get(i).size() != 0) && !holdBox[i]) {
-                        punishment += 100;
-                    }
-                }
-//            }
-
-
-        }
+////            }
+//
+//
+//        }
 
         int notInPosition = subgoals.freeze_cell(completedGoals, s);
         int completedgoals = completedGoals.size() * -1000;
