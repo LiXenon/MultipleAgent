@@ -11,7 +11,7 @@ public abstract class Heuristic
 
     private static final int EMPTY_COST = 1;
     private static final int BLOCK_COST = 10000;
-    private static final int BOX_COST = 1000;
+    private static final int BOX_COST = 100;
 
     public Heuristic(State initialState)
     {
@@ -75,17 +75,37 @@ public abstract class Heuristic
 //        }
 //        System.err.println();
         Map<Character, int[]> completedGoals = s.completedGoals;
+        int completedHelps = s.completedHelps;
 
         List<Help> helps = s.helps;
 
         int[] agentRows = s.agentRows;
         int[] agentCols = s.agentCols;
 
+        boolean[][] walls = s.walls;
+        char[][] boxes = s.boxes;
+        int rows = walls.length, cols = walls[0].length;
+        this.grid = new int[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            Arrays.fill(this.grid[i], EMPTY_COST);
+        }
 
-//        for (Map.Entry<Character, int[]> entry : boxesAndPositon.entrySet()) {
-//            int[] indices = entry.getValue();
-//            grid[indices[0]][indices[1]] = 5;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (walls[i][j] == true) {
+                    this.grid[i][j] = BLOCK_COST;
+                }
+            }
+        }
+
+//        for (int i = 0; i < agentRows.length; i++) {
+//            this.grid[agentRows[i]][agentCols[i]] = 5;
 //        }
+
+        for (Map.Entry<Character, int[]> entry : boxesAndPositon.entrySet()) {
+            int[] indices = entry.getValue();
+            grid[indices[0]][indices[1]] = BOX_COST;
+        }
 //        ArrayList<ArrayList<Character>> helpBoxes = new ArrayList<>(subgoal.size());
 //        ArrayList<ArrayList<int[]>> helpGoalPositions = new ArrayList<>(subgoal.size());
 //
@@ -127,7 +147,7 @@ public abstract class Heuristic
                 int boxtogoaldiff = subgoals.shortest_way(grid, targetPosition[0], targetPosition[1], blockerGoalCoordinate[0], blockerGoalCoordinate[1]) + 1000;
                 int agenttoboxdiff = subgoals.shortest_way(grid, agentRow, agentCol, targetPosition[0], targetPosition[1]) + 1000;
 
-                if (boxtogoaldiff != 2) {
+                if (agenttoboxdiff != 101) {
                     int thisHue = boxtogoaldiff + agenttoboxdiff;
 //                    System.err.println("Number " + i + " cost: " + thisHue);
                     sumHue += thisHue;
@@ -138,7 +158,6 @@ public abstract class Heuristic
                 }
 
             } else if (requesterhelp != null) {
-                char currentGoal = requesterhelp.blocker;
                 int[] requesterGoalCoordinate = requesterhelp.requesterGoalCoordinate;
 
                 int agentRow = s.agentRows[i];
@@ -195,7 +214,7 @@ public abstract class Heuristic
 //                        completedGoals.put(currentGoal, targetPosition);
 //                    }
 
-                    if (agenttoboxdiff != 2) {
+                    if (agenttoboxdiff != 101) {
                         int thisHue = boxtogoaldiff + agenttoboxdiff;
 //                    System.err.println("Number " + i + " cost: " + thisHue);
                         sumHue += thisHue;
@@ -229,34 +248,35 @@ public abstract class Heuristic
         }
         int punishment = 0;
 
-        if (s.parent != null) {
-            State parent = s.parent;
-            int[] parentAgentCols = parent.agentCols;
-            int[] parentAgentRows = parent.agentRows;
-//            if (parent.parent != null) {
-//                State grandparent = parent.parent;
-//                int[] grandparentAgentCols = grandparent.agentCols;
-//                int[] grandparentAgentRows = grandparent.agentRows;
+//        if (s.parent != null) {
+//            State parent = s.parent;
+//            int[] parentAgentCols = parent.agentCols;
+//            int[] parentAgentRows = parent.agentRows;
+////            if (parent.parent != null) {
+////                State grandparent = parent.parent;
+////                int[] grandparentAgentCols = grandparent.agentCols;
+////                int[] grandparentAgentRows = grandparent.agentRows;
+////                for (int i = 0; i < parentAgentCols.length; i++) {
+////                    if (((agentRows[i] == grandparentAgentRows[i] && agentCols[i] == grandparentAgentCols[i]) || (agentRows[i] == parentAgentRows[i] && agentCols[i] == parentAgentCols[i]))
+////                            && (subgoal.get(i).size() != 0)) {
+////                        punishment += 100;
+////                    }
+////                }
+////            } else {
 //                for (int i = 0; i < parentAgentCols.length; i++) {
-//                    if (((agentRows[i] == grandparentAgentRows[i] && agentCols[i] == grandparentAgentCols[i]) || (agentRows[i] == parentAgentRows[i] && agentCols[i] == parentAgentCols[i]))
-//                            && (subgoal.get(i).size() != 0)) {
+//                    if ((agentRows[i] == parentAgentRows[i] && agentCols[i] == parentAgentCols[i]) && (subgoal.get(i).size() != 0) && !holdBox[i]) {
 //                        punishment += 100;
 //                    }
 //                }
-//            } else {
-                for (int i = 0; i < parentAgentCols.length; i++) {
-                    if ((agentRows[i] == parentAgentRows[i] && agentCols[i] == parentAgentCols[i]) && (subgoal.get(i).size() != 0) && !holdBox[i]) {
-                        punishment += 100;
-                    }
-                }
-//            }
-
-
-        }
+////            }
+//
+//
+//        }
 
         int notInPosition = subgoals.freeze_cell(completedGoals, s);
-        int completed = completedGoals.size() * -1000;
-        return sumHue + notInPosition + completed;// + punishment;
+        int completedgoals = completedGoals.size() * -1000;
+        int completedhelps = completedHelps * -1000;
+        return sumHue + notInPosition + completedgoals + completedhelps;// + punishment;
 //        System.err.println(currentGoal);
 //        System.err.println(targetPosition[0] + " " + targetPosition[1]);
 //        System.err.println(goalPosition[0] + " " + goalPosition[1]);

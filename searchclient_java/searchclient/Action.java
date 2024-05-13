@@ -73,4 +73,16 @@ public enum Action
         this.boxRowDelta = brd; 
         this.boxColDelta = bcd;  
     }
+
+    @Override
+    public String toString() {
+        return "Action{" +
+                "name='" + name + '\'' +
+                ", type=" + type +
+                ", agentRowDelta=" + agentRowDelta +
+                ", agentColDelta=" + agentColDelta +
+                ", boxRowDelta=" + boxRowDelta +
+                ", boxColDelta=" + boxColDelta +
+                '}';
+    }
 }

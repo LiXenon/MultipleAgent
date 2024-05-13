@@ -55,7 +55,9 @@ public class GraphSearch {
                     return null;
                 }
 
-//                if (iterations >= 10) {
+
+
+//                if (iterations >= 30) {
 //                    exit(0);
 //                }
 
@@ -80,7 +82,31 @@ public class GraphSearch {
 //                for (Map.Entry<Character, int[]> entry : s.completedGoals.entrySet()) {
 //                    System.err.print(entry.getKey());
 //                }
-                List<Help> newHelp = addNewHelp(s);
+
+//                Timer timer = new Timer();
+//                State finalS = s;
+//                TimerTask task = new TimerTask() {
+//                    public void run() {
+//                        System.err.println(finalS.toString());
+//                    }
+//                };
+//
+//                timer.scheduleAtFixedRate(task, 1000, 10000);
+
+                try {
+                    System.err.println(s.toString());
+                    System.err.println(s.helps.toString());
+                    if (s.jointAction != null) {
+                        for (Action action : s.jointAction) {
+                            System.err.println(action.toString());
+                        }
+                    }
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                List<Help> newHelp = addNewHelp(s, iterations);
                 if (newHelp != null) s.helps = newHelp;
 
                 isChangeGoal(s,iterations);
@@ -104,7 +130,7 @@ public class GraphSearch {
         }
     }
 
-    private static List<Help> addNewHelp(State s) {
+    private static List<Help> addNewHelp(State s, int iterations) {
 //        Map<Character, int[]> goalsAndPositon = s.goalsAndPositon;
 //        Map<Character, int[]> boxesAndPositon = s.boxesAndPositon;
 //        Map<Character, int[]> completedGoals = s.completedGoals;
@@ -125,8 +151,11 @@ public class GraphSearch {
 //                System.err.println("Agent " + i + " distance " + agenttoboxdiff);
 //                if (agenttoboxdiff == 2) {
                 if (s.getHelp(i) == null) {
+//                    System.err.println(iterations + " New help");
                     Help help = s.addHelp(i, currentGoal);
-                    s.helps.add(help);
+                    if (help != null) {
+                        System.err.println(s.toString());
+                    }
                 }
 //                System.err.println("Current agent: " + i);
 //                for (Help h : s.helps) {
@@ -145,7 +174,7 @@ public class GraphSearch {
 
         for (int i = 0; i < s.subgoal.size(); i++) {
             LinkedList<Character> agentsubgoal = subgoal.get(i);
-            if (s.getHelperHelp(i) != null) {
+            if (s.getHelp(i) != null) {
                 Help help = s.getHelperHelp(i);
                 if (help == null) continue;
                 char currentGoal = help.blocker;
@@ -153,7 +182,10 @@ public class GraphSearch {
                 int[] goalPosition = help.blockerGoalCoordinate;
 
                 if (goalPosition[0] == targetPosition[0] && goalPosition[1] == targetPosition[1]) {
+                    System.err.println(iterations + " Blocker moved");
                     s.removeHelp(i);
+
+                    s.completedHelps++;
                 }
             } else if (!agentsubgoal.isEmpty()) {
                 char currentGoal = agentsubgoal.peek();
@@ -165,9 +197,14 @@ public class GraphSearch {
                     agentsubgoal.poll();
                     System.err.println(iterations);
                     System.err.println(s.subgoal);
+//                    System.err.println(s.toString());
+//                    for (LinkedList<Character> as : subgoal) {
+//                        System.err.print(as.peek() + " ");
+//                    }
                 }
             }
         }
+//        System.err.println(s.helps.toString());
     }
 
     private static long startTime = System.nanoTime();

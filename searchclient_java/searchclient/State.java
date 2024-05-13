@@ -49,6 +49,7 @@ public class State
 
     public ArrayList<LinkedList<Character>> subgoal = new ArrayList<LinkedList<Character>>();;
     public Map<Character, int[]> completedGoals = new HashMap<>();
+    public int completedHelps = 0;
 
     public Map<Character, int[]> goalsAndPositon = new HashMap<>();
     public Map<Character, int[]> boxesAndPositon = new HashMap<>();
@@ -58,7 +59,7 @@ public class State
     private static final int EMPTY_COST = 1;
     private static final int GOAL_COST = 1000;
     private static final int BLOCK_COST = 10000;
-    private static final int BOX_COST = 10;
+    private static final int BOX_COST = 100;
 
     public List<Help> helps;
 
@@ -77,6 +78,7 @@ public class State
         this.goals = goals;
         this.parent = null;
         this.jointAction = null;
+        this.completedHelps = 0;
         this.g = 0;
 
         int rows = walls.length, cols = walls[0].length;
@@ -149,6 +151,7 @@ public class State
         // Set own parameters
         this.parent = parent;
         this.jointAction = Arrays.copyOf(jointAction, jointAction.length);
+        this.completedHelps = parent.completedHelps;
         this.g = parent.g + 1;
 
         // Apply each action
@@ -516,12 +519,13 @@ public class State
 
     // Get the id of the first box on the path, if box not found, return '0'
     // The box cannot be agent's box
-    private char firstBoxOnThePath(int agent, List<int[]> path) {
+    private char firstBoxOnThePath(List<int[]> path) {
+        if (!path.isEmpty()) path.remove(0);
         for (int[] coor: path) {
             Iterator<Map.Entry<Character, int[]>> it = this.boxesAndPositon.entrySet().iterator();
             while (it.hasNext()) {
                 Map.Entry<Character, int[]> entry = it.next();
-                if (coor[0] == entry.getValue()[0] && coor[1] == entry.getValue()[1] && findAgentOfBox(entry.getKey()) != agent) {
+                if (coor[0] == entry.getValue()[0] && coor[1] == entry.getValue()[1]) {
                     return entry.getKey(); // box found, return its id
                 }
             }
@@ -622,26 +626,62 @@ public class State
         return false;
     }
 
+
+
     public Help addHelp(int requesterAgent, char requesterBox) {
         // If requester agent is requesting for help, it cannot request more
         if (isInHelp(requesterAgent)) return null;
 
         int[] startPosition = this.boxesAndPositon.get(requesterBox);
         int[] goalPosition = this.goalsAndPositon.get(requesterBox);
-        int[][] grid = this.grid;
+        int[][] grid = new int[this.grid.length][this.grid[0].length];
+        for (int i = 0; i < grid.length; i++) {
+            grid[i] = this.grid[i].clone();
+        }
         // Add box cost
+        for (int i = 0; i < grid.length; i++) {
+            Arrays.fill(grid[i], EMPTY_COST);
+        }
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
+                if (walls[i][j] == true) {
+                    grid[i][j] = BLOCK_COST;
+                } else if (goals[i][j] != 0) {
+                    grid[i][j] = GOAL_COST;
+                }
+            }
+        }
         for (Map.Entry<Character, int[]> entry : this.boxesAndPositon.entrySet()) {
             grid[entry.getValue()[0]][entry.getValue()[1]] = BOX_COST;
         }
+//        for (int i = 0; i < agentRows.length; i++) {
+//            grid[agentRows[i]][agentCols[i]] = 5;
+//        }
+
+//        int[][] printgrid = new int[grid.length][grid[0].length];
+//        for (int i = 0; i < grid.length; i++) {
+//            for (int j = 0; j < grid[i].length; j++) {
+//                grid[i][j] = grid[i][j];
+//                if (walls[i][j] == true) {
+//                    printgrid[i][j] = 9;
+//                } else if (goals[i][j] != 0) {
+//                    printgrid[i][j] = 8;
+//                }
+//            }
+//        }
+//        for (int[] i : grid) {
+//            System.err.println(Arrays.toString(i));
+//        }
         // Shortest path
         List<int[]> path = getShortestPath(startPosition, goalPosition, grid);
         // Only the first blocker is considered
-        char blocker = firstBoxOnThePath(requesterAgent, path);
+        char blocker = firstBoxOnThePath(path);
         // If id is '0', the box is not found; agent don't need to request for help
         if (blocker == '0') return null;
         // Position of blocker
         int x = this.boxesAndPositon.get(blocker)[0];
         int y = this.boxesAndPositon.get(blocker)[1];
+//        if (Math.sqrt((Math.pow(x - startPosition[0], 2) + Math.pow(y - startPosition[1], 2))) > 4) return null;
         int[] unblockedCoordinate = findUnblockedCoordinate(x, y, path);
         // Unable to move blocker currently, agent cannot request for help
         if (unblockedCoordinate == null) return null;
@@ -650,19 +690,34 @@ public class State
         if (helperAgent == '0') return null;
         // If helper agent is helping, it cannot help more
         if (isInHelp(helperAgent)) return null;
+//        if (!subgoal.isEmpty() && subgoal.get(helperAgent).peek() == blocker) return null;
         int[] helperCoordinate = new int[] {agentRows[helperAgent], agentCols[helperAgent]};
 
         List<int[]> pathHelperAgentToBlocker = getShortestPath(helperCoordinate, new int[] {x, y}, grid);
         List<int[]> pathBlockerToBeUnblocked = getShortestPath(new int[] {x, y}, unblockedCoordinate, grid);
         pathHelperAgentToBlocker.addAll(pathBlockerToBeUnblocked);
         List<int[]> helperPath = pathHelperAgentToBlocker;
-        int[] requesterGoalCoordinate = findUnblockedCoordinate(agentRows[requesterAgent], agentCols[requesterAgent], helperPath);
+        int[] requesterCoordinate = new int[] {agentRows[requesterAgent], agentCols[requesterAgent]};
+//        System.err.println(Math.sqrt((Math.pow(requesterCoordinate[0] - x, 2) + Math.pow(requesterCoordinate[1] - y, 2))));
+        if (Math.sqrt((Math.pow(requesterCoordinate[0] - x, 2) + Math.pow(requesterCoordinate[1] - y, 2))) > 4) return null;
+        int[] requesterGoalCoordinate;
+        if (isBoxOnThePath(helperPath, requesterCoordinate)) {
+            requesterGoalCoordinate = findUnblockedCoordinate(requesterCoordinate[0], requesterCoordinate[1], helperPath);
+        } else {
+            requesterGoalCoordinate = requesterCoordinate;
+        }
         // Helper cannot move the blocker because requester block the way, and requester cannot move away
         if (requesterGoalCoordinate == null) return null;
         Help help = new Help(requesterAgent, helperAgent, requesterBox, blocker, unblockedCoordinate, requesterGoalCoordinate);
         this.helps.add(help);
         System.err.println(help);
 //        for(int[] p: path) {
+//            System.err.print(Arrays.toString(p));
+//        }
+//        System.err.println("");
+//        System.err.println("====================================");
+//        System.err.println("");
+//        for(int[] p: helperPath) {
 //            System.err.print(Arrays.toString(p));
 //        }
 //        System.err.println("");
@@ -715,7 +770,9 @@ public class State
         while (it.hasNext()) {
             Help item = it.next();
             if (item != null && (item.requesterAgent == agent || item.helperAgent == agent)) {
+                System.err.println("Before: " + helps.toString());
                 it.remove();
+                System.err.println("After: " + helps.toString());
                 return true;
             }
         }
