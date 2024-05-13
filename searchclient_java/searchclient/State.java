@@ -644,10 +644,10 @@ public class State
 
         int[] startPosition = this.boxesAndPositon.get(requesterBox);
         int[] goalPosition = this.goalsAndPositon.get(requesterBox);
-        int[][] grid = new int[this.grid.length][this.grid[0].length];
-        for (int i = 0; i < grid.length; i++) {
-            grid[i] = this.grid[i].clone();
-        }
+//        int[][] grid = new int[this.grid.length][this.grid[0].length];
+//        for (int i = 0; i < grid.length; i++) {
+//            grid[i] = this.grid[i].clone();
+//        }
         // Add box cost
         for (int i = 0; i < grid.length; i++) {
             Arrays.fill(grid[i], EMPTY_COST);
@@ -796,28 +796,19 @@ public class State
         if (agentConflicts.containsKey(blockerAgent) || agentConflicts.containsKey(requesterAgent)) return null;
         int[] requesterAgentCoordinate = new int[] {agentRows[requesterAgent], agentCols[requesterAgent]};
         int[] blockerAgentCoordinate = new int[] {agentRows[blockerAgent], agentCols[blockerAgent]};
+        if (subgoal.get(requesterAgent).isEmpty()) return null;
+        char requesterAgentCurrentBox = subgoal.get(requesterAgent).peek();
+        int[] requesterAgentCurrentBoxCoordinate = boxesAndPositon.get(requesterAgentCurrentBox);
         int[] requesterGoal;
-//        int[][] directions = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
-//        int randomDirection = (int)(Math.random() * 4 / 4);
-        if (requesterAgentCoordinate[0] == blockerAgentCoordinate[0]) {
-            if (requesterAgentCoordinate[1] < blockerAgentCoordinate[1]) {
-                requesterGoal = new int[]{blockerAgentCoordinate[0], blockerAgentCoordinate[1] + 1};
-            } else {
-                requesterGoal = new int[]{blockerAgentCoordinate[0], blockerAgentCoordinate[1] - 1};
-            }
+        if ((int)(Math.sqrt(Math.pow((requesterAgentCoordinate[0] - requesterAgentCurrentBoxCoordinate[0]), 2) + Math.pow((requesterAgentCoordinate[1] - requesterAgentCurrentBoxCoordinate[1]), 2))) > 1) {
+            requesterGoal = requesterAgentCurrentBoxCoordinate;
         } else {
-            if (requesterAgentCoordinate[0] < blockerAgentCoordinate[0]) {
-                requesterGoal = new int[]{blockerAgentCoordinate[0] + 1, blockerAgentCoordinate[1]};
-            } else {
-                requesterGoal = new int[]{blockerAgentCoordinate[0] - 1, blockerAgentCoordinate[1]};
-            }
+            requesterGoal = goalsAndPositon.get(requesterAgentCurrentBox);
         }
-        if (!canMoveTo(requesterGoal[0], requesterGoal[1])) return null;
-        List<int[]> path = new ArrayList<>();
-        path.add(requesterAgentCoordinate);
-        path.add(requesterGoal);
-        path.add(blockerAgentCoordinate);
-        return findUnblockedCoordinate(blockerAgentCoordinate[0], blockerAgentCoordinate[1], path, 10);
+        List<int[]> path = getShortestPath(requesterAgentCoordinate, requesterGoal, grid);
+        int[] blockerGoalCoordinate = findUnblockedCoordinate(blockerAgentCoordinate[0], blockerAgentCoordinate[1], path, 0);
+        System.err.println("AAAblockerGoalCoordinate:" + Arrays.toString(blockerGoalCoordinate));
+        return blockerGoalCoordinate;
     }
     @Override
     public int hashCode()
