@@ -63,6 +63,7 @@ public class State
     private static final int BOX_COST = 100;
 
     public List<Help> helps;
+
     public Map<Integer, int[]> agentConflicts;
 
     // Constructs an initial state.
@@ -580,7 +581,9 @@ public class State
         return cellIsFree(x, y) && isNotOutBoundary(x, y);
     }
     // Find coordinate to make the path unblocked
-    private int[] findUnblockedCoordinate(int x, int y, List<int[]> path) {
+    private int[] findUnblockedCoordinate(int x, int y, List<int[]> path, int depth) {
+        int startX = x;
+        int startY = y;
         Set<String> visited = new HashSet<>();
         Queue<int[]> queue = new LinkedList<>();
         queue.add(new int[]{x, y});
@@ -599,8 +602,9 @@ public class State
                 }
 
                 boolean isOn = isBoxOnThePath(path, new int[]{newX, newY});
+                int ManhattanDepth = (int)(Math.sqrt(Math.pow((startX - x), 2) + Math.pow((startY - y), 2)));
                 // Path is unblocked
-                if (!isOn) {
+                if (!isOn && ManhattanDepth >= depth) {
                     return new int[]{newX, newY};
                 }
 
@@ -688,13 +692,14 @@ public class State
         int x = this.boxesAndPositon.get(blocker)[0];
         int y = this.boxesAndPositon.get(blocker)[1];
 //        if (Math.sqrt((Math.pow(x - startPosition[0], 2) + Math.pow(y - startPosition[1], 2))) > 4) return null;
-        int[] unblockedCoordinate = findUnblockedCoordinate(x, y, path);
+        int[] unblockedCoordinate = findUnblockedCoordinate(x, y, path, 0);
         // Unable to move blocker currently, agent cannot request for help
         if (unblockedCoordinate == null) return null;
         int helperAgent = findAgentOfBox(blocker);
         // Unable to find helper agent, agent cannot request for help
         if (helperAgent == '0') return null;
         // If helper agent is helping, it cannot help more
+        if (agentConflicts.containsKey(helperAgent) || agentConflicts.containsKey(requesterAgent)) return null;
         if (isInHelp(helperAgent)) return null;
 //        if (!subgoal.isEmpty() && subgoal.get(helperAgent).peek() == blocker) return null;
         int[] helperCoordinate = new int[] {agentRows[helperAgent], agentCols[helperAgent]};
@@ -708,7 +713,7 @@ public class State
         if (Math.sqrt((Math.pow(requesterCoordinate[0] - x, 2) + Math.pow(requesterCoordinate[1] - y, 2))) > 4) return null;
         int[] requesterGoalCoordinate;
         if (isBoxOnThePath(helperPath, requesterCoordinate)) {
-            requesterGoalCoordinate = findUnblockedCoordinate(requesterCoordinate[0], requesterCoordinate[1], helperPath);
+            requesterGoalCoordinate = findUnblockedCoordinate(requesterCoordinate[0], requesterCoordinate[1], helperPath, 0);
         } else {
             requesterGoalCoordinate = requesterCoordinate;
         }
@@ -787,9 +792,13 @@ public class State
 
     //
     public int[] blockerAgentGoalCoordinate(int requesterAgent, int blockerAgent) {
+        if (isInHelp(requesterAgent) || isInHelp(blockerAgent)) return null;
+        if (agentConflicts.containsKey(blockerAgent) || agentConflicts.containsKey(requesterAgent)) return null;
         int[] requesterAgentCoordinate = new int[] {agentRows[requesterAgent], agentCols[requesterAgent]};
         int[] blockerAgentCoordinate = new int[] {agentRows[blockerAgent], agentCols[blockerAgent]};
         int[] requesterGoal;
+//        int[][] directions = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
+//        int randomDirection = (int)(Math.random() * 4 / 4);
         if (requesterAgentCoordinate[0] == blockerAgentCoordinate[0]) {
             if (requesterAgentCoordinate[1] < blockerAgentCoordinate[1]) {
                 requesterGoal = new int[]{blockerAgentCoordinate[0], blockerAgentCoordinate[1] + 1};
@@ -798,9 +807,9 @@ public class State
             }
         } else {
             if (requesterAgentCoordinate[0] < blockerAgentCoordinate[0]) {
-                requesterGoal = new int[]{blockerAgentCoordinate[0], blockerAgentCoordinate[1] + 1};
+                requesterGoal = new int[]{blockerAgentCoordinate[0] + 1, blockerAgentCoordinate[1]};
             } else {
-                requesterGoal = new int[]{blockerAgentCoordinate[0], blockerAgentCoordinate[1] - 1};
+                requesterGoal = new int[]{blockerAgentCoordinate[0] - 1, blockerAgentCoordinate[1]};
             }
         }
         if (!canMoveTo(requesterGoal[0], requesterGoal[1])) return null;
@@ -808,7 +817,7 @@ public class State
         path.add(requesterAgentCoordinate);
         path.add(requesterGoal);
         path.add(blockerAgentCoordinate);
-        return findUnblockedCoordinate(blockerAgentCoordinate[0], blockerAgentCoordinate[1], path);
+        return findUnblockedCoordinate(blockerAgentCoordinate[0], blockerAgentCoordinate[1], path, 10);
     }
     @Override
     public int hashCode()

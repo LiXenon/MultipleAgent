@@ -22,7 +22,7 @@ Starting the server using the searchclient:
     $ java -jar ../server.jar -l ../levels/SAD1.lvl -c "java searchclient.SearchClient" -g -s 150 -t 180
 
 The searchclient uses the BFS strategy by default. Use arguments -dfs, -astar, -wastar, or -greedy to set alternative search strategies (after you implement them). For instance, to use DFS on the same level as above:
-java -jar ../server.jar -l ../levels/MAsimple1.lvl -c "java searchclient.SearchClient -greedy" -g -s 150 -t 180
+java -jar ../server.jar -l ../levels/MyLevel.lvl -c "java searchclient.SearchClient -greedy" -g -s 150 -t 180
 
 Memory settings:
     * Unless your hardware is unable to support this, you should let the JVM allocate at least 4GB of memory for the searchclient *

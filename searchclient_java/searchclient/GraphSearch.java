@@ -93,18 +93,18 @@ public class GraphSearch {
 //
 //                timer.scheduleAtFixedRate(task, 1000, 10000);
 
-//                try {
-//                    System.err.println(s.toString());
-//                    System.err.println(s.helps.toString());
+                try {
+                    System.err.println(s.toString());
+                    System.err.println(s.helps.toString());
 //                    if (s.jointAction != null) {
 //                        for (Action action : s.jointAction) {
 //                            System.err.println(action.toString());
 //                        }
 //                    }
-//                    Thread.sleep(200);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
                 List<Help> newHelp = addNewHelp(s, iterations);
                 if (newHelp != null) s.helps = newHelp;
