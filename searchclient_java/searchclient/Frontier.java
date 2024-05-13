@@ -159,6 +159,48 @@ class FrontierBestFirst
         StateWrapper stateWrapper = this.queue.poll();
         State state = stateWrapper.state;
         this.set.remove(state);
+        try {
+            System.err.println(state.toString());
+            System.err.println(stateWrapper.f);
+            System.err.println(state.helps.toString());
+            System.err.println(state.agentConflicts.toString());
+            if (s.parent != null) {
+                State parent = s.parent;
+                int[] parentAgentCols = parent.agentCols;
+                int[] parentAgentRows = parent.agentRows;
+//            if (parent.parent != null) {
+//                State grandparent = parent.parent;
+//                int[] grandparentAgentCols = grandparent.agentCols;
+//                int[] grandparentAgentRows = grandparent.agentRows;
+//                for (int i = 0; i < parentAgentCols.length; i++) {
+//                    if (((agentRows[i] == grandparentAgentRows[i] && agentCols[i] == grandparentAgentCols[i]) || (agentRows[i] == parentAgentRows[i] && agentCols[i] == parentAgentCols[i]))
+//                            && (subgoal.get(i).size() != 0)) {
+//                        punishment += 100;
+//                    }
+//                }
+//            } else {
+                for (int i = 0; i < parentAgentCols.length; i++) {
+
+                    if (s.getRequesterAgentConflict(i) != null && s.getRequesterHelp(i) != null) {
+                        if ((agentRows[i] == parentAgentRows[i] && agentCols[i] == parentAgentCols[i]) && (!subgoal.get(i).isEmpty())) {
+
+                        }
+                    }
+                }
+//            }
+
+
+            }
+            if (state.jointAction != null) {
+                for (Action action : state.jointAction) {
+                    System.err.println(action.toString());
+                }
+            }
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+//        System.err.println(toString());
         return state;
     }
 
@@ -183,7 +225,9 @@ class FrontierBestFirst
     @Override
     public String toString() {
         return "FrontierBestFirst{" +
-                "queue=" + queue.peek().toString() +
+//                "heuristic=" + heuristic +
+//                ", queue=" + queue +
+//                ", set=" + set +
                 '}';
     }
 

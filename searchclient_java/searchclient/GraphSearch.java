@@ -66,6 +66,10 @@ public class GraphSearch {
 //
                 s = frontier.pop();
 
+//                System.err.println(s.toString());
+//                System.err.println(s.jointAction);
+
+
 //                if (iterations >= 55 && iterations <= 70) {
 //                    System.out.println(s.helps);
 //                }
@@ -90,20 +94,17 @@ public class GraphSearch {
 //                        System.err.println(finalS.toString());
 //                    }
 //                };
-//
+////
 //                timer.scheduleAtFixedRate(task, 1000, 10000);
 
 //                try {
 //                    System.err.println(s.toString());
-//                    System.err.println(s.helps.toString());
-//                    for (Map.Entry<Integer, int[]> entry : s.agentConflicts.entrySet()) {
-//                        System.err.println(entry.getKey()+ " " + Arrays.toString(entry.getValue()));
+////                    System.err.println(s.helps.toString());
+//                    if (s.jointAction != null) {
+//                        for (Action action : s.jointAction) {
+//                            System.err.println(action.toString());
+//                        }
 //                    }
-////                    if (s.jointAction != null) {
-////                        for (Action action : s.jointAction) {
-////                            System.err.println(action.toString());
-////                        }
-////                    }
 //                    Thread.sleep(200);
 //                } catch (InterruptedException e) {
 //                    e.printStackTrace();

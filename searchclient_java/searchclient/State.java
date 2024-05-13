@@ -875,12 +875,13 @@ public class State
                 }
             }
         }
-        if (!canMoveTo(requesterGoal[0], requesterGoal[1])) return null;
-        List<int[]> path = new ArrayList<>();
-        path.add(requesterAgentCoordinate);
-        path.add(requesterGoal);
-        path.add(blockerAgentCoordinate);
-        return findUnblockedCoordinate(blockerAgentCoordinate[0], blockerAgentCoordinate[1], path, 10);
+        for (Map.Entry<Character, int[]> entry : this.boxesAndPositon.entrySet()) {
+            grid[entry.getValue()[0]][entry.getValue()[1]] = BOX_COST;
+        }
+        List<int[]> path = getShortestPath(requesterAgentCoordinate, requesterGoal, grid);
+        int[] blockerGoalCoordinate = findUnblockedCoordinate(blockerAgentCoordinate[0], blockerAgentCoordinate[1], path, 0);
+//        System.err.println("AAAblockerGoalCoordinate:" + Arrays.toString(blockerGoalCoordinate));
+        return blockerGoalCoordinate;
     }
     @Override
     public int hashCode()
