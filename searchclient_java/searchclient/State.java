@@ -699,7 +699,7 @@ public class State
         // Unable to find helper agent, agent cannot request for help
         if (helperAgent == '0') return null;
         // If helper agent is helping, it cannot help more
-        if (agentConflicts.containsKey(helperAgent) || agentConflicts.containsKey(requesterAgent)) return null;
+        if (getAgentConflict(helperAgent) != null || getAgentConflict(requesterAgent) != null) return null;
         if (isInHelp(helperAgent)) return null;
 //        if (!subgoal.isEmpty() && subgoal.get(helperAgent).peek() == blocker) return null;
         int[] helperCoordinate = new int[] {agentRows[helperAgent], agentCols[helperAgent]};
@@ -846,7 +846,7 @@ public class State
     //
     public int[] blockerAgentGoalCoordinate(int requesterAgent, int blockerAgent) {
         if (isInHelp(requesterAgent) || isInHelp(blockerAgent)) return null;
-        if (agentConflicts.containsKey(blockerAgent) || agentConflicts.containsKey(requesterAgent)) return null;
+        if (getAgentConflict(blockerAgent) != null || getAgentConflict(requesterAgent) != null) return null;
         int[] requesterAgentCoordinate = new int[] {agentRows[requesterAgent], agentCols[requesterAgent]};
         int[] blockerAgentCoordinate = new int[] {agentRows[blockerAgent], agentCols[blockerAgent]};
         if (subgoal.get(requesterAgent).isEmpty()) return null;
