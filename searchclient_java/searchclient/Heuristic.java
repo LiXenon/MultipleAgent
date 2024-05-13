@@ -153,17 +153,16 @@ public abstract class Heuristic
 
                 int thisHue = agenttogoaldiff;
                 sumHue += thisHue;
-
-            } else if (requesterAgent != null) {
-                int agentRow = s.agentRows[i];
-                int agentCol = s.agentCols[i];
-
-                int[] unlockPosition = requesterAgent.requesterGoalCoordinate;
-
-                int agenttogoaldiff = subgoals.shortest_way(grid, agentRow, agentCol, unlockPosition[0], unlockPosition[1]) + 1000;
-
-                int thisHue = agenttogoaldiff;
-                sumHue += thisHue;
+//            } else if (requesterAgent != null) {
+//                int agentRow = s.agentRows[i];
+//                int agentCol = s.agentCols[i];
+//
+//                int[] unlockPosition = requesterAgent.requesterGoalCoordinate;
+//
+//                int agenttogoaldiff = subgoals.shortest_way(grid, agentRow, agentCol, unlockPosition[0], unlockPosition[1]) + 1000;
+//
+//                int thisHue = agenttogoaldiff;
+//                sumHue += thisHue;
             } else if (helperhelp != null) {
                 char currentGoal = helperhelp.blocker;
                 int[] blockerGoalCoordinate = helperhelp.blockerGoalCoordinate;
@@ -186,15 +185,27 @@ public abstract class Heuristic
                 }
 
             } else if (requesterhelp != null) {
-                int[] requesterGoalCoordinate = requesterhelp.requesterGoalCoordinate;
+                boolean stage1 = false;
+                char currentGoal = requesterhelp.blocker;
+                int[] blockertargetPosition = boxesAndPositon.get(currentGoal);
+                int[] blockergoalPosition = requesterhelp.blockerGoalCoordinate;
+                if (blockergoalPosition[0] == blockertargetPosition[0] && blockergoalPosition[1] == blockertargetPosition[1]) {
+                    stage1 = true;
+                }
 
-                int agentRow = s.agentRows[i];
-                int agentCol = s.agentCols[i];
+                if (!stage1) {
+                    int[] requesterGoalCoordinate = requesterhelp.requesterGoalCoordinate;
 
-                int agenttogoaldiff = subgoals.shortest_way(grid, agentRow, agentCol, requesterGoalCoordinate[0], requesterGoalCoordinate[1]) + 1000;
+                    int agentRow = s.agentRows[i];
+                    int agentCol = s.agentCols[i];
 
-                int thisHue = agenttogoaldiff;
-                sumHue += thisHue;
+                    int agenttogoaldiff = subgoals.shortest_way(grid, agentRow, agentCol, requesterGoalCoordinate[0], requesterGoalCoordinate[1]) + 1000;
+
+                    int thisHue = agenttogoaldiff;
+                    sumHue += thisHue;
+                } else {
+
+                }
 
             } else if (!agentsubgoal.isEmpty()) {
                 char currentGoal = agentsubgoal.peek();
@@ -299,7 +310,7 @@ public abstract class Heuristic
 //                }
 //            } else {
                 for (int i = 0; i < parentAgentCols.length; i++) {
-                    if (s.getRequesterAgentConflict(i) != null && s.getRequesterHelp(i) != null) {
+                    if (s.getRequesterAgentConflict(i) == null && s.getRequesterHelp(i) == null) {
                         if ((agentRows[i] == parentAgentRows[i] && agentCols[i] == parentAgentCols[i]) && (!subgoal.get(i).isEmpty())) {
                             punishment += 10000;
                         }

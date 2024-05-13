@@ -97,18 +97,18 @@ public class GraphSearch {
 ////
 //                timer.scheduleAtFixedRate(task, 1000, 10000);
 
-//                try {
-//                    System.err.println(s.toString());
-////                    System.err.println(s.helps.toString());
+                try {
+                    System.err.println(s.toString());
+//                    System.err.println(s.helps.toString());
 //                    if (s.jointAction != null) {
 //                        for (Action action : s.jointAction) {
 //                            System.err.println(action.toString());
 //                        }
 //                    }
-//                    Thread.sleep(200);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
                 List<Help> newHelp = addNewHelp(s, iterations);
                 if (newHelp != null) s.helps = newHelp;
@@ -146,21 +146,27 @@ public class GraphSearch {
                 if (s.getHelp(i[1]) != null) {
                     s.removeHelp(i[1]);
                 }
+                if (s.getAgentConflict(i[0]) != null) {
+                    AgentConflict ac = s.getAgentConflict(i[0]);
+                    if ((ac.requesterAgent == i[0] && ac.blockerAgent == i[1]) || (ac.requesterAgent == i[1] && ac.blockerAgent == i[0])) {
+                        continue;
+                    }
+                }
                 int[] unlockPosition = s.blockerAgentGoalCoordinate(i[0], i[1]);
+                if (s.getAgentConflict(1) != null) {
+                    s.removeAgentConflict(i[1]);
+                }
                 if (unlockPosition == null) {
                     unlockPosition = s.blockerAgentGoalCoordinate(i[1], i[0]);
                     if (unlockPosition == null) {
                         break;
                     }
-                    if (s.getAgentConflict(1) != null) {
-                        s.removeAgentConflict(i[1]);
-                    }
-                    AgentConflict ac = new AgentConflict(i[1], i[0], new int[]{s.agentRows[i[1]], s.agentCols[i[1]]}, unlockPosition);
+                    AgentConflict ac = new AgentConflict(i[1], i[0], new int[]{s.agentRows[i[0]], s.agentCols[i[0]]}, unlockPosition);
 
                     s.agentConflicts.add(ac);
 
                 } else {
-                    AgentConflict ac = new AgentConflict(i[0], i[1], new int[]{s.agentRows[i[0]], s.agentCols[i[0]]}, unlockPosition);
+                    AgentConflict ac = new AgentConflict(i[0], i[1], new int[]{s.agentRows[i[1]], s.agentCols[i[1]]}, unlockPosition);
                     s.agentConflicts.add(ac);
                 }
             }
@@ -239,10 +245,13 @@ public class GraphSearch {
             if (s.getAgentConflict(i) != null) {
                 AgentConflict ac = s.getBlockerAgentConflict(i);
                 if (ac == null) continue;
-                int[] targetPosition = {s.agentRows[i], s.agentCols[i]};
-                int[] goalPosition = ac.blockerGoalCoordinate;
+                int[] blockerTargetPosition = {s.agentRows[i], s.agentCols[i]};
+                int[] blockerGoalPosition = ac.blockerGoalCoordinate;
+                int[] requesterTargetPosition = {s.agentRows[ac.requesterAgent], s.agentCols[ac.requesterAgent]};
+                int[] requesterGoalPosition = ac.requesterGoalCoordinate;
 
-                if (goalPosition[0] == targetPosition[0] && goalPosition[1] == targetPosition[1]) {
+                if (//blockerGoalPosition[0] == blockerTargetPosition[0] && blockerGoalPosition[1] == blockerTargetPosition[1] &&
+                requesterTargetPosition[0] == requesterGoalPosition[0] && requesterTargetPosition[1] == requesterGoalPosition[1]) {
                     s.removeAgentConflict(i);
                     s.completedAgentConflicts++;
                 }
@@ -251,10 +260,14 @@ public class GraphSearch {
                 Help help = s.getHelperHelp(i);
                 if (help == null) continue;
                 char currentGoal = help.blocker;
-                int[] targetPosition = boxesAndPositon.get(currentGoal);
-                int[] goalPosition = help.blockerGoalCoordinate;
+                int[] blockertargetPosition = boxesAndPositon.get(currentGoal);
+                int[] blockergoalPosition = help.blockerGoalCoordinate;
+                int[] requestertargetPosition = boxesAndPositon.get(help.requesterBox);
+                int[] requestergoalPosition = help.blockerGoalCoordinate;
 
-                if (goalPosition[0] == targetPosition[0] && goalPosition[1] == targetPosition[1]) {
+                if (blockergoalPosition[0] == blockertargetPosition[0] && blockergoalPosition[1] == blockertargetPosition[1] &&
+
+                ) {
                     System.err.println(iterations + " Blocker moved");
                     s.removeHelp(i);
 

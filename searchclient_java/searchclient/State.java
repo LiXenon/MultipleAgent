@@ -851,6 +851,7 @@ public class State
         int[] blockerAgentCoordinate = new int[] {agentRows[blockerAgent], agentCols[blockerAgent]};
         if (subgoal.get(requesterAgent).isEmpty()) return null;
         char requesterAgentCurrentBox = subgoal.get(requesterAgent).peek();
+        if (requesterAgentCurrentBox >= '0' && requesterAgentCurrentBox <= '9') return null;
         int[] requesterAgentCurrentBoxCoordinate = boxesAndPositon.get(requesterAgentCurrentBox);
         int[] requesterGoal;
         if ((int)(Math.sqrt(Math.pow((requesterAgentCoordinate[0] - requesterAgentCurrentBoxCoordinate[0]), 2) + Math.pow((requesterAgentCoordinate[1] - requesterAgentCurrentBoxCoordinate[1]), 2))) > 1) {
