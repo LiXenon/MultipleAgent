@@ -220,9 +220,9 @@ public class GraphSearch {
                 if (s.getHelp(i) == null && currentGoal >= 'A') {
 //                    System.err.println(iterations + " New help");
                     Help help = s.addHelp(i, currentGoal);
-                    if (help != null) {
+//                    if (help != null) {
 //                        System.err.println(s.toString());
-                    }
+//                    }
                 }
 //                System.err.println("Current agent: " + i);
 //                for (Help h : s.helps) {
@@ -262,8 +262,8 @@ public class GraphSearch {
                 char currentGoal = help.blocker;
                 int[] blockertargetPosition = boxesAndPositon.get(currentGoal);
                 int[] blockergoalPosition = help.blockerGoalCoordinate;
-                int[] requestertargetPosition = boxesAndPositon.get(help.requesterBox);
-                int[] blockerStartPosition = help.blockerStartPosition;
+                int[] requestertargetPosition = {s.agentRows[help.requesterAgent], s.agentCols[help.requesterAgent]};
+                int[] blockerStartPosition = help.blockerStartCoordinate;
 
                 if (requestertargetPosition[0] == blockerStartPosition[0] && requestertargetPosition[1] == blockerStartPosition[1]) {
                     System.err.println(iterations + " Blocker moved");

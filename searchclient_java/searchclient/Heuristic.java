@@ -153,6 +153,7 @@ public abstract class Heuristic
 
                 int thisHue = agenttogoaldiff;
                 sumHue += thisHue;
+                continue;
 //            } else if (requesterAgent != null) {
 //                int agentRow = s.agentRows[i];
 //                int agentCol = s.agentCols[i];
@@ -183,17 +184,16 @@ public abstract class Heuristic
 //                    System.err.println("Number " + i + " cost: " + thisHue);
                     sumHue += thisHue;
                 }
-
+                continue;
             } else if (requesterhelp != null) {
-                boolean stage1 = false;
+                boolean stage1 = true;
                 char currentGoal = requesterhelp.blocker;
                 int[] blockertargetPosition = boxesAndPositon.get(currentGoal);
                 int[] blockergoalPosition = requesterhelp.blockerGoalCoordinate;
                 if (blockergoalPosition[0] == blockertargetPosition[0] && blockergoalPosition[1] == blockertargetPosition[1]) {
-                    stage1 = true;
+                    stage1 = false;
                 }
-
-                if (!stage1) {
+                if (stage1) {
                     int[] requesterGoalCoordinate = requesterhelp.requesterGoalCoordinate;
 
                     int agentRow = s.agentRows[i];
@@ -203,11 +203,10 @@ public abstract class Heuristic
 
                     int thisHue = agenttogoaldiff;
                     sumHue += thisHue;
-                } else {
-
+                    continue;
                 }
-
-            } else if (!agentsubgoal.isEmpty()) {
+            }
+            if (!agentsubgoal.isEmpty()) {
                 char currentGoal = agentsubgoal.peek();
                 int[] targetPosition;
                 int[] goalPosition = goalsAndPositon.get(currentGoal);
