@@ -128,6 +128,7 @@ public class GraphSearch {
                 ArrayList<State> childState = s.getExpandedStates();
                 for (State t : childState) {
                     if ((!frontier.contains(t)) && (!expanded.contains(t))) {
+
                         frontier.add(t);
                     }
                 }

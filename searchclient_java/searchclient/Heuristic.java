@@ -162,7 +162,7 @@ public abstract class Heuristic
                 int boxtogoaldiff = subgoals.shortest_way(grid, targetPosition[0], targetPosition[1], blockerGoalCoordinate[0], blockerGoalCoordinate[1]) + 1000;
                 int agenttoboxdiff = subgoals.shortest_way(grid, agentRow, agentCol, targetPosition[0], targetPosition[1]) + 1000;
 
-                if (agenttoboxdiff != 101) {
+                if (agenttoboxdiff != 2) {
                     int thisHue = boxtogoaldiff + agenttoboxdiff;
 //                    System.err.println("Number " + i + " cost: " + thisHue);
                     sumHue += thisHue;
@@ -229,7 +229,7 @@ public abstract class Heuristic
 //                        completedGoals.put(currentGoal, targetPosition);
 //                    }
 
-                    if (agenttoboxdiff != 101) {
+                    if (agenttoboxdiff != 2) {
                         int thisHue = boxtogoaldiff + agenttoboxdiff;
 //                    System.err.println("Number " + i + " cost: " + thisHue);
                         sumHue += thisHue;
@@ -287,7 +287,7 @@ public abstract class Heuristic
 //            } else {
                 for (int i = 0; i < parentAgentCols.length; i++) {
                     if ((agentRows[i] == parentAgentRows[i] && agentCols[i] == parentAgentCols[i]) && (subgoal.get(i).size() != 0) && !holdBox[i]) {
-                        punishment += 100;
+                        punishment += 101;
                     }
                 }
 //            }
@@ -299,7 +299,7 @@ public abstract class Heuristic
         int completedgoals = completedGoals.size() * -1000;
         int completedhelps = completedHelps * -1000;
         int completedagentconflicts = completedAgentConflicts * -1000;
-        return sumHue + notInPosition + completedgoals + completedhelps + completedagentconflicts;// + punishment;
+        return sumHue + notInPosition + completedgoals + completedhelps + completedagentconflicts + punishment;
 //        System.err.println(currentGoal);
 //        System.err.println(targetPosition[0] + " " + targetPosition[1]);
 //        System.err.println(goalPosition[0] + " " + goalPosition[1]);
