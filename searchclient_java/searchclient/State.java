@@ -636,7 +636,22 @@ public class State
         return false;
     }
 
+    private boolean ArePathsCrossed(List<int[]> pathA, List<int[]> pathB) {
+        Set<String> mapPathA = new HashSet<>();
+        Set<String> mapPathB = new HashSet<>();
+        for (int[] node: pathA) {
+            mapPathA.add(Arrays.toString(node));
+        }
 
+        for (int[] node: pathB) {
+            mapPathB.add(Arrays.toString(node));
+        }
+
+        for (String node: mapPathA) {
+            if (mapPathB.contains(node)) return true;
+        }
+        return false;
+    }
 
     public Help addHelp(int requesterAgent, char requesterBox) {
         // If requester agent is requesting for help, it cannot request more
@@ -711,6 +726,13 @@ public class State
         int[] requesterCoordinate = new int[] {agentRows[requesterAgent], agentCols[requesterAgent]};
 //        System.err.println(Math.sqrt((Math.pow(requesterCoordinate[0] - x, 2) + Math.pow(requesterCoordinate[1] - y, 2))));
         if (Math.sqrt((Math.pow(requesterCoordinate[0] - x, 2) + Math.pow(requesterCoordinate[1] - y, 2))) > 4) return null;
+        if (Math.sqrt((Math.pow(helperCoordinate[0] - x, 2) + Math.pow(helperCoordinate[1] - y, 2))) < 1.4 && !subgoal.get(helperAgent).isEmpty() && subgoal.get(helperAgent).peek() == blocker) {
+            int[] blockerGoalPosition = goalsAndPositon.get(blocker);
+            List<int[]> helperOriginalPath = getShortestPath(new int[] {x, y}, blockerGoalPosition, grid);
+            if (helperOriginalPath != null) {
+                if (!ArePathsCrossed(helperOriginalPath, path)) return null;
+            }
+        }
         int[] requesterGoalCoordinate;
         if (isBoxOnThePath(helperPath, requesterCoordinate)) {
             requesterGoalCoordinate = findUnblockedCoordinate(requesterCoordinate[0], requesterCoordinate[1], helperPath, 0);
