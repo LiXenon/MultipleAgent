@@ -1,0 +1,220 @@
+Level name: AAAFUN
+Level solved: No.
+Actions used: 0.
+Time to solve: 0.000 seconds.
+
+Level name: AGACode
+Level solved: No.
+Actions used: 0.
+Time to solve: 0.000 seconds.
+
+Level name: AIAgents
+Level solved: Yes.
+Actions used: 195.
+Time to solve: 1.685 seconds.
+
+Level name: aiJoes
+Level solved: No.
+Actions used: 0.
+Time to solve: 0.000 seconds.
+
+Level name: aMAzing
+Level solved: Yes.
+Actions used: 228.
+Time to solve: 13.564 seconds.
+
+Level name: BfsFreaks
+Level solved: No.
+Actions used: 0.
+Time to solve: 0.000 seconds.
+
+Level name: Bouncer
+Level solved: No.
+Actions used: 0.
+Time to solve: 0.000 seconds.
+
+Level name: CerealWif
+Level solved: No.
+Actions used: 0.
+Time to solve: 0.000 seconds.
+
+Level name: Cliff
+Level solved: No.
+Actions used: 0.
+Time to solve: 0.000 seconds.
+
+Level name: CompCheck
+Level solved: No.
+Actions used: 0.
+Time to solve: 0.000 seconds.
+
+Level name: CphAirprt
+Level solved: No.
+Actions used: 0.
+Time to solve: 0.000 seconds.
+
+Level name: Eighty
+Level solved: No.
+Actions used: 0.
+Time to solve: 0.000 seconds.
+
+Level name: EulerPpl
+Level solved: No.
+Actions used: 0.
+Time to solve: 0.000 seconds.
+
+Level name: Flower
+Level solved: No.
+Actions used: 0.
+Time to solve: 0.000 seconds.
+
+Level name: Greeders
+Level solved: No.
+Actions used: 0.
+Time to solve: 0.000 seconds.
+
+Level name: Happyya
+Level solved: No.
+Actions used: 0.
+Time to solve: 0.000 seconds.
+
+Level name: Hashtag
+Level solved: Yes.
+Actions used: 126.
+Time to solve: 10.155 seconds.
+
+Level name: JAMP
+Level solved: No.
+Actions used: 0.
+Time to solve: 0.000 seconds.
+
+Level name: JarvisExe
+Level solved: Yes.
+Actions used: 78.
+Time to solve: 0.230 seconds.
+
+Level name: MABRY
+Level solved: Yes.
+Actions used: 76.
+Time to solve: 18.300 seconds.
+
+Level name: MAIzeRun
+Level solved: No.
+Actions used: 0.
+Time to solve: 0.000 seconds.
+
+Level name: Marathon
+Level solved: No.
+Actions used: 0.
+Time to solve: 0.000 seconds.
+
+Level name: Medibots
+Level solved: No.
+Actions used: 0.
+Time to solve: 0.000 seconds.
+
+Level name: Monad
+Level solved: No.
+Actions used: 0.
+Time to solve: 0.000 seconds.
+
+Level name: MSPaint
+Level solved: No.
+Actions used: 0.
+Time to solve: 0.000 seconds.
+
+Level name: NameHere
+Level solved: No.
+Actions used: 0.
+Time to solve: 0.000 seconds.
+
+Level name: OnlyLast
+Level solved: No.
+Actions used: 0.
+Time to solve: 0.000 seconds.
+
+Level name: PandorAI
+Level solved: No.
+Actions used: 0.
+Time to solve: 0.000 seconds.
+
+Level name: PIAF
+Level solved: No.
+Actions used: 0.
+Time to solve: 0.000 seconds.
+
+Level name: planB
+Level solved: Yes.
+Actions used: 23.
+Time to solve: 0.454 seconds.
+
+Level name: Qbit
+Level solved: No.
+Actions used: 0.
+Time to solve: 0.000 seconds.
+
+Level name: Raffaello
+Level solved: Yes.
+Actions used: 19.
+Time to solve: 0.146 seconds.
+
+Level name: RainyDay
+Level solved: No.
+Actions used: 0.
+Time to solve: 0.000 seconds.
+
+Level name: Roundbout
+Level solved: Yes.
+Actions used: 165.
+Time to solve: 4.465 seconds.
+
+Level name: sadbois
+Level solved: Yes.
+Actions used: 56.
+Time to solve: 2.689 seconds.
+
+Level name: SALTY
+Level solved: Yes.
+Actions used: 57.
+Time to solve: 37.874 seconds.
+
+Level name: SinbadAil
+Level solved: No.
+Actions used: 0.
+Time to solve: 0.000 seconds.
+
+Level name: Spds
+Level solved: Yes.
+Actions used: 15.
+Time to solve: 0.108 seconds.
+
+Level name: Spiraling
+Level solved: No.
+Actions used: 0.
+Time to solve: 0.000 seconds.
+
+Level name: StarGrid
+Level solved: No.
+Actions used: 0.
+Time to solve: 0.000 seconds.
+
+Level name: TBH
+Level solved: No.
+Actions used: 0.
+Time to solve: 0.000 seconds.
+
+Level name: UrBlocked
+Level solved: No.
+Actions used: 0.
+Time to solve: 0.000 seconds.
+
+Level name: YSERIOUS
+Level solved: No.
+Actions used: 0.
+Time to solve: 0.000 seconds.
+
+Level name: YummAI
+Level solved: No.
+Actions used: 0.
+Time to solve: 0.000 seconds.
+

@@ -1,0 +1,51 @@
+#domain
+hospital
+#levelname
+Spds
+#colors
+blue: 0,1,2
+#initial
++++++++++++++
++      1    +
++           +
+++++++ ++++++
++    0   2  +
++  +     +  +
++        +  +
++++++++++++++
+#goal
++++++++++++++
++       0   +
++           +
+++++++ ++++++
++           +
++2 +     +  +
++1       +  +
++++++++++++++
+#end
+#clientname
+SearchClient
+#actions
+106818300:Move(E)@Move(E)|Move(W)|Move(W)
+106959600:Move(N)@Move(N)|Move(W)|Move(W)
+107085600:Move(N)@Move(N)|Move(S)|Move(W)
+107195700:Move(N)@Move(N)|Move(W)|Move(W)
+107291100:Move(E)@Move(E)|Move(E)|Move(W)
+107378100:Move(E)@Move(E)|Move(E)|Move(W)
+107457800:NoOp@NoOp|Move(S)|Move(W)
+107536000:NoOp@NoOp|Move(S)|Move(W)
+107616400:NoOp@NoOp|Move(W)|Move(S)
+107702300:NoOp@NoOp|Move(S)|NoOp
+107795400:NoOp@NoOp|Move(S)|NoOp
+107876100:NoOp@NoOp|Move(W)|NoOp
+107957100:NoOp@NoOp|Move(W)|NoOp
+108047100:NoOp@NoOp|Move(W)|NoOp
+108142400:NoOp@NoOp|Move(W)|NoOp
+#end
+#solved
+true
+#numactions
+15
+#time
+108142400
+#end

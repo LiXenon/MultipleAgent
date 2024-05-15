@@ -1,0 +1,55 @@
+#domain
+hospital
+#levelname
+Raffaello
+#colors
+blue: 0, A
+red: 1, B
+green: 2
+#initial
++++++++++++++++++++
+++2              ++
++0 +        B  +  +
++                 +
++1+++++++++++++++A+
++                 +
++++++++++++++++++++
+#goal
++++++++++++++++++++
+++             1B++
++  +           +  +
++                 +
++ +++++++++++++++ +
++2               A+
++++++++++++++++++++
+#end
+#clientname
+SearchClient
+#actions
+143763300:Move(S)@Move(S)|Move(S)|Move(S)
+143922400:Move(E)@Move(E)|Move(N)|Move(W)
+144046900:Move(E)@Move(E)|Move(N)|Move(E)
+144156500:Move(E)@Move(E)|Move(E)|Move(W)
+144243200:Move(E)@Move(E)|Move(E)|Move(S)
+144353100:Move(E)@Move(E)|Move(E)|Move(S)
+144443000:Move(E)@Move(E)|Move(N)|Move(S)
+144546300:Move(E)@Move(E)|Move(E)|NoOp
+144630900:Move(E)@Move(E)|Move(E)|NoOp
+144713200:Move(E)@Move(E)|Move(E)|NoOp
+144805700:Move(E)@Move(E)|Move(E)|NoOp
+144903900:Move(E)@Move(E)|Move(E)|NoOp
+144990100:Move(E)@Move(E)|Move(E)|NoOp
+145092200:Move(E)@Move(E)|Move(E)|NoOp
+145191200:Move(E)@Move(E)|Push(E,N)|NoOp
+145276400:Move(E)@Move(E)|Push(N,E)|NoOp
+145357900:Move(E)@Move(E)|Push(E,E)|NoOp
+145448000:Push(S,S)@Push(S,S)|Push(E,E)|NoOp
+145538800:NoOp@NoOp|Push(E,E)|NoOp
+#end
+#solved
+true
+#numactions
+19
+#time
+145538800
+#end

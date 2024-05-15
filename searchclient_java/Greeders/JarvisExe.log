@@ -1,0 +1,133 @@
+#domain
+hospital
+#levelname
+JarvisExe
+#colors
+brown: 0,M,E
+pink: 1,D,S
+#initial
++++++++++++++++
++            0+
++ +++++  E  + +
++ +   +     + +
++ + M +++++++ +
++     +       +
++ +++++       +
++             +
++             +
++ +++++++++++ +
++  +       D+ +
++  +    +++++ +
++       +     +
++   +++++ S + +
++       +   + +
++1      +++++ +
++++++++++++++++
+#goal
++++++++++++++++
++            0+
++ +++++     + +
++ +   +     + +
++ +   +++++++ +
++     +       +
++ +++++       +
++       MEDS  +
++             +
++ +++++++++++ +
++  +        + +
++  +    +++++ +
++       +     +
++   +++++   + +
++       +   + +
++1      +++++ +
++++++++++++++++
+#end
+#clientname
+SearchClient
+#actions
+223843300:Move(W)@Move(W)|Move(N)
+223983300:Move(W)@Move(W)|Move(E)
+224076100:Move(W)@Move(W)|Move(N)
+224177400:Move(W)@Move(W)|Move(N)
+224256100:Pull(W,N)@Pull(W,N)|Move(E)
+224342700:Pull(W,W)@Pull(W,W)|Move(E)
+224424200:Move(W)@Move(W)|Move(N)
+224498800:Move(W)@Move(W)|Move(N)
+224584200:Move(W)@Move(W)|Move(E)
+224654600:Move(W)@Move(W)|Move(E)
+224730600:Move(W)@Move(W)|Move(E)
+224807400:Move(W)@Move(W)|Move(E)
+224889900:Move(S)@Move(S)|Move(E)
+224992500:Move(S)@Move(S)|Move(E)
+225106300:Move(S)@Move(S)|Pull(W,W)
+225190900:Move(S)@Move(S)|Pull(W,W)
+225274000:Move(E)@Move(E)|Pull(W,W)
+225351000:Move(E)@Move(E)|Pull(W,W)
+225440500:Move(E)@Move(E)|Pull(S,W)
+225520400:Push(N,W)@Push(N,W)|Pull(E,S)
+225725600:Push(W,S)@Push(W,S)|Push(W,S)
+225866900:Push(S,W)@Push(S,W)|Push(S,W)
+225953400:Push(W,W)@Push(W,W)|Push(W,W)
+226050500:Push(W,S)@Push(W,S)|Push(W,W)
+226146300:Push(S,S)@Push(S,S)|Push(W,W)
+226216500:Push(S,E)@Push(S,E)|Push(W,N)
+226297400:Push(E,E)@Push(E,E)|Push(N,W)
+226364900:Push(E,E)@Push(E,E)|Push(W,N)
+226444600:Push(E,E)@Push(E,E)|Push(N,N)
+226521400:Push(E,E)@Push(E,E)|Push(N,N)
+226606200:Push(E,E)@Push(E,E)|Push(N,E)
+226687500:Push(E,E)@Push(E,E)|Push(E,E)
+226767500:Move(N)@Move(N)|Push(E,E)
+226853100:Move(E)@Move(E)|Push(E,E)
+226933400:Move(N)@Move(N)|Push(E,E)
+227075500:Move(E)@Move(E)|Push(E,E)
+227171100:Move(E)@Move(E)|Push(E,E)
+227250300:Move(E)@Move(E)|Push(E,E)
+227352900:Move(E)@Move(E)|Push(E,E)
+227442500:Move(E)@Move(E)|Push(E,N)
+227599600:Move(N)@Move(N)|Move(E)
+227738200:Move(N)@Move(N)|Move(E)
+227850000:Move(N)@Move(N)|Move(E)
+227922500:Move(N)@Move(N)|Move(S)
+227987300:Move(W)@Move(W)|Move(S)
+228045100:Move(W)@Move(W)|Move(S)
+228115100:Move(W)@Move(W)|Move(S)
+228192100:Move(W)@Move(W)|Move(W)
+228281600:Pull(S,E)@Pull(S,E)|Move(W)
+228345300:Push(N,E)@Push(N,E)|Move(S)
+228417100:Push(E,E)@Push(E,E)|Pull(S,E)
+228614900:Push(E,E)@Push(E,E)|Push(N,N)
+228741100:Push(E,E)@Push(E,E)|Push(N,E)
+228818800:Push(E,S)@Push(E,S)|Push(E,E)
+228887600:Push(S,S)@Push(S,S)|Push(E,N)
+228957500:Push(S,S)@Push(S,S)|Push(N,N)
+229027100:Push(S,S)@Push(S,S)|Push(N,N)
+229093800:Push(S,W)@Push(S,W)|Push(N,N)
+229152800:Push(W,W)@Push(W,W)|Push(N,W)
+229221100:Push(W,W)@Push(W,W)|Push(W,W)
+229303700:Push(W,W)@Push(W,W)|Push(W,N)
+229373200:Push(W,S)@Push(W,S)|Move(W)
+229453500:Push(S,S)@Push(S,S)|Move(W)
+229514900:Move(E)@Move(E)|Move(W)
+229568700:Move(E)@Move(E)|Move(W)
+229620400:Move(E)@Move(E)|Move(W)
+229673800:Move(N)@Move(N)|Move(W)
+229727200:Move(E)@Move(E)|Move(W)
+229804600:Move(N)@Move(N)|Move(W)
+229858200:Move(N)@Move(N)|Move(W)
+229915300:Move(N)@Move(N)|Move(W)
+229984100:Move(N)@Move(N)|Move(S)
+230039900:NoOp@NoOp|Move(S)
+230096800:NoOp@NoOp|Move(S)
+230152000:NoOp@NoOp|Move(S)
+230211900:NoOp@NoOp|Move(S)
+230280200:NoOp@NoOp|Move(S)
+230335400:NoOp@NoOp|Move(S)
+#end
+#solved
+true
+#numactions
+78
+#time
+230335400
+#end

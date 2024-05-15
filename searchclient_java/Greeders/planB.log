@@ -1,0 +1,66 @@
+#domain
+hospital
+#levelname
+planB
+#colors
+blue: 0, A
+green: 1,B
+purple:3,D
+red:2,C
+#initial
+++++++++++++++
+++++++0+++++++
+++++++ +++++++
+++++++ +++++++
+++++++ +++++++
+++++++ +++++++     
++1   BA      +
++     CD    2+
++3           +
+++++++++++++++
+#goal
+++++++++++++++
+++++++ +++++++
+++++++ +++++++
+++++++ +++++++
+++++++ +++++++
+++++++ +++++++     
++           B+
++C           +
++     A    D +
+++++++++++++++
+#end
+#clientname
+SearchClient
+#actions
+451028400:Move(S)@Move(S)|Move(E)|Move(S)|Move(E)
+451197600:Move(S)@Move(S)|NoOp|Move(W)|Move(E)
+451317500:Move(S)@Move(S)|NoOp|Move(W)|Move(E)
+451419400:Move(S)@Move(S)|NoOp|Move(W)|Move(E)
+451546200:Push(S,E)@Push(S,E)|NoOp|Move(W)|Move(E)
+451654100:Pull(N,W)@Pull(N,W)|NoOp|Move(E)|Move(E)
+451755400:Push(S,E)@Push(S,E)|NoOp|Move(W)|Pull(W,S)
+451873200:Pull(N,W)@Pull(N,W)|NoOp|Move(N)|Pull(W,W)
+452000300:Push(S,E)@Push(S,E)|NoOp|Move(W)|Push(E,E)
+452147000:Pull(N,W)@Pull(N,W)|NoOp|Push(W,W)|Push(E,E)
+452292300:Push(S,E)@Push(S,E)|NoOp|Push(W,W)|Push(E,E)
+452416300:Pull(N,W)@Pull(N,W)|NoOp|Push(W,W)|Push(E,E)
+452528600:Push(S,E)@Push(S,E)|NoOp|Push(W,W)|Push(E,E)
+452627100:Pull(S,W)@Pull(S,W)|NoOp|Push(W,W)|NoOp
+452734100:Pull(S,S)@Pull(S,S)|Move(E)|Move(E)|NoOp
+452834900:Pull(E,S)@Pull(E,S)|Move(E)|NoOp|NoOp
+452950800:NoOp@NoOp|Push(E,E)|NoOp|NoOp
+453075600:NoOp@NoOp|Push(E,E)|NoOp|NoOp
+453170600:NoOp@NoOp|Push(E,E)|NoOp|NoOp
+453271400:NoOp@NoOp|Push(E,E)|NoOp|NoOp
+453472500:NoOp@NoOp|Push(E,E)|NoOp|NoOp
+453604700:NoOp@NoOp|Push(E,E)|NoOp|NoOp
+453732900:NoOp@NoOp|Push(E,E)|NoOp|NoOp
+#end
+#solved
+true
+#numactions
+23
+#time
+453732900
+#end

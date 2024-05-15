@@ -1,0 +1,220 @@
+#domain
+hospital
+#levelname
+Roundbout
+#colors
+blue: 0
+red: 1
+green: 2, A
+orange: 3, B 
+#initial
++++
++ +
++ +
++0+
++ +
++ +
++ +
++ +
++ +
++3+
++ +
++ +++
++B  +
++ + +++++++++++++
++  A  2      1  +
++++++++++++++++++
+#goal
++++
++1+
++ +
++ +
++ +
++ +
++ +
++ +
++ +
++ +
++ +
++ +++
++  B+
++ + +++++++++++++
++A             0+
++++++++++++++++++
+#end
+#clientname
+SearchClient
+#actions
+4450003200:Move(S)@Move(S)|Move(W)|Move(W)|Move(S)
+4450217800:Move(S)@Move(S)|Move(W)|Move(W)|Move(S)
+4450529100:Move(S)@Move(S)|Move(W)|Push(W,N)|Push(S,E)
+4450820900:Move(S)@Move(S)|Move(W)|Move(E)|Push(E,E)
+4451060800:Move(S)@Move(S)|Move(W)|Move(W)|NoOp
+4451210100:Move(S)@Move(S)|Move(W)|Move(W)|NoOp
+4451360400:Move(S)@Move(S)|Move(W)|Move(E)|NoOp
+4451482200:Move(S)@Move(S)|Move(W)|Move(W)|NoOp
+4451638900:Move(S)@Move(S)|Move(W)|Move(E)|NoOp
+4451770200:Move(S)@Move(S)|Move(E)|Move(W)|NoOp
+4451880300:Move(S)@Move(S)|Move(E)|Move(E)|NoOp
+4451987600:Move(E)@Move(E)|Move(E)|NoOp|NoOp
+4452106500:Move(W)@Move(W)|Move(E)|NoOp|NoOp
+4452205800:Move(N)@Move(N)|Move(E)|Pull(W,S)|NoOp
+4452328900:Move(N)@Move(N)|Move(W)|Pull(W,W)|NoOp
+4452447000:Move(N)@Move(N)|Move(W)|Pull(N,W)|NoOp
+4452553100:Move(S)@Move(S)|Move(W)|NoOp|NoOp
+4452651100:Move(N)@Move(N)|Move(W)|NoOp|NoOp
+4452750100:Move(S)@Move(S)|Move(W)|NoOp|NoOp
+4452842600:Move(N)@Move(N)|Move(W)|NoOp|NoOp
+4452937900:Move(N)@Move(N)|Move(N)|NoOp|Pull(W,W)
+4453039100:Move(N)@Move(N)|Move(N)|NoOp|Pull(N,W)
+4453130300:Move(N)@Move(N)|Move(W)|NoOp|Pull(N,N)
+4453223900:Move(N)@Move(N)|Move(W)|NoOp|Pull(N,N)
+4453322800:Move(N)@Move(N)|Move(N)|NoOp|Pull(N,N)
+4453436900:Move(S)@Move(S)|Move(N)|Move(N)|NoOp
+4453525000:Move(N)@Move(N)|Move(S)|Move(E)|NoOp
+4453625800:Move(S)@Move(S)|Move(N)|Move(E)|NoOp
+4453719700:Move(N)@Move(N)|Move(S)|Move(S)|NoOp
+4453820200:Move(S)@Move(S)|Move(S)|NoOp|Push(S,S)
+4453922200:Move(S)@Move(S)|Move(E)|NoOp|Push(S,S)
+4454014400:Move(S)@Move(S)|Move(E)|NoOp|Push(S,S)
+4454101900:Move(S)@Move(S)|Move(W)|NoOp|Push(S,S)
+4454198300:Move(S)@Move(S)|Move(E)|Move(S)|NoOp
+4454308200:Move(N)@Move(N)|Move(W)|Move(E)|NoOp
+4454410500:Move(S)@Move(S)|Move(E)|Move(E)|NoOp
+4454510900:Move(N)@Move(N)|Move(W)|Move(E)|NoOp
+4454630000:Move(S)@Move(S)|Move(E)|Move(E)|NoOp
+4454735000:Move(N)@Move(N)|Move(S)|NoOp|Move(E)
+4454833800:Move(S)@Move(S)|Move(S)|NoOp|Move(E)
+4454947400:Move(S)@Move(S)|Move(E)|NoOp|NoOp
+4455048300:Move(E)@Move(E)|Move(E)|NoOp|Move(S)
+4455134000:Move(E)@Move(E)|Move(W)|NoOp|Move(S)
+4455248800:Move(S)@Move(S)|Move(E)|NoOp|Move(W)
+4455341700:Move(S)@Move(S)|Move(W)|Move(E)|NoOp
+4455437400:Move(N)@Move(N)|Move(E)|Move(E)|NoOp
+4455522900:Move(N)@Move(N)|Move(W)|Move(E)|NoOp
+4455614600:Move(W)@Move(W)|Move(W)|NoOp|NoOp
+4455711700:Move(W)@Move(W)|Move(N)|NoOp|NoOp
+4455800800:Move(E)@Move(E)|Move(N)|NoOp|Move(E)
+4455898100:Move(W)@Move(W)|Move(S)|NoOp|Move(E)
+4456013900:Move(E)@Move(E)|Move(S)|NoOp|NoOp
+4456120000:Move(E)@Move(E)|Move(W)|NoOp|NoOp
+4456215400:Move(S)@Move(S)|Move(E)|NoOp|Move(E)
+4456328500:NoOp@NoOp|Move(E)|NoOp|NoOp
+4456453000:Move(S)@Move(S)|NoOp|NoOp|NoOp
+4456549500:Move(W)@Move(W)|NoOp|NoOp|NoOp
+4456622800:NoOp@NoOp|Move(W)|NoOp|NoOp
+4456710500:NoOp@NoOp|Move(N)|NoOp|NoOp
+4456801900:Move(E)@Move(E)|Move(N)|NoOp|NoOp
+4456893200:Move(E)@Move(E)|Move(W)|NoOp|NoOp
+4456963600:Move(W)@Move(W)|Move(W)|NoOp|NoOp
+4457031700:Move(E)@Move(E)|Move(N)|NoOp|NoOp
+4457130700:Move(W)@Move(W)|Move(N)|NoOp|NoOp
+4457230800:Move(E)@Move(E)|Move(N)|NoOp|NoOp
+4457352500:Move(W)@Move(W)|Move(N)|NoOp|NoOp
+4457444000:Move(E)@Move(E)|Move(N)|NoOp|NoOp
+4457529200:Move(W)@Move(W)|Move(N)|NoOp|NoOp
+4457609700:Move(E)@Move(E)|Move(N)|NoOp|NoOp
+4457691100:Move(W)@Move(W)|Move(N)|NoOp|NoOp
+4457757100:Move(E)@Move(E)|Move(N)|NoOp|NoOp
+4457820400:Move(W)@Move(W)|Move(N)|NoOp|NoOp
+4457880700:Move(N)@Move(N)|Move(N)|NoOp|NoOp
+4457961200:Move(N)@Move(N)|NoOp|NoOp|Move(E)
+4458014500:Move(S)@Move(S)|NoOp|NoOp|Move(E)
+4458077200:Move(S)@Move(S)|NoOp|NoOp|NoOp
+4458134500:Move(E)@Move(E)|NoOp|NoOp|NoOp
+4458229200:Move(E)@Move(E)|NoOp|NoOp|NoOp
+4458293200:Move(E)@Move(E)|NoOp|NoOp|Move(E)
+4458354400:Move(E)@Move(E)|NoOp|Move(E)|NoOp
+4458417300:Move(W)@Move(W)|NoOp|Move(E)|NoOp
+4458485300:Move(E)@Move(E)|NoOp|Move(E)|NoOp
+4458575200:Move(W)@Move(W)|NoOp|Move(E)|NoOp
+4458667600:Move(W)@Move(W)|NoOp|NoOp|Move(W)
+4458751800:Move(W)@Move(W)|NoOp|NoOp|Move(W)
+4458839400:Move(W)@Move(W)|NoOp|NoOp|Move(W)
+4458926000:Move(N)@Move(N)|NoOp|NoOp|Move(W)
+4459017300:Move(N)@Move(N)|NoOp|NoOp|Move(W)
+4459102000:Move(S)@Move(S)|NoOp|NoOp|Move(W)
+4459192100:Move(S)@Move(S)|NoOp|NoOp|NoOp
+4459282400:Move(E)@Move(E)|NoOp|NoOp|NoOp
+4459357400:Move(E)@Move(E)|NoOp|NoOp|NoOp
+4459424300:Move(E)@Move(E)|NoOp|NoOp|NoOp
+4459486100:Move(E)@Move(E)|NoOp|NoOp|NoOp
+4459597400:Move(E)@Move(E)|NoOp|NoOp|NoOp
+4459686600:Move(E)@Move(E)|NoOp|NoOp|NoOp
+4459769600:Move(E)@Move(E)|NoOp|NoOp|NoOp
+4459834900:Move(E)@Move(E)|NoOp|NoOp|NoOp
+4459894100:Move(E)@Move(E)|NoOp|NoOp|NoOp
+4459954300:Move(E)@Move(E)|NoOp|Move(E)|NoOp
+4460015800:Move(E)@Move(E)|NoOp|NoOp|Move(E)
+4460080000:Move(W)@Move(W)|NoOp|NoOp|Move(N)
+4460141800:Move(E)@Move(E)|NoOp|NoOp|Move(N)
+4460215400:Move(W)@Move(W)|NoOp|NoOp|Move(W)
+4460276800:Move(E)@Move(E)|NoOp|NoOp|Move(W)
+4460338700:Move(W)@Move(W)|NoOp|NoOp|Pull(E,N)
+4460399300:Move(E)@Move(E)|NoOp|NoOp|Push(W,N)
+4460468800:Move(W)@Move(W)|NoOp|NoOp|Push(N,N)
+4460529700:Move(E)@Move(E)|NoOp|NoOp|Push(N,N)
+4460605800:Move(W)@Move(W)|NoOp|NoOp|Push(N,N)
+4460669500:Move(E)@Move(E)|NoOp|NoOp|Push(N,N)
+4460723900:Move(W)@Move(W)|NoOp|NoOp|Push(N,N)
+4460795200:Move(E)@Move(E)|NoOp|NoOp|Push(N,N)
+4460853400:Move(W)@Move(W)|NoOp|NoOp|Push(N,N)
+4460939300:Move(E)@Move(E)|NoOp|NoOp|Push(N,N)
+4461021900:Move(W)@Move(W)|NoOp|NoOp|Push(N,N)
+4461106700:Move(E)@Move(E)|NoOp|NoOp|Move(S)
+4461188900:Move(W)@Move(W)|NoOp|NoOp|Move(S)
+4461255200:Move(E)@Move(E)|NoOp|NoOp|Move(S)
+4461331100:Move(W)@Move(W)|NoOp|NoOp|Move(S)
+4461406800:Move(E)@Move(E)|NoOp|NoOp|Move(S)
+4461484900:Move(W)@Move(W)|NoOp|NoOp|Move(S)
+4461553600:Move(W)@Move(W)|NoOp|Move(W)|NoOp
+4461635900:Move(W)@Move(W)|NoOp|Move(W)|NoOp
+4461717000:Move(W)@Move(W)|NoOp|Move(W)|NoOp
+4461780200:Move(W)@Move(W)|NoOp|Move(W)|NoOp
+4461916200:Move(W)@Move(W)|NoOp|Move(W)|NoOp
+4462023900:Move(W)@Move(W)|NoOp|Move(W)|NoOp
+4462105500:Move(W)@Move(W)|NoOp|Move(W)|NoOp
+4462187200:Move(W)@Move(W)|NoOp|Move(W)|NoOp
+4462279400:Move(W)@Move(W)|NoOp|Move(W)|NoOp
+4462380200:Move(W)@Move(W)|NoOp|Move(W)|NoOp
+4462473400:Move(N)@Move(N)|NoOp|Move(W)|NoOp
+4462632600:Move(N)@Move(N)|NoOp|Move(W)|NoOp
+4462714600:Move(S)@Move(S)|NoOp|Move(W)|NoOp
+4462775500:Move(S)@Move(S)|NoOp|NoOp|NoOp
+4462829300:Move(E)@Move(E)|NoOp|NoOp|NoOp
+4462878600:Move(E)@Move(E)|NoOp|NoOp|NoOp
+4462928500:Move(E)@Move(E)|NoOp|NoOp|NoOp
+4463001300:Move(E)@Move(E)|NoOp|NoOp|NoOp
+4463056300:Move(E)@Move(E)|NoOp|NoOp|NoOp
+4463113300:Move(E)@Move(E)|NoOp|NoOp|NoOp
+4463169500:Move(E)@Move(E)|NoOp|NoOp|NoOp
+4463250600:Move(E)@Move(E)|NoOp|NoOp|NoOp
+4463332200:Move(E)@Move(E)|NoOp|NoOp|NoOp
+4463408900:Move(E)@Move(E)|NoOp|NoOp|NoOp
+4463484600:Move(E)@Move(E)|NoOp|NoOp|NoOp
+4463563800:Move(E)@Move(E)|NoOp|NoOp|Move(N)
+4463647100:NoOp@NoOp|NoOp|NoOp|Move(N)
+4463740200:NoOp@NoOp|NoOp|NoOp|Move(N)
+4463832300:NoOp@NoOp|NoOp|NoOp|Move(N)
+4463916600:NoOp@NoOp|NoOp|NoOp|Move(N)
+4464027100:NoOp@NoOp|NoOp|NoOp|Move(N)
+4464106600:NoOp@NoOp|NoOp|NoOp|Pull(S,S)
+4464191700:NoOp@NoOp|NoOp|NoOp|Pull(S,S)
+4464257600:NoOp@NoOp|NoOp|NoOp|Pull(S,S)
+4464313300:NoOp@NoOp|NoOp|NoOp|Pull(S,S)
+4464366100:NoOp@NoOp|NoOp|NoOp|Pull(S,S)
+4464421800:NoOp@NoOp|NoOp|NoOp|Pull(S,S)
+4464475200:NoOp@NoOp|NoOp|NoOp|Pull(S,S)
+4464530000:NoOp@NoOp|NoOp|NoOp|Pull(S,S)
+4464590700:NoOp@NoOp|NoOp|NoOp|Pull(S,S)
+4464650900:NoOp@NoOp|NoOp|NoOp|Pull(S,S)
+4464721500:NoOp@NoOp|NoOp|NoOp|Push(N,E)
+4464794200:NoOp@NoOp|NoOp|NoOp|Push(E,E)
+#end
+#solved
+true
+#numactions
+165
+#time
+4464794200
+#end

@@ -1,0 +1,119 @@
+#domain
+hospital
+#levelname
+SALTY
+#colors
+blue: 0, S
+green: 1, A
+red: 2, L
+cyan:4, T
+purple: 3, Y
+#initial
+++++++++++++++++++++
++  0    1   2    3 +
++ ++++ ++++++ ++++ +
++    +     S+ +    +
++ ++ + ++++ + + ++ +
++    +   T+ + +L   +
++ ++++ ++++ + ++++ +
++         4        +
++ ++++ +        ++ +
++  A + +           +
++ ++ + +     ++++  +
++    +   +      +  +
++ ++++ ++++ +++++  +
++              Y+  +
++ ++++ ++++++ + +  +
++    +        + +  +
++ ++ + ++++ + + +  +
++    +      +   +  +
+++++++++++++++++++++
+#goal
+++++++++++++++++++++
++                  +
++ ++++ ++++++ ++++ +
++    +      + +    +
++ ++ + ++++ + + ++ +
++    +    + + +    +
++ ++++ ++++ + ++++ +
++                  +
++ ++++ +   SALTY++ +
++    + +           +
++ ++ + +     ++++  +
++    +   +      +  +
++ ++++ ++++ +++++  +
++               +  +
++ ++++ ++++++ + +  +
++    +        + +  +
++ ++ + ++++ + + +  +
++    +      +   +  +
+++++++++++++++++++++
+#end
+#clientname
+SearchClient
+#actions
+37868945800:Move(E)@Move(E)|Move(W)|Move(E)|Move(W)|Move(W)
+37869086600:Move(E)@Move(E)|Move(W)|Move(E)|Move(W)|Move(W)
+37869247000:NoOp@NoOp|Move(E)|NoOp|Move(E)|Move(W)
+37869397300:Move(E)@Move(E)|Move(E)|Move(E)|Move(E)|Move(W)
+37869528000:Move(S)@Move(S)|Move(W)|Move(W)|Move(W)|Move(N)
+37869653900:Move(S)@Move(S)|Move(W)|Move(W)|Move(W)|Move(N)
+37869771100:Move(E)@Move(E)|Move(S)|Move(W)|Move(W)|Move(E)
+37869873600:Move(E)@Move(E)|Move(S)|Move(E)|Move(E)|Move(E)
+37869971800:Move(E)@Move(E)|Move(S)|Move(W)|Move(W)|Pull(W,W)
+37870087300:Move(E)@Move(E)|Move(S)|Move(W)|Move(W)|Push(E,E)
+37870221400:Push(E,S)@Push(E,S)|Move(S)|Move(E)|Move(S)|Pull(W,W)
+37870363500:Push(S,S)@Push(S,S)|Move(S)|Move(E)|Move(S)|Pull(W,W)
+37870473600:Push(S,S)@Push(S,S)|Move(W)|Move(E)|Move(S)|Pull(S,W)
+37870572600:Push(S,S)@Push(S,S)|Move(W)|Move(E)|Move(S)|Pull(S,S)
+37870673000:Push(S,S)@Push(S,S)|Move(W)|Move(E)|Move(S)|Push(N,N)
+37870789000:NoOp@NoOp|Move(W)|Move(E)|Move(S)|Pull(S,S)
+37870904600:NoOp@NoOp|Move(W)|Move(E)|Move(W)|Pull(W,S)
+37870999000:Move(N)@Move(N)|Move(S)|Move(S)|Move(S)|Push(E,S)
+37871083500:NoOp@NoOp|Move(S)|Move(S)|Move(S)|Push(S,S)
+37871206500:NoOp@NoOp|Move(E)|Move(S)|Move(W)|Pull(N,N)
+37871302900:NoOp@NoOp|Pull(W,W)|Move(S)|Move(S)|Push(S,S)
+37871395400:NoOp@NoOp|Pull(N,W)|Move(W)|Move(S)|Pull(N,N)
+37871478600:NoOp@NoOp|Pull(N,N)|Move(W)|Move(S)|Push(S,S)
+37871573100:NoOp@NoOp|Pull(N,N)|Pull(E,E)|Move(S)|Pull(N,N)
+37871655000:NoOp@NoOp|Push(S,E)|Pull(E,E)|Move(E)|Push(S,S)
+37871741900:NoOp@NoOp|Push(E,E)|Pull(N,E)|Move(E)|Pull(N,N)
+37871832000:NoOp@NoOp|Push(E,E)|Push(S,S)|Move(E)|Push(S,S)
+37871926200:NoOp@NoOp|Push(E,E)|Push(S,S)|Pull(W,W)|Pull(N,N)
+37872017600:NoOp@NoOp|Pull(W,W)|Push(S,W)|Pull(S,W)|Push(S,S)
+37872107100:NoOp@NoOp|Push(E,E)|Push(W,W)|Push(N,W)|Pull(N,N)
+37872187200:NoOp@NoOp|Pull(W,W)|Push(W,W)|Push(W,W)|Push(S,S)
+37872278300:NoOp@NoOp|Push(E,E)|Push(W,W)|Push(W,N)|Pull(N,N)
+37872412800:NoOp@NoOp|Pull(W,W)|Push(W,W)|Push(N,N)|Push(S,S)
+37872516500:NoOp@NoOp|Push(E,E)|Push(W,S)|Push(N,N)|Pull(N,N)
+37872662500:NoOp@NoOp|Pull(W,W)|NoOp|Push(N,N)|Push(S,S)
+37872769700:NoOp@NoOp|Push(E,E)|NoOp|Push(N,E)|Pull(N,N)
+37872848400:NoOp@NoOp|Pull(W,W)|NoOp|Push(E,E)|Push(S,S)
+37872930200:NoOp@NoOp|Push(E,E)|NoOp|Push(E,E)|Pull(N,N)
+37873005000:NoOp@NoOp|Pull(W,W)|NoOp|Push(E,E)|Push(S,S)
+37873115000:NoOp@NoOp|Push(E,E)|NoOp|Push(E,N)|Push(S,S)
+37873197300:NoOp@NoOp|Push(E,E)|NoOp|NoOp|Push(S,S)
+37873273400:NoOp@NoOp|Push(E,E)|NoOp|NoOp|Push(S,E)
+37873349900:NoOp@NoOp|Push(E,E)|NoOp|NoOp|Push(E,E)
+37873428500:NoOp@NoOp|Push(E,E)|NoOp|NoOp|Push(E,N)
+37873532200:NoOp@NoOp|Push(E,E)|NoOp|NoOp|Push(N,E)
+37873611400:NoOp@NoOp|Push(E,E)|NoOp|NoOp|Push(E,N)
+37873678000:Move(N)@Move(N)|Push(E,E)|NoOp|NoOp|Push(N,E)
+37873745100:NoOp@NoOp|Pull(N,W)|NoOp|Push(N,N)|Push(E,E)
+37873811600:NoOp@NoOp|Push(S,W)|NoOp|Pull(W,S)|Push(E,E)
+37873892400:NoOp@NoOp|Pull(N,E)|NoOp|NoOp|Push(E,E)
+37873962700:NoOp@NoOp|Push(S,E)|NoOp|NoOp|Push(E,E)
+37874028800:NoOp@NoOp|Pull(N,W)|NoOp|NoOp|Push(E,E)
+37874121100:NoOp@NoOp|Push(S,W)|NoOp|Move(N)|NoOp
+37874182700:Move(S)@Move(S)|Pull(E,E)|NoOp|NoOp|Pull(N,W)
+37874254400:NoOp@NoOp|Pull(S,E)|Move(N)|NoOp|Push(S,E)
+37874323300:NoOp@NoOp|Pull(S,S)|NoOp|NoOp|Pull(W,W)
+37874389600:NoOp@NoOp|Move(S)|NoOp|NoOp|Push(E,N)
+#end
+#solved
+true
+#numactions
+57
+#time
+37874389600
+#end
