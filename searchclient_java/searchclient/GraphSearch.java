@@ -201,23 +201,24 @@ public class GraphSearch {
 //        Map<Character, int[]> goalsAndPositon = s.goalsAndPositon;
 //        Map<Character, int[]> boxesAndPositon = s.boxesAndPositon;
 //        Map<Character, int[]> completedGoals = s.completedGoals;
-        ArrayList<LinkedList<Character>> subgoal = s.subgoal;
+        ArrayList<LinkedList<String>> subgoal = s.subgoal;
 
 //        Subgoals subgoals = new Subgoals();
         int[][] grid = s.grid;
 
         for (int i = 0; i < s.subgoal.size(); i++) {
-            LinkedList<Character> agentsubgoal = subgoal.get(i);
+            LinkedList<String> agentsubgoal = subgoal.get(i);
 //            System.err.println("agentsubgoal: " + agentsubgoal);
             if (!agentsubgoal.isEmpty()) {
-                char currentGoal = agentsubgoal.peek();
+                String currentGoal = agentsubgoal.peek();
 //                int agentRow = s.agentRows[i];
 //                int agentCol = s.agentCols[i];
 //                int[] targetPosition = boxesAndPositon.get(currentGoal);
 //                int agenttoboxdiff = subgoals.shortest_way(grid, agentRow, agentCol, targetPosition[0], targetPosition[1]) + 1000;
 //                System.err.println("Agent " + i + " distance " + agenttoboxdiff);
 //                if (agenttoboxdiff == 2) {
-                if (s.getHelp(i) == null && currentGoal >= 'A') {
+                char firstChar = currentGoal.charAt(0);
+                if (s.getHelp(i) == null && firstChar >= 'A') {
 //                    System.err.println(iterations + " New help");
                     Help help = s.addHelp(i, currentGoal);
 //                    if (help != null) {
@@ -235,13 +236,13 @@ public class GraphSearch {
 
     private static void isChangeGoal(State s, int iterations) {
         Map<Character, int[]> goalsAndPositon = s.goalsAndPositon;
-        Map<Character, int[]> boxesAndPositon = s.boxesAndPositon;
-        Map<Character, int[]> completedGoals = s.completedGoals;
-        ArrayList<LinkedList<Character>> subgoal = s.subgoal;
+        Map<String, int[]> boxesAndPositon = s.boxesAndPositon;
+        Map<String, int[]> completedGoals = s.completedGoals;
+        ArrayList<LinkedList<String>> subgoal = s.subgoal;
         List<AgentConflict> agentConflicts = s.agentConflicts;
 
         for (int i = 0; i < s.subgoal.size(); i++) {
-            LinkedList<Character> agentsubgoal = subgoal.get(i);
+            LinkedList<String> agentsubgoal = subgoal.get(i);
             if (s.getAgentConflict(i) != null) {
                 AgentConflict ac = s.getBlockerAgentConflict(i);
                 if (ac == null) continue;
@@ -259,7 +260,7 @@ public class GraphSearch {
             if (s.getHelp(i) != null) {
                 Help help = s.getHelperHelp(i);
                 if (help == null) continue;
-                char currentGoal = help.blocker;
+                String currentGoal = help.blocker;
                 int[] blockertargetPosition = boxesAndPositon.get(currentGoal);
                 int[] blockergoalPosition = help.blockerGoalCoordinate;
                 int[] requestertargetPosition = {s.agentRows[help.requesterAgent], s.agentCols[help.requesterAgent]};
@@ -272,9 +273,10 @@ public class GraphSearch {
                     s.completedHelps++;
                 }
             } else if (!agentsubgoal.isEmpty()) {
-                char currentGoal = agentsubgoal.peek();
+                String currentGoal = agentsubgoal.peek();
                 int[] targetPosition;
-                if (currentGoal >= 'A') {
+                char firstChar = currentGoal.charAt(0);
+                if (firstChar >= 'A') {
                     targetPosition = boxesAndPositon.get(currentGoal);
                 } else {
                     targetPosition = new int[]{s.agentRows[i], s.agentCols[i]};

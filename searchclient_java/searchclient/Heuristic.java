@@ -67,15 +67,15 @@ public abstract class Heuristic
         Subgoals subgoals = new Subgoals();
 
         Map<Character, int[]> goalsAndPositon = s.goalsAndPositon;
-        Map<Character, int[]> boxesAndPositon = s.boxesAndPositon;
+        Map<String, int[]> boxesAndPositon = s.boxesAndPositon;
 
-        ArrayList<LinkedList<Character>> subgoal = s.subgoal;
+        ArrayList<LinkedList<String>> subgoal = s.subgoal;
 //        System.err.println("subgoals:");
 //        for (char goalname : subgoal) {
 //            System.err.print(goalname + " ");
 //        }
 //        System.err.println();
-        Map<Character, int[]> completedGoals = s.completedGoals;
+        Map<String, int[]> completedGoals = s.completedGoals;
         int completedHelps = s.completedHelps;
         int completedAgentConflicts = s.completedAgentConflicts;
 
@@ -108,7 +108,7 @@ public abstract class Heuristic
 //            this.grid[agentRows[i]][agentCols[i]] = 5;
 //        }
 //
-        for (Map.Entry<Character, int[]> entry : boxesAndPositon.entrySet()) {
+        for (Map.Entry<String, int[]> entry : boxesAndPositon.entrySet()) {
             int[] indices = entry.getValue();
             grid[indices[0]][indices[1]] = BOX_COST;
         }
@@ -137,7 +137,7 @@ public abstract class Heuristic
 
 //            System.err.println("This is agent: " + i);
 //            System.err.println("Agent" + "i goal: "+ subgoal.toString());
-            LinkedList<Character> agentsubgoal = subgoal.get(i);
+            LinkedList<String> agentsubgoal = subgoal.get(i);
 
             Help helperhelp = s.getHelperHelp(i);
             Help requesterhelp = s.getRequesterHelp(i);
@@ -165,7 +165,7 @@ public abstract class Heuristic
 //                int thisHue = agenttogoaldiff;
 //                sumHue += thisHue;
             } else if (helperhelp != null) {
-                char currentGoal = helperhelp.blocker;
+                String currentGoal = helperhelp.blocker;
                 int[] blockerGoalCoordinate = helperhelp.blockerGoalCoordinate;
                 int[] targetPosition = boxesAndPositon.get(currentGoal);
 
@@ -187,7 +187,7 @@ public abstract class Heuristic
                 continue;
             } else if (requesterhelp != null) {
                 boolean stage1 = true;
-                char currentGoal = requesterhelp.blocker;
+                String currentGoal = requesterhelp.blocker;
                 int[] blockertargetPosition = boxesAndPositon.get(currentGoal);
                 int[] blockergoalPosition = requesterhelp.blockerGoalCoordinate;
                 if (blockergoalPosition[0] == blockertargetPosition[0] && blockergoalPosition[1] == blockertargetPosition[1]) {
@@ -207,12 +207,12 @@ public abstract class Heuristic
                 }
             }
             if (!agentsubgoal.isEmpty()) {
-                char currentGoal = agentsubgoal.peek();
+                String currentGoal = agentsubgoal.peek();
                 int[] targetPosition;
                 int[] goalPosition = goalsAndPositon.get(currentGoal);
 //        int[][] grid = s.grid;
-
-                if (currentGoal >= 'A' && currentGoal <= 'Z') {
+                char firstChar = currentGoal.charAt(0);
+                if (firstChar >= 'A' && firstChar <= 'Z') {
                     targetPosition = boxesAndPositon.get(currentGoal);
 
                     int agentRow = s.agentRows[i];
@@ -263,7 +263,7 @@ public abstract class Heuristic
                         sumHue += thisHue;
                     }
                 } else {
-                    int index = currentGoal - '0';
+                    int index = Integer.parseInt(currentGoal.substring(1));
                     targetPosition = new int[]{s.agentRows[index], s.agentCols[index]};
                     goalPosition = goalsAndPositon.get(currentGoal);
 

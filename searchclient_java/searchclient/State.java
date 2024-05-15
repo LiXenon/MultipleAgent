@@ -47,13 +47,13 @@ public class State
 
     private int hash = 0;
 
-    public ArrayList<LinkedList<Character>> subgoal = new ArrayList<LinkedList<Character>>();;
-    public Map<Character, int[]> completedGoals = new HashMap<>();
+    public ArrayList<LinkedList<String>> subgoal = new ArrayList<LinkedList<String>>();;
+    public Map<String, int[]> completedGoals = new HashMap<>();
     public int completedHelps = 0;
     public int completedAgentConflicts = 0;
 
     public Map<Character, int[]> goalsAndPositon = new HashMap<>();
-    public Map<Character, int[]> boxesAndPositon = new HashMap<>();
+    public Map<String, int[]> boxesAndPositon = new HashMap<>();
 
 
     public int[][] grid;
@@ -104,15 +104,15 @@ public class State
         }
 
         Subgoals subgoals = new Subgoals();
-
+        int boxDuplicateRename = 0;
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 char c = goals[i][j];
-                char d = boxes[i][j];
+                String d = boxes[i][j] + "" + boxDuplicateRename++;
                 if (c != 0) {
                     this.goalsAndPositon.put(c, new int[]{i, j});
                 }
-                if (d != 0) {
+                if (boxes[i][j] != 0) {
                     this.boxesAndPositon.put(d, new int[]{i, j});
                 }
             }
@@ -214,14 +214,15 @@ public class State
         this.goalsAndPositon = new HashMap<>();
         this.boxesAndPositon = new HashMap<>();
 
+        int boxDuplicateRename = 0;
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 char c = goals[i][j];
-                char d = boxes[i][j];
+                String d = boxes[i][j] + "" + boxDuplicateRename++;
                 if (c != 0) {
                     this.goalsAndPositon.put(c, new int[]{i, j});
                 }
-                if (d != 0) {
+                if (boxes[i][j] != 0) {
                     this.boxesAndPositon.put(d, new int[]{i, j});
                 }
             }
@@ -526,18 +527,18 @@ public class State
 
     // Get the id of the first box on the path, if box not found, return '0'
     // The box cannot be agent's box
-    private char firstBoxOnThePath(List<int[]> path) {
+    private String firstBoxOnThePath(List<int[]> path) {
         if (!path.isEmpty()) path.remove(0);
         for (int[] coor: path) {
-            Iterator<Map.Entry<Character, int[]>> it = this.boxesAndPositon.entrySet().iterator();
+            Iterator<Map.Entry<String, int[]>> it = this.boxesAndPositon.entrySet().iterator();
             while (it.hasNext()) {
-                Map.Entry<Character, int[]> entry = it.next();
+                Map.Entry<String, int[]> entry = it.next();
                 if (coor[0] == entry.getValue()[0] && coor[1] == entry.getValue()[1]) {
                     return entry.getKey(); // box found, return its id
                 }
             }
         }
-        return '0'; // If return 0, means no box found on the path
+        return "0"; // If return 0, means no box found on the path
     }
 
     // Check if the box is still on the path
@@ -615,8 +616,8 @@ public class State
         return null; // No suitable coordinate found
     }
 
-    private int findAgentOfBox(char boxId) {
-        int boxColorIndex = boxId - 'A';
+    private int findAgentOfBox(String boxId) {
+        int boxColorIndex = Integer.parseInt(boxId.substring(1));
         Color boxColor = boxColors[boxColorIndex];
         for(int i = 0; i < agentColors.length; i++) {
             if (boxColor == agentColors[i]) {
@@ -653,7 +654,7 @@ public class State
         return false;
     }
 
-    public Help addHelp(int requesterAgent, char requesterBox) {
+    public Help addHelp(int requesterAgent, String requesterBox) {
         // If requester agent is requesting for help, it cannot request more
         if (isInHelp(requesterAgent)) return null;
 
@@ -676,7 +677,7 @@ public class State
                 }
             }
         }
-        for (Map.Entry<Character, int[]> entry : this.boxesAndPositon.entrySet()) {
+        for (Map.Entry<String, int[]> entry : this.boxesAndPositon.entrySet()) {
             grid[entry.getValue()[0]][entry.getValue()[1]] = BOX_COST;
         }
 //        for (int i = 0; i < agentRows.length; i++) {
@@ -700,9 +701,9 @@ public class State
         // Shortest path
         List<int[]> path = getShortestPath(startPosition, goalPosition, grid);
         // Only the first blocker is considered
-        char blocker = firstBoxOnThePath(path);
+        String blocker = firstBoxOnThePath(path);
         // If id is '0', the box is not found; agent don't need to request for help
-        if (blocker == '0') return null;
+        if (blocker == "0") return null;
         // Position of blocker
         int x = this.boxesAndPositon.get(blocker)[0];
         int y = this.boxesAndPositon.get(blocker)[1];
@@ -726,7 +727,7 @@ public class State
         int[] requesterCoordinate = new int[] {agentRows[requesterAgent], agentCols[requesterAgent]};
 //        System.err.println(Math.sqrt((Math.pow(requesterCoordinate[0] - x, 2) + Math.pow(requesterCoordinate[1] - y, 2))));
         if (Math.sqrt((Math.pow(requesterCoordinate[0] - x, 2) + Math.pow(requesterCoordinate[1] - y, 2))) > 4) return null;
-        if (Math.sqrt((Math.pow(helperCoordinate[0] - x, 2) + Math.pow(helperCoordinate[1] - y, 2))) < 1.4 && !subgoal.get(helperAgent).isEmpty() && subgoal.get(helperAgent).peek() == blocker) {
+        if (Math.sqrt((Math.pow(helperCoordinate[0] - x, 2) + Math.pow(helperCoordinate[1] - y, 2))) < 1.4 && !subgoal.get(helperAgent).isEmpty() && subgoal.get(helperAgent).peek().equals(blocker)) {
             int[] blockerGoalPosition = goalsAndPositon.get(blocker);
             List<int[]> helperOriginalPath = getShortestPath(new int[] {x, y}, blockerGoalPosition, grid);
             if (helperOriginalPath != null) {
@@ -875,8 +876,9 @@ public class State
         int[] requesterAgentCoordinate = new int[] {agentRows[requesterAgent], agentCols[requesterAgent]};
         int[] blockerAgentCoordinate = new int[] {agentRows[blockerAgent], agentCols[blockerAgent]};
         if (subgoal.get(requesterAgent).isEmpty()) return null;
-        char requesterAgentCurrentBox = subgoal.get(requesterAgent).peek();
-        if (requesterAgentCurrentBox >= '0' && requesterAgentCurrentBox <= '9') return null;
+        String requesterAgentCurrentBox = subgoal.get(requesterAgent).peek();
+        char charPart = requesterAgentCurrentBox.charAt(0);
+        if (charPart >= '0' && charPart <= '9') return null;
         int[] requesterAgentCurrentBoxCoordinate = boxesAndPositon.get(requesterAgentCurrentBox);
         int[] requesterGoal;
         if ((int)(Math.sqrt(Math.pow((requesterAgentCoordinate[0] - requesterAgentCurrentBoxCoordinate[0]), 2) + Math.pow((requesterAgentCoordinate[1] - requesterAgentCurrentBoxCoordinate[1]), 2))) > 1) {
@@ -901,7 +903,7 @@ public class State
                 }
             }
         }
-        for (Map.Entry<Character, int[]> entry : this.boxesAndPositon.entrySet()) {
+        for (Map.Entry<String, int[]> entry : this.boxesAndPositon.entrySet()) {
             grid[entry.getValue()[0]][entry.getValue()[1]] = BOX_COST;
         }
         List<int[]> path = getShortestPath(requesterAgentCoordinate, requesterGoal, grid);
