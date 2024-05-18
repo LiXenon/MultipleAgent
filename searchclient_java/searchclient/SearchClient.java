@@ -148,44 +148,18 @@ public class SearchClient
         {
             switch (args[0].toLowerCase(Locale.ROOT))
             {
-                case "-bfs":
-                    frontier = new FrontierBFS();
-                    break;
-                case "-dfs":
-                    frontier = new FrontierDFS();
-                    break;
-                case "-astar":
-                    frontier = new FrontierBestFirst(new HeuristicAStar(initialState));
-                    break;
-                case "-wastar":
-                    int w = 5;
-                    if (args.length > 1)
-                    {
-                        try
-                        {
-                            w = Integer.parseUnsignedInt(args[1]);
-                        }
-                        catch (NumberFormatException e)
-                        {
-                            System.err.println("Couldn't parse weight argument to -wastar as integer, using default.");
-                        }
-                    }
-                    frontier = new FrontierBestFirst(new HeuristicWeightedAStar(initialState, w));
-                    break;
                 case "-greedy":
                     frontier = new FrontierBestFirst(new HeuristicGreedy(initialState));
                     break;
                 default:
-                    frontier = new FrontierBFS();
-                    System.err.println("Defaulting to BFS search. Use arguments -bfs, -dfs, -astar, -wastar, or " +
-                                       "-greedy to set the search strategy.");
+                    frontier = new FrontierBestFirst(new HeuristicGreedy(initialState));
+                    System.err.println("Defaulting to greedy search.");
             }
         }
         else
         {
-            frontier = new FrontierBFS();
-            System.err.println("Defaulting to BFS search. Use arguments -bfs, -dfs, -astar, -wastar, or -greedy to " +
-                               "set the search strategy.");
+            frontier = new FrontierBestFirst(new HeuristicGreedy(initialState));
+            System.err.println("Defaulting to greedy search.");
         }
 
         // Search for a plan.
