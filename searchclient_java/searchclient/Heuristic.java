@@ -259,7 +259,7 @@ public abstract class Heuristic
 //                    }
                     sumHue += agenttogoaldiff;
                 }
-            } else if (agentsubgoal.isEmpty()){
+            } else if (agentsubgoal.isEmpty() && s.parent != null){
                 State parent = s.parent;
                 int[] parentAgentRows = parent.agentRows;
                 int[] parentAgentCols = parent.agentCols;
@@ -286,7 +286,7 @@ public abstract class Heuristic
 //                }
 //            } else {
                 for (int i = 0; i < parentAgentCols.length; i++) {
-                    if ((agentRows[i] == parentAgentRows[i] && agentCols[i] == parentAgentCols[i]) && (subgoal.get(i).size() != 0) && !holdBox[i]) {
+                    if ((agentRows[i] == parentAgentRows[i] && agentCols[i] == parentAgentCols[i]) && (subgoal.get(i).size() != 0)) {
                         punishment += 101;
                     }
                 }
