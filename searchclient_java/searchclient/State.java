@@ -122,19 +122,6 @@ public class State
         this.subgoal = subgoals.sort_priority(this.grid, this.walls, this.goals, this.agentRows, this.agentCols, this.goalsAndPositon, this.agentColors, this.boxColors);
 
         System.err.println(this.subgoal);
-
-//        for (int i = 0; i < rows; i++) {
-//            for (int j = 0; j < cols; j++) {
-//                char c = goals[i][j];
-//                char d = boxes[i][j];
-//                if (c != 0) {
-//                    this.goalsAndPositon.put(c, new int[]{i, j});
-//                }
-//                if (d != 0) {
-//                    this.boxesAndPositon.put(d, new int[]{i, j});
-//                }
-//            }
-//        }
     }
 
 
@@ -507,10 +494,6 @@ public class State
                 }
             }
         }
-//        List<int[]> path = reconstructPath(cameFrom, start, goal);
-//        for (int[] step : path) {
-//            System.out.println(Arrays.toString(step));
-//        }
         return reconstructPath(cameFrom, start, goal);
     }
 
@@ -667,24 +650,6 @@ public class State
         for (Map.Entry<Character, int[]> entry : this.boxesAndPositon.entrySet()) {
             grid[entry.getValue()[0]][entry.getValue()[1]] = BOX_COST;
         }
-//        for (int i = 0; i < agentRows.length; i++) {
-//            grid[agentRows[i]][agentCols[i]] = 5;
-//        }
-
-//        int[][] printgrid = new int[grid.length][grid[0].length];
-//        for (int i = 0; i < grid.length; i++) {
-//            for (int j = 0; j < grid[i].length; j++) {
-//                grid[i][j] = grid[i][j];
-//                if (walls[i][j] == true) {
-//                    printgrid[i][j] = 9;
-//                } else if (goals[i][j] != 0) {
-//                    printgrid[i][j] = 8;
-//                }
-//            }
-//        }
-//        for (int[] i : grid) {
-//            System.err.println(Arrays.toString(i));
-//        }
         // Shortest path
         List<int[]> path = getShortestPath(startPosition, goalPosition, grid);
         // Only the first blocker is considered
@@ -725,18 +690,6 @@ public class State
         Help help = new Help(requesterAgent, helperAgent, requesterBox, blocker, unblockedCoordinate, requesterGoalCoordinate);
         this.helps.add(help);
         System.err.println(help);
-//        for(int[] p: path) {
-//            System.err.print(Arrays.toString(p));
-//        }
-//        System.err.println("");
-//        System.err.println("====================================");
-//        System.err.println("");
-//        for(int[] p: helperPath) {
-//            System.err.print(Arrays.toString(p));
-//        }
-//        System.err.println("");
-//        System.err.println("====================================");
-//        System.err.println("");
         return help;
     }
 
