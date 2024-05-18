@@ -37,5 +37,5 @@ Memory settings:
 java -jar ../server.jar -l ../levels/SATheRedDot.lvl -c "java searchclient.SearchClient -greedy" -g -s 150 -t 180
 java -jar ../server.jar -l ../levels/MAthomasAppartment.lvl -c "java -Xmx8g searchclient.SearchClient -greedy" -g -s 150 -t 180
 
-java -jar ../server.jar -c "java searchclient.SearchClient -greedy" -l "../complevels" -t 180 -o "<group-name>.zip"
+java -jar ../server.jar -c "java searchclient.SearchClient -greedy" -l "../complevels" -t 180 -o "Greeders.zip"
 
