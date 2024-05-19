@@ -44,6 +44,8 @@ public abstract class Heuristic
 
         int[] agentRows = s.agentRows;
         int[] agentCols = s.agentCols;
+        char[][] boxes = s.boxes;
+        char[][] goals = s.goals;
 
         int sumHue = 0;
         boolean[] holdBox = new boolean[agentRows.length];
@@ -52,50 +54,7 @@ public abstract class Heuristic
 
             LinkedList<Character> agentsubgoal = subgoal.get(i);
 
-            Help helperhelp = s.getHelperHelp(i);
-            Help requesterhelp = s.getRequesterHelp(i);
-            int[] unlockPosition = s.agentConflicts.get(i);
-            if (unlockPosition != null) {
-                int agentRow = s.agentRows[i];
-                int agentCol = s.agentCols[i];
-
-                int agenttogoaldiff = subgoals.shortest_way(grid, agentRow, agentCol, unlockPosition[0], unlockPosition[1]) + 1000;
-
-                int thisHue = agenttogoaldiff;
-                sumHue += thisHue;
-
-            } else if (helperhelp != null) {
-                char currentGoal = helperhelp.blocker;
-                int[] blockerGoalCoordinate = helperhelp.blockerGoalCoordinate;
-                int[] targetPosition = boxesAndPositon.get(currentGoal);
-
-                int agentRow = agentRows[i];
-                int agentCol = agentCols[i];
-
-                int boxtogoaldiff = subgoals.shortest_way(grid, targetPosition[0], targetPosition[1], blockerGoalCoordinate[0], blockerGoalCoordinate[1]) + 1000;
-                int agenttoboxdiff = subgoals.shortest_way(grid, agentRow, agentCol, targetPosition[0], targetPosition[1]) + 1000;
-
-                int thisHue;
-                if (agenttoboxdiff != 2) {
-                    thisHue = boxtogoaldiff + agenttoboxdiff;
-                    sumHue += thisHue;
-                } else {
-                    thisHue = boxtogoaldiff;
-                    sumHue += thisHue;
-                }
-
-            } else if (requesterhelp != null) {
-                int[] requesterGoalCoordinate = requesterhelp.requesterGoalCoordinate;
-
-                int agentRow = s.agentRows[i];
-                int agentCol = s.agentCols[i];
-
-                int agenttogoaldiff = subgoals.shortest_way(grid, agentRow, agentCol, requesterGoalCoordinate[0], requesterGoalCoordinate[1]) + 1000;
-
-                int thisHue = agenttogoaldiff;
-                sumHue += thisHue;
-
-            } else if (!agentsubgoal.isEmpty()) {
+            if (!agentsubgoal.isEmpty()) {
                 char currentGoal = agentsubgoal.peek();
                 int[] targetPosition;
                 int[] goalPosition = goalsAndPositon.get(currentGoal);
@@ -125,6 +84,24 @@ public abstract class Heuristic
                     int agenttogoaldiff = subgoals.shortest_way(grid, goalPosition[0], goalPosition[1], targetPosition[0], targetPosition[1]) + 1000;
 
                     sumHue += agenttogoaldiff;
+                }
+            }  else if (agentsubgoal.isEmpty() && s.parent != null){
+                State parent = s.parent;
+//                boolean isBoxOrGoalNear = false;
+//                for (int j = agentRows[i]; j <= agentRows[i] + 1; j++) {
+//                    for (int k = agentCols[i]; k <= agentCols[i] + 1; k++) {
+//                        if (boxes[j][k] != 0 || goals[j][k] != 0) {
+//                            isBoxOrGoalNear = true;
+//                        }
+//                    }
+//                }
+//                if (isBoxOrGoalNear) {
+//                    continue;
+//                }
+                int[] parentAgentRows = parent.agentRows;
+                int[] parentAgentCols = parent.agentCols;
+                if (agentRows[i] == parentAgentRows[i] && agentCols[i] == parentAgentCols[i]) {
+                    sumHue -= 10000;
                 }
             }
         }
