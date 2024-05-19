@@ -85,22 +85,40 @@ public abstract class Heuristic
 
                     sumHue += agenttogoaldiff;
                 }
-            }  else if (agentsubgoal.isEmpty() && s.parent != null){
+            }
+            else if (agentsubgoal.isEmpty() && s.parent != null){
                 State parent = s.parent;
-//                boolean isBoxOrGoalNear = false;
-//                for (int j = agentRows[i]; j <= agentRows[i] + 1; j++) {
-//                    for (int k = agentCols[i]; k <= agentCols[i] + 1; k++) {
-//                        if (boxes[j][k] != 0 || goals[j][k] != 0) {
-//                            isBoxOrGoalNear = true;
-//                        }
-//                    }
-//                }
-//                if (isBoxOrGoalNear) {
-//                    continue;
-//                }
+                if (goals[agentRows[i]][agentCols[i]] - '0' == i) {
+                    continue;
+                }
+                boolean isBlockinWay = true;
+                LinkedList<int[]> positons = new LinkedList<int[]>();
+                for (int j = agentRows[i] - 1; j <= agentRows[i] + 1; j++) {
+                    for (int k = agentCols[i] - 1; k <= agentCols[i] + 1; k++) {
+                        if (j != agentRows[i] || k != agentCols[i]) {
+                            if (grid[j][k] == 1 && goals[j][k] == 0) {
+                                positons.add(new int[] {j, k});
+                            }
+                        }
+                    }
+                }
+                int count = 0;
+                for (int[] j : positons) {
+                    for (int[] k : positons) {
+                        if (Math.abs(k[0] - j[0]) + Math.abs(k[1] - j[1]) == 1) {
+                            count++;
+                        }
+                    }
+                }
+                if ((count / 2) == positons.size() - 1) {
+                    isBlockinWay = false;
+                }
+                if (isBlockinWay) {
+                    continue;
+                }
                 int[] parentAgentRows = parent.agentRows;
                 int[] parentAgentCols = parent.agentCols;
-                if (agentRows[i] == parentAgentRows[i] && agentCols[i] == parentAgentCols[i]) {
+                if ((agentRows[i] == parentAgentRows[i] && agentCols[i] == parentAgentCols[i]) && goals[agentRows[i]][agentCols[i]] == 0) {
                     sumHue -= 10000;
                 }
             }
